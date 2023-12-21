@@ -1,0 +1,1 @@
+import { Canvas } from 'fabric';

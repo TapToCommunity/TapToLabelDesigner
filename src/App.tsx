@@ -1,6 +1,7 @@
 import './App.css'
 import { useContext } from 'react';
 import { FileDropContext } from './components/FileDropper';
+import { LabelEditor } from './components/LabelEditor';
 
 function App() {
   const files = useContext(FileDropContext);
@@ -15,7 +16,9 @@ function App() {
     );
   }
   return (
-    files.map(file => file.name)
+    <>
+      {files.map(file => <LabelEditor file={file} />)}
+    </>
   )
 }
 
