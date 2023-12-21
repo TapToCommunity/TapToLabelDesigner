@@ -1,1 +1,1 @@
-import { Canvas } from 'fabric';
+// import { Canvas } from 'fabric';

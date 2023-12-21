@@ -1,10 +1,14 @@
 import { createContext, useState, useEffect, DragEventHandler, DragEvent as ReactDragEvent } from 'react';
-
+import type { FC, JSX } from 'react';
 export const FileDropContext = createContext<File[]>([]);
 
 const acceptDrag: DragEventHandler<HTMLDivElement> = (evt: ReactDragEvent<HTMLDivElement>) => evt.preventDefault();
 
-export const FileDropper = ({ children }) => {
+type FileDropperProps = {
+    children: JSX.Element | JSX.Element[];
+};
+
+export const FileDropper: FC<FileDropperProps> = ({ children }) => {
   const [files, setFiles] = useState<File[]>([]);
     
   useEffect(() => {
