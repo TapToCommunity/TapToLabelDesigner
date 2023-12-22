@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import './LabelEditor.css';
 import { Canvas, util } from 'fabric';
-import { cardLikeOptions } from '../constants';
+import { cardLikeOptions, cardRatio } from '../constants';
 
 type LabelEditorProps = {
   file: File;
@@ -14,11 +14,12 @@ export const LabelEditor = ({ file }: LabelEditorProps) => {
   useEffect(() => {
     if (fabricCanvas && padderRef.current) {
       const bbox = padderRef.current.getBoundingClientRect();
+      const chosenWidth = Math.floor(bbox.width - 20);
       fabricCanvas.setDimensions({
-        width: bbox.width,
-        height: bbox.height,
+        width: chosenWidth,
+        height: Math.ceil(chosenWidth / cardRatio),
       });
-      const scale = util.findScaleToFit(cardLikeOptions, bbox);
+      const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
       fabricCanvas.setZoom(scale);
       fabricCanvas.requestRenderAll();
     }

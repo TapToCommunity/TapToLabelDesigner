@@ -7,3 +7,5 @@ export const cardLikeOptions = {
   stroke: 'black',
   fill: 'white',
 };
+
+export const cardRatio = 855 / 540;
