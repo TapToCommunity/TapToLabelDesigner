@@ -1,0 +1,18 @@
+.topHeader {
+  display: flex;
+  justify-content: flex-end;
+  height: 64px;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.labelsContent {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
