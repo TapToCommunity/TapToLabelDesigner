@@ -1,0 +1,16 @@
+.labelContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 49.9%;
+  width: 49.9%;
+  height: auto;
+}
+
+.labelPadder {
+  position: absolute;
+  width: 100%;
+  padding: 0;
+  padding-bottom: 63%
+}
