@@ -1,5 +1,6 @@
 import { Canvas, FabricImage, util, Rect, FabricObject } from 'fabric';
 import { useRef, useEffect } from 'react';
+import { cardLikeOptions } from '../constants';
 
 FabricObject.ownDefaults.originX = 'center';
 FabricObject.ownDefaults.originY = 'center';
@@ -8,17 +9,6 @@ type WrapperProp = {
   file: File;
   setFabricCanvas: (canvas: Canvas | null) => void;
 }
-
-const cardLikeOptions = {
-  width: 854,
-  height: 539,
-  rx: 30,
-  ry: 30,
-  strokeWidth: 1,
-  stroke: 'black',
-  strokeUniform: true,
-  fill: 'white',
-};
 
 export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
