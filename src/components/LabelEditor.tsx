@@ -12,22 +12,28 @@ export const LabelEditor = ({ file }: LabelEditorProps) => {
   const [fabricCanvas, setFabricCanvas] = useState<Canvas | null>(null)
   const padderRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (fabricCanvas && padderRef.current) {
-      const bbox = padderRef.current.getBoundingClientRect();
-      const chosenWidth = Math.floor(bbox.width - 20);
-      fabricCanvas.setDimensions({
-        width: chosenWidth,
-        height: Math.ceil(chosenWidth / cardRatio),
+    const divRef = padderRef.current;
+    if (fabricCanvas && divRef) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        const bbox = entries[0].contentRect;
+        const chosenWidth = Math.floor(bbox.width - 20);
+        fabricCanvas.setDimensions({
+          width: chosenWidth,
+          height: Math.ceil(chosenWidth / cardRatio),
+        });
+        const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
+        fabricCanvas.setZoom(scale);
       });
-      const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
-      fabricCanvas.setZoom(scale);
-      fabricCanvas.requestRenderAll();
+      resizeObserver.observe(divRef);
+      return () => {
+        resizeObserver.unobserve(divRef);
+      }
     }
   }, [fabricCanvas]);
 
   return (
-    <div className="labelContainer">
-      <div className="labelPadder" ref={padderRef}></div>
+    <div className="labelContainer" ref={padderRef}>
+      <div className="labelPadder"></div>
       <FabricCanvasWrapper
         setFabricCanvas={setFabricCanvas}
         file={file} 
