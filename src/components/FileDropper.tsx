@@ -16,6 +16,7 @@ import './FileDropper.css';
 
 const FilterDropdown = lazy(() => import('./FilterDropdown'));
 const PdfButton = lazy(() => import('./PdfButton'));
+const TemplateDropdown = lazy(() => import('./TemplateDropdown'));
 
 type contextType = {
   files: File[];
@@ -79,6 +80,7 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
     <FileDropContext.Provider value={contextValue}>
       <div className="topHeader" >
         <input multiple ref={hiddenInput} type="file" onChange={fileLoader} style={{ display: 'none' }} />
+        {hasFiles && <TemplateDropdown canvasArrayRef={canvasArrayRef} />}
         {hasFiles && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
         <button onClick={openInputFile} >Add files</button>
         {hasFiles && <PdfButton canvasArrayRef={canvasArrayRef} />}

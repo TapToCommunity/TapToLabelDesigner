@@ -14,11 +14,11 @@ type FilterDropdownProps = {
 
 const FilterDropdown = ({ canvasArrayRef }: FilterDropdownProps): JSX.Element => {
 
-  const [filter, setCurrentFilter] = useState<string>('')
+  const [filter, setCurrentFilter] = useState<string>('none')
 
   const toggleFilter = useCallback((evt: SelectChangeEvent<string>) => {
-    const value = evt.target.value;
-    const filter = value && new (classRegistry.getClass(value));
+    const value = evt.target.value ;
+    const filter = value !== 'none' && new (classRegistry.getClass(value));
     const canvases = canvasArrayRef.current;
     if (canvases) {
       canvases.forEach((canvas) => {
@@ -30,7 +30,7 @@ const FilterDropdown = ({ canvasArrayRef }: FilterDropdownProps): JSX.Element =>
       });
       setCurrentFilter(value);
     }
-  }, []);
+  }, [canvasArrayRef]);
 
 
     return <FormControl size="small" sx={{ m: 1, minWidth: 120 }} >
@@ -41,7 +41,7 @@ const FilterDropdown = ({ canvasArrayRef }: FilterDropdownProps): JSX.Element =>
       label="Image filter"
       onChange={toggleFilter}
     >
-      <MenuItem value="">
+      <MenuItem value="none">
         <em>None</em>
       </MenuItem>
       <MenuItem value="BlackWhite">Black & white</MenuItem>
