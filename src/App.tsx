@@ -1,7 +1,9 @@
-import { useContext } from 'react';
+import { useContext, lazy } from 'react';
 import { FileDropContext } from './components/FileDropper';
-import { LabelEditor } from './components/LabelEditor';
 import './App.css';
+
+const LabelEditor = lazy(() => import('./components/LabelEditor'));
+
 
 function App() {
   const { files, canvasArrayRef } = useContext(FileDropContext);

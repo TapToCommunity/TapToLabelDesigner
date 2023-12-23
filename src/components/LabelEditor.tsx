@@ -4,6 +4,7 @@ import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import './LabelEditor.css';
 import type { Canvas } from 'fabric';
 import { cardLikeOptions, cardRatio } from '../constants';
+import { util } from 'fabric';
 
 type LabelEditorProps = {
   file: File;
@@ -28,10 +29,8 @@ export const LabelEditor = ({ file, canvasArrayRef, index }: LabelEditorProps) =
           width: chosenWidth,
           height: Math.ceil(chosenWidth / cardRatio),
         });
-        import('fabric').then(({ util }) => {
-          const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
-          fabricCanvas.setZoom(scale);
-        });
+        const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
+        fabricCanvas.setZoom(scale);
       });
       resizeObserver.observe(divRef);
       return () => {
@@ -50,3 +49,5 @@ export const LabelEditor = ({ file, canvasArrayRef, index }: LabelEditorProps) =
     </div>
   );
 }
+
+export default LabelEditor;
