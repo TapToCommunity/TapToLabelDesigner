@@ -7,6 +7,7 @@ import {
   useRef,
   useMemo,
   lazy,
+  startTransition,
 } from 'react';
 import type { Canvas } from 'fabric';
 import type { FC, JSX, ReactEventHandler, DragEvent as ReactDragEvent, RefObject } from 'react';
@@ -46,9 +47,11 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
 
   const fileLoader = useCallback<ReactEventHandler<HTMLInputElement>>((evt) => {
     const element = evt.currentTarget as HTMLInputElement;
-    if (element.files) {
-      setFiles([...files, ...element.files]);
-    }
+    startTransition(() => {
+      if (element.files) {
+        setFiles([...files, ...element.files]);
+      }
+    })
   }, [files]);
 
   const openInputFile = useCallback(() => {
@@ -58,9 +61,11 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
   useEffect(() => {
     const eventListener = (evt: DragEvent) => {
       evt.preventDefault();
-      if (evt.dataTransfer && evt.dataTransfer.files) {
-        setFiles([...files, ...evt.dataTransfer.files]);
-      }
+      startTransition(() => {
+        if (evt.dataTransfer && evt.dataTransfer.files) {
+          setFiles([...files, ...evt.dataTransfer.files]);
+        }
+      });
     }
     window.addEventListener('drop', eventListener);
     return () => {

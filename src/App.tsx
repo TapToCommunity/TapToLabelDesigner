@@ -1,4 +1,4 @@
-import { useContext, lazy } from 'react';
+import { useContext, lazy, Suspense } from 'react';
 import { FileDropContext } from './components/FileDropper';
 import './App.css';
 
@@ -18,12 +18,16 @@ function App() {
           <h4>Or click the button to load your files</h4>
         </div>
       )}
-      {files.map((file, index) => <LabelEditor
-        index={index}
-        key={`key-${index}`}
-        file={file}
-        canvasArrayRef={canvasArrayRef}
-      />)}
+      {files.map((file, index) => 
+        <Suspense key={`key-susp-${index}`} fallback={null}>
+          <LabelEditor
+            index={index}
+            key={`key-${index}`}
+            file={file}
+            canvasArrayRef={canvasArrayRef}
+          />
+        </Suspense>
+      )}
     </>
   )
 }

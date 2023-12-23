@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, startTransition } from 'react';
 import { cardLikeOptions } from '../constants';
 import { Canvas, FabricImage, util, Rect, FabricObject } from 'fabric';
 type WrapperProp = {
@@ -32,7 +32,9 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
           fabricImage.scaleY = scale;
           fabricCanvas.add(fabricImage);
           fabricCanvas.centerObject(fabricImage);
-          setFabricCanvas(fabricCanvas);
+          startTransition(() => {
+            setFabricCanvas(fabricCanvas);
+          })
         });
       }
     }
