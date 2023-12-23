@@ -19,8 +19,6 @@ type contextType = {
   canvasArrayRef: RefObject<Canvas[]>;
 }
 
-const BWFilter = new filters.BlackWhite();
-
 export const FileDropContext = createContext<contextType>({
   files: [],
   canvasArrayRef: {
@@ -56,14 +54,17 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
   }, []);
 
   const toggleFilter = useCallback<ReactEventHandler<HTMLInputElement>>((evt) => {
-    const filterOn = (evt.target as HTMLInputElement).checked;
-    const canvases = canvasArrayRef.current;
-    canvases.forEach((canvas) => {
-      canvas.getObjects('image').forEach((image) => {
-        (image as unknown as FabricImage).filters = (filterOn ? [BWFilter as unknown as filters.BaseFilter] : []);
-        (image as FabricImage).applyFilters();
+    import('fabric').then(({ filters }) => {
+      const BWFilter = new filters.BlackWhite();
+      const filterOn = (evt.target as HTMLInputElement).checked;
+      const canvases = canvasArrayRef.current;
+      canvases.forEach((canvas) => {
+        canvas.getObjects('image').forEach((image) => {
+          (image as unknown as FabricImage).filters = (filterOn ? [BWFilter as unknown as filters.BaseFilter] : []);
+          (image as FabricImage).applyFilters();
+        });
+        canvas.renderAll();
       });
-      canvas.renderAll();
     });
   }, []);
 
