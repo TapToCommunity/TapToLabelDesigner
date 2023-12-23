@@ -7,14 +7,19 @@ import {
   useRef,
   useMemo,
 } from 'react';
-import type { Canvas } from 'fabric';
+import type { Canvas, FabricImage } from 'fabric';
+import { filters } from 'fabric';
 import type { FC, JSX, ReactEventHandler, DragEvent as ReactDragEvent, RefObject } from 'react';
 import './FileDropper.css';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 type contextType = {
   files: File[];
   canvasArrayRef: RefObject<Canvas[]>;
 }
+
+const BWFilter = new filters.BlackWhite();
 
 export const FileDropContext = createContext<contextType>({
   files: [],
@@ -48,6 +53,18 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
 
   const openInputFile = useCallback(() => {
     hiddenInput.current && hiddenInput.current.click();
+  }, []);
+
+  const toggleFilter = useCallback<ReactEventHandler<HTMLInputElement>>((evt) => {
+    const filterOn = (evt.target as HTMLInputElement).checked;
+    const canvases = canvasArrayRef.current;
+    canvases.forEach((canvas) => {
+      canvas.getObjects('image').forEach((image) => {
+        (image as unknown as FabricImage).filters = (filterOn ? [BWFilter as unknown as filters.BaseFilter] : []);
+        (image as FabricImage).applyFilters();
+      });
+      canvas.renderAll();
+    });
   }, []);
 
   const preparePdf = useCallback(() => {
@@ -97,6 +114,7 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
     <FileDropContext.Provider value={contextValue}>
       <div className="topHeader" >
         <input multiple ref={hiddenInput} type="file" onChange={fileLoader} style={{ display: 'none' }} />
+        <FormControlLabel control={<Checkbox onChange={toggleFilter} />} label="BW filter" />
         <button onClick={openInputFile} >Add files</button>
         {hasFiles && <button onClick={preparePdf} >make PDF</button>}
       </div>
