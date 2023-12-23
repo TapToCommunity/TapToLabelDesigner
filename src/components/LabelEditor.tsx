@@ -5,12 +5,24 @@ import './LabelEditor.css';
 import type { Canvas } from 'fabric';
 import { cardLikeOptions, cardRatio } from '../constants';
 import { util } from 'fabric';
+import { debounce } from '../utils';
 
 type LabelEditorProps = {
   file: File;
   canvasArrayRef: RefObject<Canvas[]>;
   index: number;
 }
+
+const resizerFunctionCreator = (fabricCanvas: Canvas): ResizeObserverCallback => debounce<ResizeObserverCallback>((entries) => {
+  const bbox = entries[0].contentRect;
+  const chosenWidth = Math.floor(bbox.width - 20);
+  fabricCanvas.setDimensions({
+    width: chosenWidth,
+    height: Math.ceil(chosenWidth / cardRatio),
+  });
+  const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
+  fabricCanvas.setZoom(scale);
+}, 10);
 
 export const LabelEditor = ({ file, canvasArrayRef, index }: LabelEditorProps) => {
   const [fabricCanvas, setFabricCanvas] = useState<Canvas | null>(null)
@@ -22,16 +34,8 @@ export const LabelEditor = ({ file, canvasArrayRef, index }: LabelEditorProps) =
       if (canvasArrayRef.current) {
         canvasArrayRef.current[index] = fabricCanvas;
       }
-      const resizeObserver = new ResizeObserver((entries) => {
-        const bbox = entries[0].contentRect;
-        const chosenWidth = Math.floor(bbox.width - 20);
-        fabricCanvas.setDimensions({
-          width: chosenWidth,
-          height: Math.ceil(chosenWidth / cardRatio),
-        });
-        const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
-        fabricCanvas.setZoom(scale);
-      });
+      const callback = resizerFunctionCreator(fabricCanvas);
+      const resizeObserver = new ResizeObserver(callback);
       resizeObserver.observe(divRef);
       return () => {
         resizeObserver.unobserve(divRef);
