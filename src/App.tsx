@@ -13,7 +13,6 @@ function App() {
     <>
       {!hasFiles && (
         <div className="somePadding">
-          <h4>WORK IN PROGRESS</h4>
           <h1>Start by dropping in the browser one or more images you want to use on your labels</h1>
           <h4>Or click the button to load your files</h4>
         </div>
