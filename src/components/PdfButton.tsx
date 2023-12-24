@@ -29,7 +29,11 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
           const column = index % 2;
           // reset rows every 5;
           const row = Math.floor(index / 2) % 5;
-          doc.addImage(canvas.toDataURL(), 'PNG', column * 105 + 10, row * 59.4 + 2.5, 85.5, 54);
+          doc.addImage(canvas.toDataURL({
+            format: 'png',
+            // canvas is set up at 10px per mm by choice, 260 per DPI. we multiply by 2 to go over 300
+            multiplier: 2 / canvas.getZoom(),
+          }), 'PNG', column * 105 + 10, row * 59.4 + 2.5, 85.5, 54);
         });
       }
       doc.save("a4.pdf");

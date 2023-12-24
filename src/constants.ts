@@ -1,11 +1,11 @@
-import taptoOverlayImg from './assets/tapto_label.png';
+import taptoOverlayImg from './assets/tapto_label.svg';
 
 export const cardLikeOptions = {
   width: 854,
   height: 539,
   rx: 30,
   ry: 30,
-  strokeWidth: 1,
+  strokeWidth: 2,
   stroke: 'black',
   fill: 'white',
 };
