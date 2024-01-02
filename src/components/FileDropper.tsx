@@ -10,9 +10,14 @@ import {
   startTransition,
 } from 'react';
 import type { Canvas } from 'fabric';
-import type { FC, JSX, ReactEventHandler, DragEvent as ReactDragEvent, RefObject } from 'react';
+import type {
+  FC,
+  JSX,
+  ReactEventHandler,
+  DragEvent as ReactDragEvent,
+  RefObject,
+} from 'react';
 import './FileDropper.css';
-
 
 const FilterDropdown = lazy(() => import('./FilterDropdown'));
 const PdfButton = lazy(() => import('./PdfButton'));
@@ -21,7 +26,7 @@ const TemplateDropdown = lazy(() => import('./TemplateDropdown'));
 type contextType = {
   files: File[];
   canvasArrayRef: RefObject<Canvas[]>;
-}
+};
 
 export const FileDropContext = createContext<contextType>({
   files: [],
@@ -30,10 +35,12 @@ export const FileDropContext = createContext<contextType>({
   },
 });
 
-const acceptDrag: DragEventHandler<HTMLDivElement> = (evt: ReactDragEvent<HTMLDivElement>) => evt.preventDefault();
+const acceptDrag: DragEventHandler<HTMLDivElement> = (
+  evt: ReactDragEvent<HTMLDivElement>,
+) => evt.preventDefault();
 
 type FileDropperProps = {
-    children: JSX.Element | JSX.Element[];
+  children: JSX.Element | JSX.Element[];
 };
 
 export const FileDropper: FC<FileDropperProps> = ({ children }) => {
@@ -41,19 +48,25 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
   const hiddenInput = useRef<HTMLInputElement>(null);
   const canvasArrayRef = useRef<Canvas[]>([]);
 
-  const contextValue = useMemo<contextType>(() => ({
-    files,
-    canvasArrayRef,
-  }), [files]);
+  const contextValue = useMemo<contextType>(
+    () => ({
+      files,
+      canvasArrayRef,
+    }),
+    [files],
+  );
 
-  const fileLoader = useCallback<ReactEventHandler<HTMLInputElement>>((evt) => {
-    const element = evt.currentTarget as HTMLInputElement;
-    startTransition(() => {
-      if (element.files) {
-        setFiles([...files, ...element.files]);
-      }
-    })
-  }, [files]);
+  const fileLoader = useCallback<ReactEventHandler<HTMLInputElement>>(
+    (evt) => {
+      const element = evt.currentTarget as HTMLInputElement;
+      startTransition(() => {
+        if (element.files) {
+          setFiles([...files, ...element.files]);
+        }
+      });
+    },
+    [files],
+  );
 
   const openInputFile = useCallback(() => {
     hiddenInput.current && hiddenInput.current.click();
@@ -67,25 +80,31 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
           setFiles([...files, ...evt.dataTransfer.files]);
         }
       });
-    }
+    };
     window.addEventListener('drop', eventListener);
     return () => {
       window.removeEventListener('drop', eventListener);
-    }
+    };
   }, [setFiles, files]);
 
   const hasFiles = !!files.length;
 
   return (
     <FileDropContext.Provider value={contextValue}>
-      <div className="topHeader" >
-        <input multiple ref={hiddenInput} type="file" onChange={fileLoader} style={{ display: 'none' }} />
+      <div className="topHeader">
+        <input
+          multiple
+          ref={hiddenInput}
+          type="file"
+          onChange={fileLoader}
+          style={{ display: 'none' }}
+        />
         {hasFiles && <TemplateDropdown canvasArrayRef={canvasArrayRef} />}
         {hasFiles && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
-        <button onClick={openInputFile} >Add files</button>
+        <button onClick={openInputFile}>Add files</button>
         {hasFiles && <PdfButton canvasArrayRef={canvasArrayRef} />}
       </div>
-      <div className="labelsContent" onDragOver={acceptDrag}  >
+      <div className="labelsContent" onDragOver={acceptDrag}>
         {children}
       </div>
     </FileDropContext.Provider>

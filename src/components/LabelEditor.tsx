@@ -11,21 +11,26 @@ type LabelEditorProps = {
   file: File;
   canvasArrayRef: RefObject<Canvas[]>;
   index: number;
-}
+};
 
-const resizerFunctionCreator = (fabricCanvas: Canvas): ResizeObserverCallback => debounce<ResizeObserverCallback>((entries) => {
-  const bbox = entries[0].contentRect;
-  const chosenWidth = Math.floor(bbox.width - 20);
-  fabricCanvas.setDimensions({
-    width: chosenWidth,
-    height: Math.ceil(chosenWidth / cardRatio),
-  });
-  const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
-  fabricCanvas.setZoom(scale);
-}, 10);
+const resizerFunctionCreator = (fabricCanvas: Canvas): ResizeObserverCallback =>
+  debounce<ResizeObserverCallback>((entries) => {
+    const bbox = entries[0].contentRect;
+    const chosenWidth = Math.floor(bbox.width - 20);
+    fabricCanvas.setDimensions({
+      width: chosenWidth,
+      height: Math.ceil(chosenWidth / cardRatio),
+    });
+    const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
+    fabricCanvas.setZoom(scale);
+  }, 10);
 
-export const LabelEditor = ({ file, canvasArrayRef, index }: LabelEditorProps) => {
-  const [fabricCanvas, setFabricCanvas] = useState<Canvas | null>(null)
+export const LabelEditor = ({
+  file,
+  canvasArrayRef,
+  index,
+}: LabelEditorProps) => {
+  const [fabricCanvas, setFabricCanvas] = useState<Canvas | null>(null);
   const padderRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -39,19 +44,16 @@ export const LabelEditor = ({ file, canvasArrayRef, index }: LabelEditorProps) =
       resizeObserver.observe(divRef);
       return () => {
         resizeObserver.unobserve(divRef);
-      }
+      };
     }
   }, [canvasArrayRef, fabricCanvas, index]);
 
   return (
     <div className="labelContainer" ref={padderRef}>
       <div className="labelPadder"></div>
-      <FabricCanvasWrapper
-        setFabricCanvas={setFabricCanvas}
-        file={file} 
-      />
+      <FabricCanvasWrapper setFabricCanvas={setFabricCanvas} file={file} />
     </div>
   );
-}
+};
 
 export default LabelEditor;

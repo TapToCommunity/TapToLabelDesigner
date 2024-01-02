@@ -25,10 +25,10 @@ type templateLayer = {
 };
 
 type templateType = {
-  overlay?: templateLayer
+  overlay?: templateLayer;
   background?: templateLayer;
   label: string;
-}
+};
 
 export const templates: Record<string, templateType> = {
   tapto: {
@@ -40,5 +40,5 @@ export const templates: Record<string, templateType> = {
       y: 27 / 600,
     },
     label: 'PC-Engine',
-  }
+  },
 } as const;

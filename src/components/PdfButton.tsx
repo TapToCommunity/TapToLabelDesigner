@@ -4,10 +4,9 @@ import type { Canvas } from 'fabric';
 
 type PdfButtonProps = {
   canvasArrayRef: RefObject<Canvas[]>;
-}
+};
 
 export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
-
   const preparePdf = useCallback(() => {
     import('jspdf').then(({ jsPDF }) => {
       const doc = new jsPDF({
@@ -15,7 +14,7 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
         unit: 'mm',
         format: 'a4',
         putOnlyUsedFonts: true,
-        floatPrecision: 16 // or "smart", default is 16
+        floatPrecision: 16, // or "smart", default is 16
       });
       const canvases = canvasArrayRef.current;
       if (canvases) {
@@ -29,18 +28,25 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
           const column = index % 2;
           // reset rows every 5;
           const row = Math.floor(index / 2) % 5;
-          doc.addImage(canvas.toDataURL({
-            format: 'png',
-            // canvas is set up at 10px per mm by choice, 260 per DPI. we multiply by 2 to go over 300
-            multiplier: 2 / canvas.getZoom(),
-          }), 'PNG', column * 105 + 10, row * 59.4 + 2.5, 85.5, 54);
+          doc.addImage(
+            canvas.toDataURL({
+              format: 'png',
+              // canvas is set up at 10px per mm by choice, 260 per DPI. we multiply by 2 to go over 300
+              multiplier: 2 / canvas.getZoom(),
+            }),
+            'PNG',
+            column * 105 + 10,
+            row * 59.4 + 2.5,
+            85.5,
+            54,
+          );
         });
       }
-      doc.save("a4.pdf");
+      doc.save('a4.pdf');
     });
   }, [canvasArrayRef]);
 
-  return <button onClick={preparePdf} >make PDF</button>
-}
+  return <button onClick={preparePdf}>make PDF</button>;
+};
 
 export default PdfButton;

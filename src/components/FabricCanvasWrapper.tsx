@@ -4,7 +4,7 @@ import { Canvas, FabricImage, util, Rect, FabricObject } from 'fabric';
 type WrapperProp = {
   file: File;
   setFabricCanvas: (canvas: Canvas | null) => void;
-}
+};
 
 export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -16,7 +16,7 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
       FabricObject.ownDefaults.originY = 'center';
       fabricCanvas = new Canvas(canvasRef.current!, {
         width: 855,
-        height: 540
+        height: 540,
       });
       const cardBorder = new Rect(cardLikeOptions);
       cardBorder.canvas = fabricCanvas;
@@ -34,7 +34,7 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
           fabricCanvas.centerObject(fabricImage);
           startTransition(() => {
             setFabricCanvas(fabricCanvas);
-          })
+          });
         });
       }
     }
@@ -46,7 +46,5 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
     };
   }, [setFabricCanvas, file]);
 
-  return (
-    <canvas ref={canvasRef} />
-  );
-}
+  return <canvas ref={canvasRef} />;
+};
