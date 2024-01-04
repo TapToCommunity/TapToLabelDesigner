@@ -1,0 +1,8 @@
+.colorButton {
+  display: block;
+  border-radius: 4px;
+  margin: 10px 5px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid black;
+}

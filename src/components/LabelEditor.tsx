@@ -3,10 +3,11 @@ import type { RefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import './LabelEditor.css';
 import type { Canvas } from 'fabric';
-import { cardLikeOptions, cardRatio, defaultTemplate } from '../constants';
+import { cardLikeOptions, cardRatio } from '../constants';
 import { util } from 'fabric';
 import { debounce } from '../utils';
 import { setTemplateOnCanvases } from '../utils/setTemplate';
+import { useAppDataContext } from '../contexts/appData';
 
 type LabelEditorProps = {
   file: File;
@@ -33,7 +34,7 @@ export const LabelEditor = ({
 }: LabelEditorProps) => {
   const [fabricCanvas, setFabricCanvas] = useState<Canvas | null>(null);
   const padderRef = useRef<HTMLDivElement | null>(null);
-
+  const { template } = useAppDataContext();
   useEffect(() => {
     const divRef = padderRef.current;
     if (fabricCanvas && divRef) {
@@ -41,14 +42,14 @@ export const LabelEditor = ({
         canvasArrayRef.current[index] = fabricCanvas;
       }
       const callback = resizerFunctionCreator(fabricCanvas);
-      setTemplateOnCanvases(defaultTemplate, [fabricCanvas]);
+      setTemplateOnCanvases([fabricCanvas], template);
       const resizeObserver = new ResizeObserver(callback);
       resizeObserver.observe(divRef);
       return () => {
         resizeObserver.unobserve(divRef);
       };
     }
-  }, [canvasArrayRef, fabricCanvas, index]);
+  }, [canvasArrayRef, fabricCanvas, index, template]);
 
   return (
     <div className="labelContainer" ref={padderRef}>

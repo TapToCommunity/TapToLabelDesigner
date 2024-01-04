@@ -7,6 +7,8 @@ import {
   useCallback,
   useRef,
 } from 'react';
+import { ColorChanger } from './ColorChanger';
+import { useAppDataContext } from '../contexts/appData';
 
 const FilterDropdown = lazy(() => import('./FilterDropdown'));
 const PdfButton = lazy(() => import('./PdfButton'));
@@ -16,6 +18,7 @@ export const Header = () => {
   const hiddenInput = useRef<HTMLInputElement>(null);
 
   const { files, setFiles, canvasArrayRef } = useFileDropperContext();
+  const { templateKey } = useAppDataContext();
 
   const openInputFile = useCallback(() => {
     hiddenInput.current && hiddenInput.current.click();
@@ -34,6 +37,7 @@ export const Header = () => {
   );
 
   const hasFiles = !!files.length;
+  const hasTemplate = templateKey !== 'blank';
 
   return (
     <div className="topHeader">
@@ -44,6 +48,7 @@ export const Header = () => {
         onChange={fileLoader}
         style={{ display: 'none' }}
       />
+      {hasTemplate && <ColorChanger />}
       {hasFiles && <TemplateDropdown canvasArrayRef={canvasArrayRef} />}
       {hasFiles && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
       <button onClick={openInputFile}>Add files</button>

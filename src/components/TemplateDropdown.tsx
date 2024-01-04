@@ -1,12 +1,13 @@
 import type { JSX, RefObject } from 'react';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import type { Canvas } from 'fabric';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { templates, defaultTemplateKey } from '../constants';
+import { templates } from '../constants';
 import { setTemplateOnCanvases } from '../utils/setTemplate';
+import { useAppDataContext } from '../contexts/appData';
 
 type FilterDropdownProps = {
   canvasArrayRef: RefObject<Canvas[]>;
@@ -15,20 +16,21 @@ type FilterDropdownProps = {
 const TemplateDropdown = ({
   canvasArrayRef,
 }: FilterDropdownProps): JSX.Element => {
-  const [template, setCurrentTemplate] = useState<string>(defaultTemplateKey);
-
+  const { templateKey, setTemplate, setTemplateKey, setOriginalColors } =
+    useAppDataContext();
   const toggleTemplate = useCallback(
     async (evt: SelectChangeEvent<string>) => {
       const value = evt.target.value;
       const canvases = canvasArrayRef.current;
       const template = templates[value];
       if (canvases) {
-        const colors = await setTemplateOnCanvases(template, canvases);
-        console.log(colors);
+        const colors = await setTemplateOnCanvases(canvases, template);
+        setOriginalColors(colors);
       }
-      setCurrentTemplate(value);
+      setTemplateKey(value);
+      setTemplate(template);
     },
-    [canvasArrayRef],
+    [canvasArrayRef, setOriginalColors, setTemplate, setTemplateKey],
   );
 
   return (
@@ -36,7 +38,7 @@ const TemplateDropdown = ({
       <InputLabel id="template-select">Card template</InputLabel>
       <Select
         labelId="template-select"
-        value={template}
+        value={templateKey}
         label="Card template"
         onChange={toggleTemplate}
       >
@@ -44,7 +46,7 @@ const TemplateDropdown = ({
           <em>Blank</em>
         </MenuItem>
         {Object.entries(templates).map(([key, value]) => (
-          <MenuItem key={key} value={key}>
+          <MenuItem key={key} value={key} selected={key === templateKey}>
             {value.label}
           </MenuItem>
         ))}
