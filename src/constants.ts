@@ -1,5 +1,6 @@
-import taptoPcEngineHorizontal from './assets/tapto_pcengine_horizontal.svg';
+// import taptoPcEngineHorizontal from './assets/tapto_pcengine_horizontal.svg';
 import tapToHorizontal from './assets/tapto_horizontal.svg';
+import tapToBg from './assets/tapto_pattern_bg.svg';
 
 export const cardLikeOptions = {
   width: 1009,
@@ -15,6 +16,12 @@ export const cardRatio = 855 / 540;
 
 type templateLayer = {
   url: string;
+  /* how large the overlay is */
+  layerWidth: number;
+  layerHeight: number;
+};
+
+type templateOverlay = templateLayer & {
   /* percentage width where the overlaye transparent area begins */
   x: number;
   /* percentage height where the overlaye transparent area begins */
@@ -23,13 +30,10 @@ type templateLayer = {
   width: number;
   /* percentage height that is transparent */
   height: number;
-  /* how large the overlay is */
-  layerWidth: number;
-  layerHeight: number;
-};
+}
 
 type templateType = {
-  overlay?: templateLayer;
+  overlay?: templateOverlay;
   background?: templateLayer;
   label: string;
 };
@@ -56,6 +60,11 @@ export const templates: Record<string, templateType> = {
       height: 0.88,
       x: 0.30,
       y: 0.06,
+    },
+    background: {
+      layerWidth: 975,
+      layerHeight: 600,
+      url: tapToBg,
     },
     label: 'Tap-to',
   },

@@ -91,10 +91,12 @@ const TemplateDropdown = ({
               mainImage.setPositionByOrigin(new Point(0, 0), 'left', 'top');
             }
             if (backgroundImageElement) {
-              const scale = util.findScaleToCover(
-                backgroundImageElement,
-                cardLikeOptions,
-              );
+              // scale the overlay asset to cover the designed layer size
+              // example: the template is supposed to be smaller than the card
+              const scale = util.findScaleToFit(backgroundImageElement, {
+                width: background!.layerWidth,
+                height: background!.layerHeight,
+              });
               const backgroundImg = new FabricImage(backgroundImageElement, {
                 canvas,
                 scaleX: scale,
