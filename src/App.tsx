@@ -1,5 +1,6 @@
 import { useContext, lazy, Suspense } from 'react';
 import { FileDropContext } from './components/FileDropper';
+import { AppDataContextProvider } from './components/appData';
 import './App.css';
 
 const LabelEditor = lazy(() => import('./components/LabelEditor'));
@@ -9,7 +10,7 @@ function App() {
   const hasFiles = files.length > 0;
 
   return (
-    <>
+    <AppDataContextProvider>
       {!hasFiles && (
         <div className="somePadding">
           <h1>
@@ -29,7 +30,7 @@ function App() {
           />
         </Suspense>
       ))}
-    </>
+    </AppDataContextProvider>
   );
 }
 
