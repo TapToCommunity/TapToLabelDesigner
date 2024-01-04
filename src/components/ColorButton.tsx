@@ -10,12 +10,12 @@ type ColorButtonProps = {
 export const ColorButton = memo(
   ({ color, originalColor }: ColorButtonProps) => {
     return (
-      <ButtonBase>
-        <div
-          className="colorButton"
-          style={{ backgroundColor: color ?? originalColor }}
-        />
-      </ButtonBase>
+      <div
+        className="colorButton"
+        style={{ backgroundColor: color ?? originalColor }}
+      >
+        <ButtonBase style={{ width: '100%', height: '100%' }} />
+      </div>
     );
   },
 );
