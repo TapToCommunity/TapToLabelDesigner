@@ -55,6 +55,7 @@ export const setTemplateOnCanvases = async (canvases: Canvas[], template?: templ
       let overlayImg;
       if (overlayImageElement instanceof Group) {
         overlayImg = await overlayImageElement.clone();
+        overlayImg.canvas = canvas;
       } else {
         overlayImg = new FabricImage(overlayImageElement, {
           canvas,
