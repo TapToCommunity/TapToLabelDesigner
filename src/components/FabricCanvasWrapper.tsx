@@ -15,8 +15,8 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
       FabricObject.ownDefaults.originX = 'center';
       FabricObject.ownDefaults.originY = 'center';
       fabricCanvas = new Canvas(canvasRef.current!, {
-        width: 855,
-        height: 540,
+        width: cardLikeOptions.width,
+        height: cardLikeOptions.height,
       });
       const cardBorder = new Rect(cardLikeOptions);
       cardBorder.canvas = fabricCanvas;

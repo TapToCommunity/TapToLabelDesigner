@@ -1,8 +1,9 @@
-import taptoOverlayImg from './assets/tapto_label.svg';
+import taptoPcEngineHorizontal from './assets/tapto_pcengine_horizontal.svg';
+import tapToHorizontal from './assets/tapto_horizontal.svg';
 
 export const cardLikeOptions = {
-  width: 854,
-  height: 539,
+  width: 1009,
+  height: 637,
   rx: 30,
   ry: 30,
   strokeWidth: 2,
@@ -22,6 +23,9 @@ type templateLayer = {
   width: number;
   /* percentage height that is transparent */
   height: number;
+  /* how large the overlay is */
+  layerWidth: number;
+  layerHeight: number;
 };
 
 type templateType = {
@@ -31,14 +35,28 @@ type templateType = {
 };
 
 export const templates: Record<string, templateType> = {
-  tapto: {
+  // tapto1: {
+  //   overlay: {
+  //     layerWidth: 975,
+  //     layerHeight: 600,
+  //     url: taptoPcEngineHorizontal,
+  //     width: 702 / 975,
+  //     height: 547 / 600,
+  //     x: 26 / 975,
+  //     y: 27 / 600,
+  //   },
+  //   label: 'PC-Engine',
+  // },
+  tapto2: {
     overlay: {
-      url: taptoOverlayImg,
-      width: 702 / 975,
-      height: 547 / 600,
-      x: 26 / 975,
-      y: 27 / 600,
+      layerWidth: 975,
+      layerHeight: 600,
+      url: tapToHorizontal,
+      width: 0.66,
+      height: 0.88,
+      x: 0.30,
+      y: 0.06,
     },
-    label: 'PC-Engine',
+    label: 'Tap-to',
   },
 } as const;
