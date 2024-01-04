@@ -1,15 +1,16 @@
-import { FabricImage, util, Point, type Canvas } from 'fabric';
+import { FabricImage, util, Point, type Canvas, Shadow } from 'fabric';
 import { cardLikeOptions, type templateType } from '../constants';
 
 export const setTemplateOnCanvases = (template: templateType, canvases: Canvas[]): void => {
   if (canvases) {
-    const { overlay, background } = template || {};
+    const { overlay, background, shadow } = template || {};
     Promise.all([
       overlay && util.loadImage(overlay.url),
       background && util.loadImage(background.url),
     ]).then(([overlayImageElement, backgroundImageElement]) => {
       canvases.forEach((canvas) => {
         const mainImage = canvas.getObjects('image')[0];
+        mainImage.shadow = shadow ? new Shadow(shadow) : null;
         if (overlayImageElement) {
           // scale the overlay asset to cover the designed layer size
           // example: the template is supposed to be smaller than the card

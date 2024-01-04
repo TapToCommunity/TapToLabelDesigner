@@ -36,6 +36,8 @@ export type templateType = {
   overlay?: templateOverlay;
   background?: templateLayer;
   label: string;
+  /* box-shadow like property for the main image, 3 numbers + color */
+  shadow: string;
 };
 
 export const templates: Record<string, templateType> = {
@@ -61,6 +63,7 @@ export const templates: Record<string, templateType> = {
       x: 0.30,
       y: 0.06,
     },
+    shadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
     background: {
       layerWidth: 975,
       layerHeight: 600,

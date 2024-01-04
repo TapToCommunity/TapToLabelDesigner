@@ -43,7 +43,9 @@ const TemplateDropdown = ({
           <em>Blank</em>
         </MenuItem>
         {Object.entries(templates).map(([key, value]) => (
-          <MenuItem value={key}>{value.label}</MenuItem>
+          <MenuItem key={key} value={key}>
+            {value.label}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>
