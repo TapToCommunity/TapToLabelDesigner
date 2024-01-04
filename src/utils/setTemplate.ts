@@ -1,7 +1,7 @@
 import { FabricImage, util, Point, type Canvas } from 'fabric';
 import { cardLikeOptions, type templateType } from '../constants';
 
-export const setTemplate = (template: templateType, canvases: Canvas[]): void => {
+export const setTemplateOnCanvases = (template: templateType, canvases: Canvas[]): void => {
   if (canvases) {
     const { overlay, background } = template || {};
     Promise.all([

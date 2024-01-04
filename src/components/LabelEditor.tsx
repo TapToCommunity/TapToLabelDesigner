@@ -3,9 +3,10 @@ import type { RefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import './LabelEditor.css';
 import type { Canvas } from 'fabric';
-import { cardLikeOptions, cardRatio } from '../constants';
+import { cardLikeOptions, cardRatio, defaultTemplate } from '../constants';
 import { util } from 'fabric';
 import { debounce } from '../utils';
+import { setTemplateOnCanvases } from '../utils/setTemplate';
 
 type LabelEditorProps = {
   file: File;
@@ -40,6 +41,7 @@ export const LabelEditor = ({
         canvasArrayRef.current[index] = fabricCanvas;
       }
       const callback = resizerFunctionCreator(fabricCanvas);
+      setTemplateOnCanvases(defaultTemplate, [fabricCanvas]);
       const resizeObserver = new ResizeObserver(callback);
       resizeObserver.observe(divRef);
       return () => {

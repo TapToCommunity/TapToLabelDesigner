@@ -69,3 +69,6 @@ export const templates: Record<string, templateType> = {
     label: 'Tap-to',
   },
 } as const;
+
+export const defaultTemplateKey = 'tapto2';
+export const defaultTemplate = templates[defaultTemplateKey];

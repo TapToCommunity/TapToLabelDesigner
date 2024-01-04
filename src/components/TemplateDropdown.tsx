@@ -5,8 +5,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { templates } from '../constants';
-import { setTemplate } from '../utils/setTemplate';
+import { templates, defaultTemplateKey } from '../constants';
+import { setTemplateOnCanvases } from '../utils/setTemplate';
 
 type FilterDropdownProps = {
   canvasArrayRef: RefObject<Canvas[]>;
@@ -15,7 +15,7 @@ type FilterDropdownProps = {
 const TemplateDropdown = ({
   canvasArrayRef,
 }: FilterDropdownProps): JSX.Element => {
-  const [template, setCurrentTemplate] = useState<string>('blank');
+  const [template, setCurrentTemplate] = useState<string>(defaultTemplateKey);
 
   const toggleTemplate = useCallback(
     (evt: SelectChangeEvent<string>) => {
@@ -23,7 +23,7 @@ const TemplateDropdown = ({
       const canvases = canvasArrayRef.current;
       const template = templates[value];
       if (canvases) {
-        setTemplate(template, canvases);
+        setTemplateOnCanvases(template, canvases);
       }
       setCurrentTemplate(value);
     },
