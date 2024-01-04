@@ -1,11 +1,17 @@
-import { FabricImage, util, Point, type Canvas, Shadow } from 'fabric';
+import { FabricImage, util, Point, type Canvas, Shadow, loadSVGFromURL, Group, type FabricObject } from 'fabric';
 import { cardLikeOptions, type templateType } from '../constants';
+
+export const parseSvg = (url: string): Promise<Group> => 
+  loadSVGFromURL(url).then(({ objects }) => {
+    const nonNullObjects = objects.filter(objects => !!objects) as FabricObject[];
+    return new Group(nonNullObjects);
+  });
 
 export const setTemplateOnCanvases = (template: templateType, canvases: Canvas[]): void => {
   if (canvases) {
     const { overlay, background, shadow } = template || {};
     Promise.all([
-      overlay && util.loadImage(overlay.url),
+      overlay && (overlay.isSvg ? parseSvg(overlay.url) : util.loadImage(overlay.url)),
       background && util.loadImage(background.url),
     ]).then(([overlayImageElement, backgroundImageElement]) => {
       canvases.forEach((canvas) => {
@@ -18,11 +24,16 @@ export const setTemplateOnCanvases = (template: templateType, canvases: Canvas[]
             width: overlay!.layerWidth,
             height: overlay!.layerHeight,
           });
-          const overlayImg = new FabricImage(overlayImageElement, {
-            canvas,
-            scaleX: scale,
-            scaleY: scale,
-          });
+          let overlayImg;
+          if (overlayImageElement instanceof Group) {
+            overlayImg = overlayImageElement;
+          } else {
+            overlayImg = new FabricImage(overlayImageElement, {
+              canvas,
+              scaleX: scale,
+              scaleY: scale,
+            });
+          }
           canvas.overlayImage = overlayImg;
           // set the overlay of the template in the center of the card
           canvas.viewportCenterObject(overlayImg);

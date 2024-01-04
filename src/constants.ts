@@ -19,6 +19,8 @@ type templateLayer = {
   /* how large the overlay is */
   layerWidth: number;
   layerHeight: number;
+  /* parse the layer as a group rather than raster */
+  isSvg: boolean;
 };
 
 type templateOverlay = templateLayer & {
@@ -62,12 +64,14 @@ export const templates: Record<string, templateType> = {
       height: 0.88,
       x: 0.30,
       y: 0.06,
+      isSvg: true,
     },
     shadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
     background: {
       layerWidth: 975,
       layerHeight: 600,
       url: tapToBg,
+      isSvg: false,
     },
     label: 'Tap-to',
   },
