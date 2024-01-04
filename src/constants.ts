@@ -32,7 +32,7 @@ type templateOverlay = templateLayer & {
   height: number;
 }
 
-type templateType = {
+export type templateType = {
   overlay?: templateOverlay;
   background?: templateLayer;
   label: string;
