@@ -18,12 +18,13 @@ const TemplateDropdown = ({
   const [template, setCurrentTemplate] = useState<string>(defaultTemplateKey);
 
   const toggleTemplate = useCallback(
-    (evt: SelectChangeEvent<string>) => {
+    async (evt: SelectChangeEvent<string>) => {
       const value = evt.target.value;
       const canvases = canvasArrayRef.current;
       const template = templates[value];
       if (canvases) {
-        setTemplateOnCanvases(template, canvases);
+        const colors = await setTemplateOnCanvases(template, canvases);
+        console.log(colors);
       }
       setCurrentTemplate(value);
     },
