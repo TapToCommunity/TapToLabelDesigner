@@ -1,16 +1,16 @@
-import { useContext, lazy, Suspense } from 'react';
-import { FileDropContext } from './components/FileDropper';
-import { AppDataContextProvider } from './components/appData';
+import { lazy, Suspense } from 'react';
+import { FileDropper } from './components/FileDropper';
+import { useFileDropperContext } from './contexts/fileDropper';
 import './App.css';
 
 const LabelEditor = lazy(() => import('./components/LabelEditor'));
 
 function App() {
-  const { files, canvasArrayRef } = useContext(FileDropContext);
+  const { files, canvasArrayRef } = useFileDropperContext();
   const hasFiles = files.length > 0;
 
   return (
-    <AppDataContextProvider>
+    <FileDropper>
       {!hasFiles && (
         <div className="somePadding">
           <h1>
@@ -30,7 +30,7 @@ function App() {
           />
         </Suspense>
       ))}
-    </AppDataContextProvider>
+    </FileDropper>
   );
 }
 

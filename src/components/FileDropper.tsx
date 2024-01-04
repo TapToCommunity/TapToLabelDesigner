@@ -1,60 +1,37 @@
 import {
-  createContext,
-  useState,
   useEffect,
   DragEventHandler,
   useCallback,
   useRef,
-  useMemo,
   lazy,
   startTransition,
 } from 'react';
-import type { Canvas } from 'fabric';
 import type {
   FC,
   JSX,
   ReactEventHandler,
   DragEvent as ReactDragEvent,
-  RefObject,
+  ReactNode,
 } from 'react';
+import { useFileDropperContext } from '../contexts/fileDropper';
 import './FileDropper.css';
 
 const FilterDropdown = lazy(() => import('./FilterDropdown'));
 const PdfButton = lazy(() => import('./PdfButton'));
 const TemplateDropdown = lazy(() => import('./TemplateDropdown'));
 
-type contextType = {
-  files: File[];
-  canvasArrayRef: RefObject<Canvas[]>;
-};
-
-export const FileDropContext = createContext<contextType>({
-  files: [],
-  canvasArrayRef: {
-    current: [],
-  },
-});
-
 const acceptDrag: DragEventHandler<HTMLDivElement> = (
   evt: ReactDragEvent<HTMLDivElement>,
 ) => evt.preventDefault();
 
 type FileDropperProps = {
-  children: JSX.Element | JSX.Element[];
+  children: JSX.Element | JSX.Element[] | ReactNode;
 };
 
 export const FileDropper: FC<FileDropperProps> = ({ children }) => {
-  const [files, setFiles] = useState<File[]>([]);
   const hiddenInput = useRef<HTMLInputElement>(null);
-  const canvasArrayRef = useRef<Canvas[]>([]);
 
-  const contextValue = useMemo<contextType>(
-    () => ({
-      files,
-      canvasArrayRef,
-    }),
-    [files],
-  );
+  const { files, setFiles, canvasArrayRef } = useFileDropperContext();
 
   const fileLoader = useCallback<ReactEventHandler<HTMLInputElement>>(
     (evt) => {
@@ -65,7 +42,7 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
         }
       });
     },
-    [files],
+    [files, setFiles],
   );
 
   const openInputFile = useCallback(() => {
@@ -90,7 +67,7 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
   const hasFiles = !!files.length;
 
   return (
-    <FileDropContext.Provider value={contextValue}>
+    <>
       <div className="topHeader">
         <input
           multiple
@@ -107,6 +84,6 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
       <div className="labelsContent" onDragOver={acceptDrag}>
         {children}
       </div>
-    </FileDropContext.Provider>
+    </>
   );
 };
