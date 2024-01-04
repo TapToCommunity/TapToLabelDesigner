@@ -1,12 +1,3 @@
-.topHeader {
-  display: flex;
-  justify-content: flex-end;
-  height: 64px;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-}
-
 .labelsContent {
   overflow-x: hidden;
   overflow-y: scroll;

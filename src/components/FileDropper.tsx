@@ -1,24 +1,7 @@
-import {
-  useEffect,
-  DragEventHandler,
-  useCallback,
-  useRef,
-  lazy,
-  startTransition,
-} from 'react';
-import type {
-  FC,
-  JSX,
-  ReactEventHandler,
-  DragEvent as ReactDragEvent,
-  ReactNode,
-} from 'react';
+import { useEffect, DragEventHandler, startTransition } from 'react';
+import type { FC, JSX, DragEvent as ReactDragEvent, ReactNode } from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import './FileDropper.css';
-
-const FilterDropdown = lazy(() => import('./FilterDropdown'));
-const PdfButton = lazy(() => import('./PdfButton'));
-const TemplateDropdown = lazy(() => import('./TemplateDropdown'));
 
 const acceptDrag: DragEventHandler<HTMLDivElement> = (
   evt: ReactDragEvent<HTMLDivElement>,
@@ -29,25 +12,7 @@ type FileDropperProps = {
 };
 
 export const FileDropper: FC<FileDropperProps> = ({ children }) => {
-  const hiddenInput = useRef<HTMLInputElement>(null);
-
-  const { files, setFiles, canvasArrayRef } = useFileDropperContext();
-
-  const fileLoader = useCallback<ReactEventHandler<HTMLInputElement>>(
-    (evt) => {
-      const element = evt.currentTarget as HTMLInputElement;
-      startTransition(() => {
-        if (element.files) {
-          setFiles([...files, ...element.files]);
-        }
-      });
-    },
-    [files, setFiles],
-  );
-
-  const openInputFile = useCallback(() => {
-    hiddenInput.current && hiddenInput.current.click();
-  }, []);
+  const { files, setFiles } = useFileDropperContext();
 
   useEffect(() => {
     const eventListener = (evt: DragEvent) => {
@@ -64,26 +29,9 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
     };
   }, [setFiles, files]);
 
-  const hasFiles = !!files.length;
-
   return (
-    <>
-      <div className="topHeader">
-        <input
-          multiple
-          ref={hiddenInput}
-          type="file"
-          onChange={fileLoader}
-          style={{ display: 'none' }}
-        />
-        {hasFiles && <TemplateDropdown canvasArrayRef={canvasArrayRef} />}
-        {hasFiles && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
-        <button onClick={openInputFile}>Add files</button>
-        {hasFiles && <PdfButton canvasArrayRef={canvasArrayRef} />}
-      </div>
-      <div className="labelsContent" onDragOver={acceptDrag}>
-        {children}
-      </div>
-    </>
+    <div className="labelsContent" onDragOver={acceptDrag}>
+      {children}
+    </div>
   );
 };
