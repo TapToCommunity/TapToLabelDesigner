@@ -73,7 +73,13 @@ export const setTemplateOnCanvases = async (canvases: Canvas[], template?: templ
       }
       canvas.overlayImage = overlayImg;
       // set the overlay of the template in the center of the card
-      canvas.viewportCenterObject(overlayImg);
+      if (template?.layout === 'horizontal') {
+        overlayImg.left = cardLikeOptions.width / 2;
+        overlayImg.top = cardLikeOptions.height / 2;
+      } else {
+        overlayImg.left = cardLikeOptions.height / 2;
+        overlayImg.top = cardLikeOptions.width / 2;
+      }
       // scale the art to the designed area in the template. to fit
       // TODO: add option later for fit or cover
       const scaledTemplateOverlaySize =
@@ -132,7 +138,13 @@ export const setTemplateOnCanvases = async (canvases: Canvas[], template?: templ
         scaleY: scale,
       });
       canvas.backgroundImage = backgroundImg;
-      canvas.viewportCenterObject(backgroundImg);
+      if (template?.layout === 'horizontal') {
+        backgroundImg.left = cardLikeOptions.width / 2;
+        backgroundImg.top = cardLikeOptions.height / 2;
+      } else {
+        backgroundImg.left = cardLikeOptions.height / 2;
+        backgroundImg.top = cardLikeOptions.width / 2;
+      }
     } else {
       canvas.backgroundImage = canvas.clipPath;
     }
