@@ -104,5 +104,3 @@ export const LabelEditor = ({
     </div>
   );
 };
-
-export default LabelEditor;
