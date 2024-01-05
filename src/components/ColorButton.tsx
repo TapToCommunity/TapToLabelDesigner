@@ -2,7 +2,7 @@ import { memo, lazy, useState, Suspense, type ReactNode } from 'react';
 import ButtonBase from '@mui/material/ButtonBase';
 import './ColorButton.css';
 
-const CompatColor = lazy(() => import('@uiw/react-color-compact'));
+const CompactColor = lazy(() => import('@uiw/react-color-compact'));
 
 type ColorButtonProps = {
   onClick: (color: string) => void;
@@ -45,7 +45,7 @@ export const ColorButton = memo(({ color, onClick }: ColorButtonProps) => {
     <ColorSwatch onClick={() => setOpen(true)} color={color}>
       <Suspense fallback={null}>
         {open && (
-          <CompatColor
+          <CompactColor
             color={color}
             onChange={(color) => colorChange(color.hex)}
             style={{
