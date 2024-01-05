@@ -42,7 +42,6 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
       if (fabricCanvas) {
         fabricCanvas.dispose();
       }
-      setFabricCanvas(null);
     };
   }, [setFabricCanvas, file]);
 
