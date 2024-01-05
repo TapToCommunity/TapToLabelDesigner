@@ -1,6 +1,7 @@
 // import taptoPcEngineHorizontal from './assets/tapto_pcengine_horizontal.svg';
 import tapToHorizontal from './assets/tapto_horizontal.svg';
 import tapToBg from './assets/tapto_pattern_bg.svg';
+import { type Group } from 'fabric';
 
 export const cardLikeOptions = {
   width: 1009,
@@ -21,6 +22,7 @@ type templateLayer = {
   layerHeight: number;
   /* parse the layer as a group rather than raster */
   isSvg: boolean;
+  parsed?: Promise<Group>;
 };
 
 type templateOverlay = templateLayer & {

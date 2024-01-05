@@ -39,7 +39,10 @@ const extractUniqueColorsFromGroup = (group: Group): string[] => {
 export const setTemplateOnCanvases = async (canvases: Canvas[], template?: templateType): Promise<string[]> => {
   const { overlay, background, shadow } = template || {};
   const [overlayImageElement, backgroundImageElement] = await Promise.all([
-    overlay && (overlay.isSvg ? parseSvg(overlay.url) : util.loadImage(overlay.url)),
+    overlay && (overlay.isSvg 
+      ? overlay.parsed ?? (overlay.parsed = parseSvg(overlay.url)) 
+      : util.loadImage(overlay.url)
+    ),
     background && util.loadImage(background.url),
   ]);
   let colors: string[] = [];
