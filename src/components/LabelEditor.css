@@ -1,4 +1,4 @@
-.labelContainer {
+.labelContainer.horizontal {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -9,9 +9,27 @@
   margin-bottom: 20px;
 }
 
-.labelPadder {
+.labelContainer.vertical {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 33.2%;
+  width: 33.2%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.labelPadder.horizontal {
   position: absolute;
   width: 100%;
   padding: 0;
   padding-bottom: 63%;
+}
+
+.labelPadder.vertical {
+  position: absolute;
+  height: 100%;
+  padding: 0;
+  padding-right: 63%;
 }

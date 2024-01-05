@@ -1,6 +1,9 @@
 // import taptoPcEngineHorizontal from './assets/tapto_pcengine_horizontal.svg';
 import tapToHorizontal from './assets/tapto_horizontal.svg';
+import tapToVertical from './assets/tapto_vertical.svg';
 import tapToBg from './assets/tapto_pattern_bg.svg';
+import tapToBgV from './assets/tapto_pattern_bg_vertical.svg';
+
 import { type Group } from 'fabric';
 
 export const cardLikeOptions = {
@@ -13,7 +16,7 @@ export const cardLikeOptions = {
   fill: 'white',
 };
 
-export const cardRatio = 855 / 540;
+export const cardRatio = 855 / 540; // 1.583333
 
 type templateLayer = {
   url: string;
@@ -36,12 +39,15 @@ type templateOverlay = templateLayer & {
   height: number;
 }
 
+export type layoutOrientation = 'horizontal' | 'vertical';
+
 export type templateType = {
+  layout: layoutOrientation;
   overlay?: templateOverlay;
   background?: templateLayer;
   label: string;
   /* box-shadow like property for the main image, 3 numbers + color */
-  shadow: string;
+  shadow?: string;
 };
 
 export const templates: Record<string, templateType> = {
@@ -57,7 +63,12 @@ export const templates: Record<string, templateType> = {
   //   },
   //   label: 'PC-Engine',
   // },
+  blank: {
+    layout: 'horizontal',
+    label: 'Blank',
+  },
   tapto2: {
+    layout: 'horizontal',
     overlay: {
       layerWidth: 975,
       layerHeight: 600,
@@ -75,7 +86,28 @@ export const templates: Record<string, templateType> = {
       url: tapToBg,
       isSvg: false,
     },
-    label: 'Tap-to',
+    label: 'Tap-to H',
+  },
+  tapto3: {
+    layout: 'vertical',
+    overlay: {
+      layerWidth: 600,
+      layerHeight: 975,
+      url: tapToVertical,
+      width: 0.88,
+      height: 0.66,
+      x: 0.06,
+      y: 0.06,
+      isSvg: true,
+    },
+    shadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
+    background: {
+      layerWidth: 600,
+      layerHeight: 975,
+      url: tapToBgV,
+      isSvg: false,
+    },
+    label: 'Tap-to V',
   },
 } as const;
 

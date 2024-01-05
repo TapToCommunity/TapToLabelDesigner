@@ -3,7 +3,11 @@ import type { RefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import './LabelEditor.css';
 import type { Canvas } from 'fabric';
-import { cardLikeOptions, cardRatio } from '../constants';
+import {
+  cardLikeOptions,
+  cardRatio,
+  type layoutOrientation,
+} from '../constants';
 import { util } from 'fabric';
 import { debounce } from '../utils';
 import { setTemplateOnCanvases } from '../utils/setTemplate';
@@ -17,16 +21,29 @@ type LabelEditorProps = {
   index: number;
 };
 
-const resizerFunctionCreator = (fabricCanvas: Canvas): ResizeObserverCallback =>
+const resizeFunction = (
+  fabricCanvas: Canvas,
+  orientation: layoutOrientation,
+  bbox: DOMRectReadOnly,
+) => {
+  const chosenWidth = Math.floor(bbox.width - 20);
+  fabricCanvas.setDimensions({
+    width: chosenWidth,
+    height: Math.ceil(
+      chosenWidth / (orientation === 'horizontal' ? cardRatio : 1 / cardRatio),
+    ),
+  });
+  const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
+  fabricCanvas.setZoom(scale);
+};
+
+const resizerFunctionCreator = (
+  fabricCanvas: Canvas,
+  orientation: layoutOrientation,
+): ResizeObserverCallback =>
   debounce<ResizeObserverCallback>((entries) => {
     const bbox = entries[0].contentRect;
-    const chosenWidth = Math.floor(bbox.width - 20);
-    fabricCanvas.setDimensions({
-      width: chosenWidth,
-      height: Math.ceil(chosenWidth / cardRatio),
-    });
-    const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
-    fabricCanvas.setZoom(scale);
+    resizeFunction(fabricCanvas, orientation, bbox);
   }, 10);
 
 export const LabelEditor = ({
@@ -43,25 +60,32 @@ export const LabelEditor = ({
       if (canvasArrayRef.current) {
         canvasArrayRef.current[index] = fabricCanvas;
       }
-      const callback = resizerFunctionCreator(fabricCanvas);
       setTemplateOnCanvases([fabricCanvas], template).then((colors) => {
         if (colorsDiffer(colors, customColors)) {
           updateColors([fabricCanvas], customColors, colors);
         }
       });
+    }
+    // shouldn't retrigger for index change or template change or colors
+    // the data reconciler does that
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canvasArrayRef, fabricCanvas]);
+
+  useEffect(() => {
+    const divRef = padderRef.current;
+    if (fabricCanvas && divRef) {
+      const callback = resizerFunctionCreator(fabricCanvas, template.layout);
       const resizeObserver = new ResizeObserver(callback);
       resizeObserver.observe(divRef);
       return () => {
         resizeObserver.unobserve(divRef);
       };
     }
-    // shouldn't retrigger for index change or template change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvasArrayRef, fabricCanvas]);
+  }, [template, fabricCanvas]);
 
   return (
-    <div className="labelContainer" ref={padderRef}>
-      <div className="labelPadder"></div>
+    <div className={`labelContainer ${template.layout}`} ref={padderRef}>
+      <div className={`labelPadder ${template.layout}`}></div>
       <FabricCanvasWrapper
         key={`canvas_${file.name}`}
         setFabricCanvas={setFabricCanvas}

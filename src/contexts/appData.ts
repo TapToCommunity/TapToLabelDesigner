@@ -10,7 +10,7 @@ const noop = () => {};
 export type contextType = {
   originalColors: string[];
   customColors: string[];
-  template?: templateType;
+  template: templateType;
   templateKey: string;
   setOriginalColors: (colors: string[]) => void;
   setCustomColors: (colors: string[]) => void;

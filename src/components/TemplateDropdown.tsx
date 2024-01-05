@@ -28,9 +28,6 @@ const TemplateDropdown = (): JSX.Element => {
         label="Card template"
         onChange={toggleTemplate}
       >
-        <MenuItem value="blank">
-          <em>Blank</em>
-        </MenuItem>
         {Object.entries(templates).map(([key, value]) => (
           <MenuItem key={key} value={key} selected={key === templateKey}>
             {value.label}
