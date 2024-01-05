@@ -27,13 +27,23 @@ const resizeFunction = (
   bbox: DOMRectReadOnly,
 ) => {
   const chosenWidth = Math.floor(bbox.width - 20);
+  const ratio = orientation === 'horizontal' ? cardRatio : 1 / cardRatio;
   fabricCanvas.setDimensions({
     width: chosenWidth,
-    height: Math.ceil(
-      chosenWidth / (orientation === 'horizontal' ? cardRatio : 1 / cardRatio),
-    ),
+    height: Math.ceil(chosenWidth / ratio),
   });
-  const scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
+  let scale;
+  if (orientation === 'horizontal') {
+    scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
+  } else {
+    scale = util.findScaleToFit(
+      {
+        width: cardLikeOptions.height,
+        height: cardLikeOptions.width,
+      },
+      fabricCanvas,
+    );
+  }
   fabricCanvas.setZoom(scale);
 };
 
