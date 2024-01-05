@@ -22,6 +22,10 @@ const extractUniqueColorsFromGroup = (group: Group): string[] => {
         const hexValue = `#${colorInstance.toHex()}`;
         const opacity = colorInstance.getAlpha();
         object[property] = hexValue;
+        object.set({
+          [property]: hexValue,
+          [`original_${property}`]: hexValue,
+        });
         object.opacity = opacity;
         if (!colors.includes(hexValue)) {
           colors.push(hexValue);
@@ -55,6 +59,7 @@ export const setTemplateOnCanvases = async (canvases: Canvas[], template?: templ
       let overlayImg;
       if (overlayImageElement instanceof Group) {
         overlayImg = await overlayImageElement.clone();
+        extractUniqueColorsFromGroup(overlayImg);
         overlayImg.canvas = canvas;
       } else {
         overlayImg = new FabricImage(overlayImageElement, {
