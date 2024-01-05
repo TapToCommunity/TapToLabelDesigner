@@ -48,6 +48,7 @@ export const Header = () => {
         onChange={fileLoader}
         style={{ display: 'none' }}
       />
+
       {hasTemplate && hasFiles && <ColorChanger />}
       {hasFiles && <TemplateDropdown />}
       {hasFiles && <FilterDropdown canvasArrayRef={canvasArrayRef} />}

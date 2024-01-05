@@ -2,11 +2,7 @@ import { memo, lazy, useState, Suspense, type ReactNode } from 'react';
 import ButtonBase from '@mui/material/ButtonBase';
 import './ColorButton.css';
 
-const CompatColor = lazy(() =>
-  import('@uiw/react-color').then(({ Compact }) => ({
-    default: Compact,
-  })),
-);
+const CompatColor = lazy(() => import('@uiw/react-color-compact'));
 
 type ColorButtonProps = {
   onClick: (color: string) => void;

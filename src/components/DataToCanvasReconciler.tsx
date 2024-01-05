@@ -38,3 +38,5 @@ export const DataToCanvasReconciler = () => {
 
   return null;
 };
+
+export default DataToCanvasReconciler;
