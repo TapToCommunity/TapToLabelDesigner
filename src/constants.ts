@@ -3,7 +3,8 @@ import tapToHorizontal from './assets/tapto_horizontal.svg';
 import tapToVertical from './assets/tapto_vertical.svg';
 import tapToBg from './assets/tapto_pattern_bg.svg';
 import tapToBgV from './assets/tapto_pattern_bg_vertical.svg';
-
+import tapToHu from './assets/tapto_hucard.svg';
+import tapToHuBg from './assets/tapto_hucard_bg.svg';
 import { type Group } from 'fabric';
 
 export const cardLikeOptions = {
@@ -109,6 +110,26 @@ export const templates: Record<string, templateType> = {
     },
     label: 'Tap-to V',
   },
+  hucard: {
+    layout: 'vertical',
+    overlay: {
+      layerWidth: 600,
+      layerHeight: 975,
+      url: tapToHu,
+      height: 702 / 975,
+      width: 547 / 600,
+      y: 26 / 975,
+      x: 27 / 600,
+      isSvg: true,
+    },
+    background: {
+      layerWidth: 600,
+      layerHeight: 975,
+      url: tapToHuBg,
+      isSvg: false,
+    },
+    label: 'HuCard'
+  }
 } as const;
 
 export const defaultTemplateKey = 'tapto2';

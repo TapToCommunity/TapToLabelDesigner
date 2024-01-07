@@ -1,4 +1,4 @@
-import { FabricImage, util, Point, type Canvas, Shadow, loadSVGFromURL, Group, type FabricObject, Color } from 'fabric';
+import { FabricImage, util, Point, type Canvas, Shadow, loadSVGFromURL, Group, type FabricObject, Color, Gradient } from 'fabric';
 import { cardLikeOptions, type templateType } from '../constants';
 
 const parseSvg = (url: string): Promise<Group> => 
@@ -17,7 +17,7 @@ const extractUniqueColorsFromGroup = (group: Group): string[] => {
   const colors: string[] = [];
   group.forEachObject((object) => {
     (['stroke', 'fill'] as const).forEach((property) => {
-      if (object[property]) {
+      if (object[property] && !(object[property] as Gradient<'linear'>).colorStops) {
         const colorInstance = new Color(object[property] as string);
         const hexValue = `#${colorInstance.toHex()}`;
         const opacity = colorInstance.getAlpha();
