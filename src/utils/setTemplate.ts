@@ -36,7 +36,7 @@ const extractUniqueColorsFromGroup = (group: Group): string[] => {
   return colors;
 }
 
-export const setTemplateOnCanvases = async (canvases: Canvas[], template?: templateType): Promise<string[]> => {
+export const setTemplateOnCanvases = async (canvases: Canvas[], template: templateType): Promise<string[]> => {
   const { overlay, background, shadow } = template || {};
   const [overlayImageElement, backgroundImageElement] = await Promise.all([
     overlay && (overlay.isSvg 
@@ -148,6 +148,19 @@ export const setTemplateOnCanvases = async (canvases: Canvas[], template?: templ
     } else {
       canvas.backgroundImage = canvas.clipPath;
     }
+    const { clipPath } = canvas;
+    if (clipPath) {
+      if (template.layout === 'horizontal') {
+        clipPath.left = cardLikeOptions.width / 2;
+        clipPath.top = cardLikeOptions.height / 2;
+        clipPath.angle = 0;
+      } else {
+        clipPath.top = cardLikeOptions.width / 2;
+        clipPath.left = cardLikeOptions.height / 2;
+        clipPath.angle = 90;
+      }
+    }
+
     canvas.requestRenderAll();
   }
   return colors;
