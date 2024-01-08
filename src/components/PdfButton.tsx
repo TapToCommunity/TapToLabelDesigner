@@ -30,6 +30,7 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
           const column = index % 2;
           // reset rows every 5;
           const row = Math.floor(index / 2) % 5;
+          console.log({ top, left, width, height });
           doc.addImage(
             canvas.toDataURL({
               format: 'png',
