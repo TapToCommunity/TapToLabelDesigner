@@ -20,6 +20,8 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
       if (canvases) {
         let pageNumber = 0;
         canvases.map((canvas, index) => {
+          const { top, left, width, height } =
+            canvas.clipPath!.getBoundingRect();
           const newPageNumber = Math.floor(index / 10);
           if (newPageNumber > pageNumber) {
             doc.addPage('a4', 'p');
@@ -28,12 +30,16 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
           const column = index % 2;
           // reset rows every 5;
           const row = Math.floor(index / 2) % 5;
+
+          const htmlCanvas = canvas.toCanvasElement(2 / canvas.getZoom(), {
+            top: top * canvas.getZoom(),
+            left: left * canvas.getZoom(),
+            width: width * canvas.getZoom(),
+            height: height * canvas.getZoom(),
+          });
+
           doc.addImage(
-            canvas.toDataURL({
-              format: 'png',
-              // canvas is set up at 10px per mm by choice, 260 per DPI. we multiply by 2 to go over 300
-              multiplier: 2 / canvas.getZoom(),
-            }),
+            htmlCanvas,
             'PNG',
             column * 105 + 10,
             row * 59.4 + 2.5,
