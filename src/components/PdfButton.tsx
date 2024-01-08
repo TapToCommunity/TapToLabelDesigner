@@ -42,7 +42,7 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
           );
         });
       }
-      doc.save('a4.pdf');
+      doc.save(`tapto-a4-${new Date().getTime()}.pdf`);
     });
   }, [canvasArrayRef]);
 
