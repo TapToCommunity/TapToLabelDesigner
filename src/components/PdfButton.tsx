@@ -30,7 +30,7 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
           const column = index % 2;
           // reset rows every 5;
           const row = Math.floor(index / 2) % 5;
-
+          // TODO: the top and left values should take in account of viewport translations
           const htmlCanvas = canvas.toCanvasElement(2 / canvas.getZoom(), {
             top: top * canvas.getZoom(),
             left: left * canvas.getZoom(),
