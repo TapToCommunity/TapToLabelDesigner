@@ -46,7 +46,6 @@ export const ColorButtons = memo(({ color, onClick }: ColorButtonsProps) => {
   const [open, setOpen] = useState(false);
 
   const close = useCallback(() => {
-    console.log('clicking close');
     setOpen(false);
   }, [setOpen]);
 
