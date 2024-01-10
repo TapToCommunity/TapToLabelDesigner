@@ -1,16 +1,24 @@
 import { useCallback } from 'react';
 import type { JSX, RefObject } from 'react';
 import type { Canvas } from 'fabric';
+import { useAppDataContext } from '../contexts/appData';
 
 type PdfButtonProps = {
   canvasArrayRef: RefObject<Canvas[]>;
 };
 
 export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
+  const { template } = useAppDataContext();
+
   const preparePdf = useCallback(() => {
+    const isH = template.layout === 'horizontal';
     import('jspdf').then(({ jsPDF }) => {
+      const orientation = isH ? 'l' : 'p';
+      const safePrinterMargin = 15;
+      const labelsPerPage = 9;
+      const gridSize = [90, 59];
       const doc = new jsPDF({
-        orientation: 'p',
+        orientation,
         unit: 'mm',
         format: 'a4',
         putOnlyUsedFonts: true,
@@ -22,14 +30,14 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
         canvases.map((canvas, index) => {
           const { top, left, width, height } =
             canvas.clipPath!.getBoundingRect();
-          const newPageNumber = Math.floor(index / 10);
+          const newPageNumber = Math.floor(index / labelsPerPage);
           if (newPageNumber > pageNumber) {
-            doc.addPage('a4', 'p');
+            doc.addPage('a4', orientation);
             pageNumber = newPageNumber;
           }
-          const column = index % 2;
+          const column = index % 3;
           // reset rows every 5;
-          const row = Math.floor(index / 2) % 5;
+          const row = Math.floor(index / 3) % 3;
           // TODO: the top and left values should take in account of viewport translations
           const htmlCanvas = canvas.toCanvasElement(2 / canvas.getZoom(), {
             top: top * canvas.getZoom(),
@@ -41,8 +49,8 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
           doc.addImage(
             htmlCanvas,
             'PNG',
-            column * 105 + 10,
-            row * 59.4 + 2.5,
+            column * gridSize[0] + safePrinterMargin,
+            row * gridSize[1] + safePrinterMargin,
             85.5,
             54,
           );
@@ -50,7 +58,7 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
       }
       doc.save(`tapto-a4-${new Date().getTime()}.pdf`);
     });
-  }, [canvasArrayRef]);
+  }, [canvasArrayRef, template.layout]);
 
   return <button onClick={preparePdf}>make PDF</button>;
 };

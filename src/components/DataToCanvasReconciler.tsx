@@ -3,7 +3,6 @@ import { useAppDataContext } from '../contexts/appData';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { setTemplateOnCanvases } from '../utils/setTemplate';
 import { updateColors } from '../utils/updateColors';
-import { colorsDiffer } from '../utils/utils';
 
 export const DataToCanvasReconciler = () => {
   const { canvasArrayRef } = useFileDropperContext();
