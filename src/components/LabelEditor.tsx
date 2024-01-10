@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import type { RefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import './LabelEditor.css';
-import type { Canvas } from 'fabric';
+import type { StaticCanvas } from 'fabric';
 import {
   cardLikeOptions,
   cardRatio,
@@ -17,12 +17,12 @@ import { updateColors } from '../utils/updateColors';
 
 type LabelEditorProps = {
   file: File;
-  canvasArrayRef: RefObject<Canvas[]>;
+  canvasArrayRef: RefObject<StaticCanvas[]>;
   index: number;
 };
 
 const resizeFunction = (
-  fabricCanvas: Canvas,
+  fabricCanvas: StaticCanvas,
   orientation: layoutOrientation,
   bbox: DOMRectReadOnly,
 ) => {
@@ -48,7 +48,7 @@ const resizeFunction = (
 };
 
 const resizerFunctionCreator = (
-  fabricCanvas: Canvas,
+  fabricCanvas: StaticCanvas,
   orientation: layoutOrientation,
 ): ResizeObserverCallback =>
   debounce<ResizeObserverCallback>((entries) => {
@@ -61,7 +61,7 @@ export const LabelEditor = ({
   canvasArrayRef,
   index,
 }: LabelEditorProps) => {
-  const [fabricCanvas, setFabricCanvas] = useState<Canvas | null>(null);
+  const [fabricCanvas, setFabricCanvas] = useState<StaticCanvas | null>(null);
   const padderRef = useRef<HTMLDivElement | null>(null);
   const { template, customColors } = useAppDataContext();
   useEffect(() => {

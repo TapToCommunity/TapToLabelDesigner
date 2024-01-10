@@ -1,6 +1,6 @@
-import { Group, type Canvas } from 'fabric';
+import { Group, type StaticCanvas } from 'fabric';
 
-export const updateColors = (canvases: Canvas[], colors: string[], originalColors: string[]) => {
+export const updateColors = (canvases: StaticCanvas[], colors: string[], originalColors: string[]) => {
   canvases.forEach((canvas) => {
     const overlayImage = canvas.overlayImage;
     if (overlayImage instanceof Group) {

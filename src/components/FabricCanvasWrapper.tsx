@@ -1,25 +1,31 @@
 import { useRef, useEffect, startTransition } from 'react';
 import { cardLikeOptions } from '../constants';
-import { Canvas, FabricImage, util, Rect, FabricObject } from 'fabric';
+import {
+  StaticCanvas,
+  FabricImage,
+  util,
+  Rect,
+  FabricObject,
+  type Canvas,
+} from 'fabric';
 type WrapperProp = {
   file: File;
-  setFabricCanvas: (canvas: Canvas | null) => void;
+  setFabricCanvas: (canvas: StaticCanvas | null) => void;
 };
 
 export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    let fabricCanvas: Canvas;
     if (canvasRef.current) {
       FabricObject.ownDefaults.originX = 'center';
       FabricObject.ownDefaults.originY = 'center';
-      fabricCanvas = new Canvas(canvasRef.current!, {
+      const fabricCanvas = new StaticCanvas(canvasRef.current!, {
         width: cardLikeOptions.width,
         height: cardLikeOptions.height,
       });
       const cardBorder = new Rect(cardLikeOptions);
-      cardBorder.canvas = fabricCanvas;
+      cardBorder.canvas = fabricCanvas as Canvas;
       fabricCanvas.clipPath = cardBorder;
       fabricCanvas.backgroundImage = cardBorder;
       fabricCanvas.centerObject(cardBorder);
@@ -37,13 +43,14 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
           });
         });
       }
+      return () => {
+        setFabricCanvas(null);
+        if (fabricCanvas) {
+          fabricCanvas.dispose();
+        }
+      };
     }
-    return () => {
-      if (fabricCanvas) {
-        fabricCanvas.dispose();
-      }
-    };
   }, [setFabricCanvas, file]);
 
-  return <canvas ref={canvasRef} />;
+  return <canvas ref={canvasRef} key={`${file.name}`} />;
 };

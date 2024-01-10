@@ -1,4 +1,4 @@
-import { FabricImage, util, Point, type Canvas, Shadow, loadSVGFromURL, Group, type FabricObject, Color, Gradient } from 'fabric';
+import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, type FabricObject, Color, Gradient, type Canvas } from 'fabric';
 import { cardLikeOptions, type templateType } from '../constants';
 
 const parseSvg = (url: string): Promise<Group> => 
@@ -36,7 +36,7 @@ const extractUniqueColorsFromGroup = (group: Group): string[] => {
   return colors;
 }
 
-export const setTemplateOnCanvases = async (canvases: Canvas[], template: templateType): Promise<string[]> => {
+export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: templateType): Promise<string[]> => {
   const { overlay, background, shadow } = template || {};
   const [overlayImageElement, backgroundImageElement] = await Promise.all([
     overlay && (overlay.isSvg 
@@ -63,7 +63,7 @@ export const setTemplateOnCanvases = async (canvases: Canvas[], template: templa
       if (overlayImageElement instanceof Group) {
         overlayImg = await overlayImageElement.clone();
         extractUniqueColorsFromGroup(overlayImg);
-        overlayImg.canvas = canvas;
+        overlayImg.canvas = canvas as Canvas;
       } else {
         overlayImg = new FabricImage(overlayImageElement, {
           canvas,
