@@ -1,6 +1,6 @@
 import { IconButton } from '@mui/material';
 import { useAppDataContext } from '../contexts/appData';
-import { ColorButton } from './ColorButton';
+import { ColorButtons } from './ColorButton';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 export const ColorChanger = () => {
@@ -15,7 +15,7 @@ export const ColorChanger = () => {
         <RestartAltIcon />
       </IconButton>
       {originalColors.map((color, index) => (
-        <ColorButton
+        <ColorButtons
           key={color}
           color={customColors[index]}
           onClick={(color) => {

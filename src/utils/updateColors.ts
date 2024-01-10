@@ -9,7 +9,7 @@ export const updateColors = (canvases: StaticCanvas[], colors: string[], origina
           if (object[property]) {
             const objectOriginalColor = object[`original_${property}` as keyof typeof object] as string;
             const originalIndex = originalColors.indexOf(objectOriginalColor);
-            if (originalIndex > -1 && colors[originalIndex] !== objectOriginalColor) {
+            if (originalIndex > -1 && colors[originalIndex] !== object[property]) {
               object.set({
                 [property]: colors[originalIndex],
               });

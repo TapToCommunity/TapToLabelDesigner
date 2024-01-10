@@ -29,12 +29,13 @@ export const DataToCanvasReconciler = () => {
   // reconcile color changes
   useEffect(() => {
     const canvases = canvasArrayRef.current;
-    const hasCustomColors = colorsDiffer(customColors, originalColors);
 
-    if (hasCustomColors && canvases) {
+    if (canvases) {
       updateColors(canvases, customColors, originalColors);
     }
   }, [canvasArrayRef, customColors, originalColors]);
+
+  useEffect(() => {});
 
   return null;
 };
