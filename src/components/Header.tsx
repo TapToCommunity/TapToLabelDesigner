@@ -13,6 +13,7 @@ import { useAppDataContext } from '../contexts/appData';
 const FilterDropdown = lazy(() => import('./FilterDropdown'));
 const PdfButton = lazy(() => import('./PdfButton'));
 const TemplateDropdown = lazy(() => import('./TemplateDropdown'));
+const PrinterTemplateDropdown = lazy(() => import('./PrinterTemplateDropdown'));
 
 export const Header = () => {
   const hiddenInput = useRef<HTMLInputElement>(null);
@@ -53,6 +54,7 @@ export const Header = () => {
       {hasFiles && <TemplateDropdown />}
       {false && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
       <button onClick={openInputFile}>Add files</button>
+      {hasFiles && <PrinterTemplateDropdown />}
       {hasFiles && <PdfButton canvasArrayRef={canvasArrayRef} />}
     </div>
   );

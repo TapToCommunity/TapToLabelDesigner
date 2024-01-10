@@ -25,27 +25,40 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
   const [templateKey, setTemplateKey] = useState<contextType['templateKey']>(
     defaultContextValue.templateKey,
   );
-
+  const [printerTemplate, setPrinterTemplate] = useState<
+    contextType['printerTemplate']
+  >(defaultContextValue.printerTemplate);
+  const [printerTemplateKey, setPrinterTemplateKey] = useState<
+    contextType['printerTemplateKey']
+  >(defaultContextValue.printerTemplateKey);
   const contextValue = useMemo(
     () => ({
       originalColors,
       customColors,
       template,
       templateKey,
+      printerTemplate,
+      printerTemplateKey,
       setOriginalColors,
       setCustomColors,
       setTemplate,
       setTemplateKey,
+      setPrinterTemplate,
+      setPrinterTemplateKey,
     }),
     [
       originalColors,
       customColors,
       template,
       templateKey,
+      printerTemplate,
+      printerTemplateKey,
       setOriginalColors,
       setCustomColors,
       setTemplate,
       setTemplateKey,
+      setPrinterTemplate,
+      setPrinterTemplateKey,
     ],
   );
 
