@@ -51,7 +51,7 @@ export const Header = () => {
 
       {hasTemplate && hasFiles && <ColorChanger />}
       {hasFiles && <TemplateDropdown />}
-      {hasFiles && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
+      {false && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
       <button onClick={openInputFile}>Add files</button>
       {hasFiles && <PdfButton canvasArrayRef={canvasArrayRef} />}
     </div>
