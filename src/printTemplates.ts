@@ -23,13 +23,13 @@ export const printTemplates: Record<string, PrintTemplate> = {
     paperSize: 'a4'
   }, 
   vertical: {
-    gridSize: [90, 59],
+    gridSize: [90, 56],
     label: 'A4, Vertical 2x5',
     labelsPerPage: 10,
     rows: 5,
     columns: 2,
     leftMargin: 15,
-    topMargin: 15,
+    topMargin: 9,
     layout: 'portrait',
     paperSize: 'a4'
   }

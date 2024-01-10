@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import type { JSX, RefObject } from 'react';
 import type { Canvas } from 'fabric';
+import { util } from 'fabric';
 import { useAppDataContext } from '../contexts/appData';
 
 type PdfButtonProps = {
@@ -8,17 +9,24 @@ type PdfButtonProps = {
 };
 
 export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
-  const { template } = useAppDataContext();
+  const { printerTemplate, template } = useAppDataContext();
 
   const preparePdf = useCallback(() => {
-    const isH = template.layout === 'horizontal';
+    const {
+      gridSize,
+      labelsPerPage,
+      leftMargin,
+      topMargin,
+      layout,
+      columns,
+      rows,
+    } = printerTemplate;
+
+    const imageNeedsRotation = template.layout === 'vertical';
+
     import('jspdf').then(({ jsPDF }) => {
-      const orientation = isH ? 'l' : 'p';
-      const safePrinterMargin = 15;
-      const labelsPerPage = 9;
-      const gridSize = [90, 59];
       const doc = new jsPDF({
-        orientation,
+        orientation: layout,
         unit: 'mm',
         format: 'a4',
         putOnlyUsedFonts: true,
@@ -32,12 +40,11 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
             canvas.clipPath!.getBoundingRect();
           const newPageNumber = Math.floor(index / labelsPerPage);
           if (newPageNumber > pageNumber) {
-            doc.addPage('a4', orientation);
+            doc.addPage('a4', layout);
             pageNumber = newPageNumber;
           }
-          const column = index % 3;
-          // reset rows every 5;
-          const row = Math.floor(index / 3) % 3;
+          const column = index % columns;
+          const row = Math.floor(index / columns) % rows;
           // TODO: the top and left values should take in account of viewport translations
           const htmlCanvas = canvas.toCanvasElement(2 / canvas.getZoom(), {
             top: top * canvas.getZoom(),
@@ -46,11 +53,28 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
             height: height * canvas.getZoom(),
           });
 
+          let rotatedHtmlCanvas = htmlCanvas;
+          if (imageNeedsRotation) {
+            rotatedHtmlCanvas = document.createElement('canvas');
+            rotatedHtmlCanvas.width = htmlCanvas.height;
+            rotatedHtmlCanvas.height = htmlCanvas.width;
+            const ctx = rotatedHtmlCanvas.getContext('2d');
+            if (ctx) {
+              ctx.translate(htmlCanvas.height / 2, htmlCanvas.width / 2);
+              ctx.rotate(util.degreesToRadians(90));
+              ctx.drawImage(
+                htmlCanvas,
+                -htmlCanvas.width / 2,
+                -htmlCanvas.height / 2,
+              );
+            }
+          }
+
           doc.addImage(
-            htmlCanvas,
+            rotatedHtmlCanvas,
             'PNG',
-            column * gridSize[0] + safePrinterMargin,
-            row * gridSize[1] + safePrinterMargin,
+            column * gridSize[0] + leftMargin,
+            row * gridSize[1] + topMargin,
             85.5,
             54,
           );
@@ -58,7 +82,7 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
       }
       doc.save(`tapto-a4-${new Date().getTime()}.pdf`);
     });
-  }, [canvasArrayRef, template.layout]);
+  }, [canvasArrayRef, template.layout, printerTemplate]);
 
   return <button onClick={preparePdf}>make PDF</button>;
 };

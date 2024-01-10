@@ -20,8 +20,6 @@ const PrinterTemplateDropdown = (): JSX.Element => {
     [setPrinterTemplateKey, setPrinterTemplate],
   );
 
-  console.log(printerTemplateKey);
-
   return (
     <FormControl size="small" sx={{ m: 1, minWidth: 120 }}>
       <InputLabel id="template-select">Print template</InputLabel>

@@ -159,6 +159,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
         clipPath.left = cardLikeOptions.height / 2;
         clipPath.angle = 90;
       }
+      clipPath.setCoords();
     }
 
     canvas.requestRenderAll();
