@@ -105,7 +105,7 @@ export const templates: Record<string, templateType> = {
       layerHeight: 975,
       url: tapToHu,
       height: 1 - (95 + 263) / 975,
-      width: 47 * 2 / 600,
+      width: 1 - (47 * 2) / 600,
       y: 263 / 975,
       x: 47 / 600,
       isSvg: true,
