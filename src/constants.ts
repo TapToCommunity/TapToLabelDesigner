@@ -52,18 +52,6 @@ export type templateType = {
 };
 
 export const templates: Record<string, templateType> = {
-  // tapto1: {
-  //   overlay: {
-  //     layerWidth: 975,
-  //     layerHeight: 600,
-  //     url: taptoPcEngineHorizontal,
-  //     width: 702 / 975,
-  //     height: 547 / 600,
-  //     x: 26 / 975,
-  //     y: 27 / 600,
-  //   },
-  //   label: 'PC-Engine',
-  // },
   blank: {
     layout: 'horizontal',
     label: 'Blank',
@@ -74,9 +62,9 @@ export const templates: Record<string, templateType> = {
       layerWidth: 975,
       layerHeight: 600,
       url: tapToHorizontal,
-      width: 0.66,
+      width: 1 - (292 + 35)/ 975,
       height: (600 - 35 * 2) / 600,
-      x: 0.30,
+      x: 292 / 975,
       y: 35 / 600,
       isSvg: true,
     },
@@ -96,7 +84,7 @@ export const templates: Record<string, templateType> = {
       layerHeight: 975,
       url: tapToVertical,
       width: (600 - 35 * 2) / 600,
-      height: 1 - (35 + 149) / 975,
+      height: 1 - (35 + 148) / 975,
       x: 35 / 600,
       y: 35 / 975,
       isSvg: true,
@@ -116,12 +104,13 @@ export const templates: Record<string, templateType> = {
       layerWidth: 600,
       layerHeight: 975,
       url: tapToHu,
-      height: 682 / 975,
-      width: 0.82,
-      y: 267 / 975,
-      x: 0.09,
+      height: 1 - (95 + 263) / 975,
+      width: 1 - (47 * 2) / 600,
+      y: 263 / 975,
+      x: 47 / 600,
       isSvg: true,
     },
+    shadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
     background: {
       layerWidth: 600,
       layerHeight: 975,
