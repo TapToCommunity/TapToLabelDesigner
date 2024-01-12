@@ -62,7 +62,7 @@ export const templates: Record<string, templateType> = {
       layerWidth: 975,
       layerHeight: 600,
       url: tapToHorizontal,
-      width: 1 - (292 + 35)/ 600,
+      width: 1 - (292 + 35)/ 975,
       height: (600 - 35 * 2) / 600,
       x: 292 / 600,
       y: 35 / 600,
