@@ -64,7 +64,7 @@ export const templates: Record<string, templateType> = {
       url: tapToHorizontal,
       width: 1 - (292 + 35)/ 975,
       height: (600 - 35 * 2) / 600,
-      x: 292 / 600,
+      x: 292 / 975,
       y: 35 / 600,
       isSvg: true,
     },
