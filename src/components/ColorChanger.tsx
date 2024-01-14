@@ -7,13 +7,15 @@ export const ColorChanger = () => {
   const { originalColors, customColors, setCustomColors } = useAppDataContext();
   return (
     <>
-      <IconButton
-        onClick={() => {
-          setCustomColors(originalColors);
-        }}
-      >
-        <RestartAltIcon />
-      </IconButton>
+      {originalColors.length > 0 && (
+        <IconButton
+          onClick={() => {
+            setCustomColors(originalColors);
+          }}
+        >
+          <RestartAltIcon />
+        </IconButton>
+      )}
       {originalColors.map((color, index) => (
         <ColorButtons
           key={color}
