@@ -14,6 +14,7 @@ import { setTemplateOnCanvases } from '../utils/setTemplate';
 import { useAppDataContext } from '../contexts/appData';
 import { colorsDiffer } from '../utils/utils';
 import { updateColors } from '../utils/updateColors';
+import { ColorChanger } from './ColorChanger';
 
 type LabelEditorProps = {
   file: File;
@@ -94,13 +95,16 @@ export const LabelEditor = ({
   }, [template, fabricCanvas]);
 
   return (
-    <div className={`labelContainer ${template.layout}`} ref={padderRef}>
-      <div className={`labelPadder ${template.layout}`}></div>
+    <div className={`labelContainer ${template.layout}`}>
+      <div className={`labelPadder ${template.layout}`} ref={padderRef}></div>
       <FabricCanvasWrapper
         key={`canvas_${file.name}`}
         setFabricCanvas={setFabricCanvas}
         file={file}
       />
+      <div className="colorChanger-container">
+        <ColorChanger />
+      </div>
     </div>
   );
 };

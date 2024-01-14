@@ -38,7 +38,6 @@ export const Header = () => {
   );
 
   const hasFiles = !!files.length;
-  const hasTemplate = templateKey !== 'blank';
 
   return (
     <div className="topHeader">
@@ -50,7 +49,7 @@ export const Header = () => {
         style={{ display: 'none' }}
       />
 
-      {hasTemplate && hasFiles && <ColorChanger />}
+      {hasFiles && <ColorChanger />}
       {hasFiles && <TemplateDropdown />}
       {false && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
       <button onClick={openInputFile}>Add files</button>

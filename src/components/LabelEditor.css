@@ -33,3 +33,15 @@
   padding: 0;
   padding-right: 63%;
 }
+
+.labelContainer > .colorChanger-container {
+  display: flex;
+  flex-direction: row;
+  height: 0;
+  opacity: 0;
+}
+
+.labelContainer:hover > .colorChanger-container {
+  height: auto;
+  opacity: 1;
+}
