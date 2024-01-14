@@ -115,15 +115,20 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
     } else {
       // reset to BLANK
       canvas.overlayImage = undefined;
+      const destination = template?.layout === 'horizontal' ? cardLikeOptions : {
+        width: cardLikeOptions.height,
+        height:  cardLikeOptions.width,
+      }
       const pictureScale = util.findScaleToCover(
         mainImage,
-        cardLikeOptions,
+        destination,
       );
       mainImage.set({
         scaleX: pictureScale,
         scaleY: pictureScale,
+        left: destination.width / 2,
+        top: destination.height / 2,
       });
-      mainImage.setPositionByOrigin(new Point(0, 0), 'left', 'top');
     }
     if (backgroundImageElement) {
       // scale the overlay asset to cover the designed layer size
@@ -138,15 +143,16 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
         scaleY: scale,
       });
       canvas.backgroundImage = backgroundImg;
-      if (template?.layout === 'horizontal') {
-        backgroundImg.left = cardLikeOptions.width / 2;
-        backgroundImg.top = cardLikeOptions.height / 2;
-      } else {
-        backgroundImg.left = cardLikeOptions.height / 2;
-        backgroundImg.top = cardLikeOptions.width / 2;
-      }
     } else {
       canvas.backgroundImage = canvas.clipPath;
+    }
+    const backgroundImg = canvas.backgroundImage!;
+    if (template?.layout === 'horizontal') {
+      backgroundImg.left = cardLikeOptions.width / 2;
+      backgroundImg.top = cardLikeOptions.height / 2;
+    } else {
+      backgroundImg.left = cardLikeOptions.height / 2;
+      backgroundImg.top = cardLikeOptions.width / 2;
     }
     const { clipPath } = canvas;
     if (clipPath) {

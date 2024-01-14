@@ -54,7 +54,11 @@ export type templateType = {
 export const templates: Record<string, templateType> = {
   blank: {
     layout: 'horizontal',
-    label: 'Blank',
+    label: 'Blank H',
+  },
+  blankV: {
+    layout: 'vertical',
+    label: 'Blank V',
   },
   tapto2: {
     layout: 'horizontal',
