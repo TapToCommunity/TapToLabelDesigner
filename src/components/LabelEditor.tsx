@@ -83,11 +83,6 @@ export const LabelEditor = ({
   }, [canvasArrayRef, files, index, setFiles]);
 
   useEffect(() => {
-    // every time customColors change reset the local
-    setLocalColors(customColors);
-  }, [customColors]);
-
-  useEffect(() => {
     const divRef = padderRef.current;
     if (fabricCanvas && divRef) {
       if (canvasArrayRef.current) {
@@ -105,8 +100,19 @@ export const LabelEditor = ({
   }, [canvasArrayRef, fabricCanvas]);
 
   useEffect(() => {
+    // every time customColors change reset the local
+    setLocalColors(customColors);
+  }, [customColors]);
+
+  useEffect(() => {
     // every time local colors change update the canvas
-    if (fabricCanvas) {
+    // only if we have colors in place
+    // this could also be detected by inspecting the template
+    if (
+      fabricCanvas &&
+      originalColors.length === localColors.length &&
+      localColors.length
+    ) {
       updateColors([fabricCanvas], localColors, originalColors);
     }
   }, [localColors, fabricCanvas, originalColors]);

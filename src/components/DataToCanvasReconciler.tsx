@@ -6,13 +6,7 @@ import { updateColors } from '../utils/updateColors';
 
 export const DataToCanvasReconciler = () => {
   const { canvasArrayRef } = useFileDropperContext();
-  const {
-    template,
-    setOriginalColors,
-    originalColors,
-    customColors,
-    setCustomColors,
-  } = useAppDataContext();
+  const { template, setOriginalColors, setCustomColors } = useAppDataContext();
 
   // takes care of template change
   useEffect(() => {
@@ -24,8 +18,6 @@ export const DataToCanvasReconciler = () => {
       });
     }
   }, [template, setCustomColors, canvasArrayRef, setOriginalColors]);
-
-  useEffect(() => {});
 
   return null;
 };
