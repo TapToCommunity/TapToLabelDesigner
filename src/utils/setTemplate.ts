@@ -1,10 +1,10 @@
-import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, type FabricObject, Color, Gradient, type Canvas } from 'fabric';
+import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, type FabricObject, Color, Gradient, type Canvas, SerializedGroupProps } from 'fabric';
 import { cardLikeOptions, type templateType } from '../constants';
 
-const parseSvg = (url: string): Promise<Group> => 
+const parseSvg = (url: string): Promise<SerializedGroupProps> => 
   loadSVGFromURL(url).then(({ objects }) => {
     const nonNullObjects = objects.filter(objects => !!objects) as FabricObject[];
-    return new Group(nonNullObjects);
+    return new Group(nonNullObjects).toObject();
   });
 
 /**
@@ -38,14 +38,12 @@ const extractUniqueColorsFromGroup = (group: Group): string[] => {
 
 export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: templateType): Promise<string[]> => {
   const { overlay, background, shadow } = template || {};
-  const [overlayImageElement, backgroundImageElement] = await Promise.all([
-    overlay && (overlay.isSvg 
-      ? overlay.parsed ?? (overlay.parsed = parseSvg(overlay.url)) 
-      : util.loadImage(overlay.url)
-    ),
-    background && util.loadImage(background.url),
+  const [overlayImageSource, backgroundImageElement] = await Promise.all([
+    overlay && (overlay.parsed ? overlay.parsed : (overlay.isSvg ? (overlay.parsed = parseSvg(overlay.url)) : (overlay.parsed = util.loadImage(overlay.url)))),
+    background && (background.parsed ? background.parsed : (background.parsed = util.loadImage(background.url))),
   ]);
   let colors: string[] = [];
+  const overlayImageElement = overlayImageSource && (overlayImageSource instanceof Image ? overlayImageSource : await Group.fromObject(overlayImageSource))
   if (overlayImageElement instanceof Group) {
     colors = extractUniqueColorsFromGroup(overlayImageElement);
   }
@@ -61,7 +59,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
       });
       let overlayImg;
       if (overlayImageElement instanceof Group) {
-        overlayImg = await overlayImageElement.clone();
+        overlayImg = await Group.fromObject(overlayImageSource);
         extractUniqueColorsFromGroup(overlayImg);
         overlayImg.canvas = canvas as Canvas;
       } else {

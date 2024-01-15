@@ -5,7 +5,7 @@ import tapToBg from './assets/tapto_pattern_bg.svg';
 import tapToBgV from './assets/tapto_pattern_bg_vertical.svg';
 import tapToHu from './assets/tapto_hucard.svg';
 import tapToHuBg from './assets/tapto_hucard_bg.svg';
-import { type Group } from 'fabric';
+import { SerializedGroupProps, type Group } from 'fabric';
 
 export const cardLikeOptions = {
   width: 1009,
@@ -26,7 +26,7 @@ type templateLayer = {
   layerHeight: number;
   /* parse the layer as a group rather than raster */
   isSvg: boolean;
-  parsed?: Promise<Group>;
+  parsed?: Promise<SerializedGroupProps | HTMLImageElement>;
 };
 
 type templateOverlay = templateLayer & {
