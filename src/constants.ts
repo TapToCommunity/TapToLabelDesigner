@@ -5,7 +5,7 @@ import tapToBg from './assets/tapto_pattern_bg.svg';
 import tapToBgV from './assets/tapto_pattern_bg_vertical.svg';
 import tapToHu from './assets/tapto_hucard.svg';
 import tapToHuBg from './assets/tapto_hucard_bg.svg';
-import { SerializedGroupProps, type Group } from 'fabric';
+import { type SerializedGroupProps } from 'fabric';
 
 export const cardLikeOptions = {
   width: 1009,

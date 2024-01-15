@@ -44,7 +44,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
   const { overlay, background, shadow } = template || {};
   const [overlayImageSource, backgroundImageElement] = await Promise.all([
     overlay && (overlay.parsed ? overlay.parsed : (overlay.isSvg ? (overlay.parsed = parseSvg(overlay.url)) : (overlay.parsed = util.loadImage(overlay.url)))),
-    background && (background.parsed ? background.parsed : (background.parsed = util.loadImage(background.url))),
+    background && (background.parsed ? background.parsed : (background.parsed = util.loadImage(background.url))) as unknown as HTMLImageElement,
   ]);
   const overlayImageElement = overlayImageSource && (overlayImageSource instanceof Image ? overlayImageSource : await Group.fromObject(overlayImageSource))
   for (const canvas of canvases ) {

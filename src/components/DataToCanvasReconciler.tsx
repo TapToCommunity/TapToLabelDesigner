@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useAppDataContext } from '../contexts/appData';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { setTemplateOnCanvases } from '../utils/setTemplate';
-import { updateColors } from '../utils/updateColors';
 
 export const DataToCanvasReconciler = () => {
   const { canvasArrayRef } = useFileDropperContext();

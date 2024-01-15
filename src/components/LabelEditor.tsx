@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import type { RefObject } from 'react';
+import type { MutableRefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import './LabelEditor.css';
 import type { StaticCanvas } from 'fabric';
@@ -21,7 +21,7 @@ import { useFileDropperContext } from '../contexts/fileDropper';
 
 type LabelEditorProps = {
   file: File;
-  canvasArrayRef: RefObject<StaticCanvas[]>;
+  canvasArrayRef: MutableRefObject<StaticCanvas[]>;
   index: number;
 };
 
