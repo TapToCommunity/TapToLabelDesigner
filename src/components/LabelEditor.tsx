@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import type { RefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import './LabelEditor.css';
@@ -15,6 +15,9 @@ import { useAppDataContext } from '../contexts/appData';
 import { colorsDiffer } from '../utils/utils';
 import { updateColors } from '../utils/updateColors';
 import { ColorChanger } from './ColorChanger';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import { useFileDropperContext } from '../contexts/fileDropper';
 
 type LabelEditorProps = {
   file: File;
@@ -65,6 +68,17 @@ export const LabelEditor = ({
   const [fabricCanvas, setFabricCanvas] = useState<StaticCanvas | null>(null);
   const padderRef = useRef<HTMLDivElement | null>(null);
   const { template, customColors } = useAppDataContext();
+  const { setFiles, files } = useFileDropperContext();
+
+  const deleteLabel = useCallback(() => {
+    if (canvasArrayRef.current) {
+      canvasArrayRef.current = canvasArrayRef.current
+        .slice(0, index)
+        .concat(canvasArrayRef.current.slice(index + 1));
+    }
+    setFiles(files.slice(0, index).concat(files.slice(index + 1)));
+  }, [canvasArrayRef, files, index, setFiles]);
+
   useEffect(() => {
     const divRef = padderRef.current;
     if (fabricCanvas && divRef) {
@@ -104,6 +118,13 @@ export const LabelEditor = ({
       />
       <div className="colorChanger-container">
         <ColorChanger />
+        <IconButton
+          onClick={() => {
+            deleteLabel();
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
       </div>
     </div>
   );
