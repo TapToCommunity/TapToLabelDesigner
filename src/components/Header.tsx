@@ -19,7 +19,7 @@ export const Header = () => {
   const hiddenInput = useRef<HTMLInputElement>(null);
 
   const { files, setFiles, canvasArrayRef } = useFileDropperContext();
-  const { templateKey } = useAppDataContext();
+  const { originalColors, customColors, setCustomColors } = useAppDataContext();
 
   const openInputFile = useCallback(() => {
     hiddenInput.current && hiddenInput.current.click();
@@ -49,7 +49,13 @@ export const Header = () => {
         style={{ display: 'none' }}
       />
 
-      {hasFiles && <ColorChanger />}
+      {hasFiles && (
+        <ColorChanger
+          setCustomColors={setCustomColors}
+          customColors={customColors}
+          originalColors={originalColors}
+        />
+      )}
       {hasFiles && <TemplateDropdown />}
       {false && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
       <button onClick={openInputFile}>Add files</button>

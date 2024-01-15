@@ -25,15 +25,6 @@ export const DataToCanvasReconciler = () => {
     }
   }, [template, setCustomColors, canvasArrayRef, setOriginalColors]);
 
-  // reconcile color changes
-  useEffect(() => {
-    const canvases = canvasArrayRef.current;
-
-    if (canvases) {
-      updateColors(canvases, customColors, originalColors);
-    }
-  }, [canvasArrayRef, customColors, originalColors]);
-
   useEffect(() => {});
 
   return null;

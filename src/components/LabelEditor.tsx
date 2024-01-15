@@ -67,7 +67,10 @@ export const LabelEditor = ({
 }: LabelEditorProps) => {
   const [fabricCanvas, setFabricCanvas] = useState<StaticCanvas | null>(null);
   const padderRef = useRef<HTMLDivElement | null>(null);
-  const { template, customColors } = useAppDataContext();
+  const { template, customColors, originalColors } = useAppDataContext();
+
+  const [localColors, setLocalColors] = useState<string[]>(customColors);
+
   const { setFiles, files } = useFileDropperContext();
 
   const deleteLabel = useCallback(() => {
@@ -80,14 +83,19 @@ export const LabelEditor = ({
   }, [canvasArrayRef, files, index, setFiles]);
 
   useEffect(() => {
+    // every time customColors change reset the local
+    setLocalColors(customColors);
+  }, [customColors]);
+
+  useEffect(() => {
     const divRef = padderRef.current;
     if (fabricCanvas && divRef) {
       if (canvasArrayRef.current) {
         canvasArrayRef.current[index] = fabricCanvas;
       }
       setTemplateOnCanvases([fabricCanvas], template).then((colors) => {
-        if (colorsDiffer(colors, customColors)) {
-          updateColors([fabricCanvas], customColors, colors);
+        if (colorsDiffer(colors, localColors)) {
+          setLocalColors(colors);
         }
       });
     }
@@ -95,6 +103,13 @@ export const LabelEditor = ({
     // the data reconciler does that
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canvasArrayRef, fabricCanvas]);
+
+  useEffect(() => {
+    // every time local colors change update the canvas
+    if (fabricCanvas) {
+      updateColors([fabricCanvas], localColors, originalColors);
+    }
+  }, [localColors, fabricCanvas, originalColors]);
 
   useEffect(() => {
     const divRef = padderRef.current;
@@ -109,15 +124,19 @@ export const LabelEditor = ({
   }, [template, fabricCanvas]);
 
   return (
-    <div className={`labelContainer ${template.layout}`}>
-      <div className={`labelPadder ${template.layout}`} ref={padderRef}></div>
+    <div className={`labelContainer ${template.layout}`} ref={padderRef}>
+      <div className={`labelPadder ${template.layout}`}></div>
       <FabricCanvasWrapper
         key={`canvas_${file.name}`}
         setFabricCanvas={setFabricCanvas}
         file={file}
       />
       <div className="colorChanger-container">
-        <ColorChanger />
+        <ColorChanger
+          originalColors={customColors}
+          setCustomColors={setLocalColors}
+          customColors={localColors}
+        />
         <IconButton
           onClick={() => {
             deleteLabel();

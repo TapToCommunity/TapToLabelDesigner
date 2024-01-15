@@ -9,7 +9,7 @@ export const LabelsView = () => {
     <>
       {files.map((file, index) => (
         <LabelEditor
-          key={`key-susp-${index}`}
+          key={`key-susp-${file.name}`}
           index={index}
           file={file}
           canvasArrayRef={canvasArrayRef}
