@@ -131,7 +131,6 @@ export const LabelEditor = ({
 
   return (
     <div className={`labelContainer ${template.layout}`} ref={padderRef}>
-      <div className={`labelPadder ${template.layout}`}></div>
       <FabricCanvasWrapper
         key={`canvas_${file.name}`}
         setFabricCanvas={setFabricCanvas}

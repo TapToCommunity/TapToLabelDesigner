@@ -5,7 +5,7 @@
   align-items: center;
   max-width: 49.9%;
   width: 49.9%;
-  height: auto;
+  height: fit-content;
   margin-bottom: 20px;
 }
 
@@ -16,22 +16,8 @@
   align-items: center;
   max-width: 33.2%;
   width: 33.2%;
-  height: auto;
+  height: fit-content;
   margin-bottom: 20px;
-}
-
-.labelPadder.horizontal {
-  position: absolute;
-  width: 100%;
-  padding: 0;
-  padding-bottom: 63%;
-}
-
-.labelPadder.vertical {
-  position: absolute;
-  height: 100%;
-  padding: 0;
-  padding-right: 63%;
 }
 
 .labelContainer > .colorChanger-container {
