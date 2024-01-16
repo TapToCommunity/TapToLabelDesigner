@@ -96,7 +96,7 @@ export const LabelEditor = ({
     setMenuOpen({
       open: true,
       left: bbox.left + bbox.width / 2,
-      top: bbox.top + bbox.height / 2,
+      top: bbox.top + bbox.height / 2 + window.scrollY,
     });
   }, [setMenuOpen]);
 

@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { useAppDataContext } from '../contexts/appData';
+import './portalMenu.css';
 
 type PortalMenuType = {
   top: number;
