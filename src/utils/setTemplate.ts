@@ -1,5 +1,7 @@
-import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, type FabricObject, Color, Gradient, type Canvas, type SerializedGroupProps } from 'fabric';
+import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, FabricObject, Color, Gradient, type Canvas, type SerializedGroupProps } from 'fabric';
 import { cardLikeOptions, type templateType } from '../constants';
+
+FabricObject.ownDefaults.objectCaching = false;
 
 /**
  * extract and normalizes to hex format colors in the objects

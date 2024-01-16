@@ -63,7 +63,6 @@ export const ColorButtons = memo(({ color, onClick }: ColorButtonsProps) => {
               color={color}
               onChange={(color) => colorChange(color.hex)}
               style={{
-                opacity: 1,
                 width: '296px',
                 zIndex: 20,
                 border: '1px solid grey',
