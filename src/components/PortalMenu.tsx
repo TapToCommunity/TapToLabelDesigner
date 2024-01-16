@@ -7,8 +7,8 @@ import { useAppDataContext } from '../contexts/appData';
 import './portalMenu.css';
 
 type PortalMenuType = {
-  top: number;
-  left: number;
+  top: number | string;
+  left: number | string;
   setIsOpen: (arg: { open: boolean; top: number; left: number }) => void;
   deleteLabel: () => void;
   setLocalColors: (colors: string[]) => void;
