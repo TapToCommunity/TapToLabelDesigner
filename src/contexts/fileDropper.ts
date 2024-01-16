@@ -1,5 +1,5 @@
 import type {
-  RefObject,
+  MutableRefObject,
 } from 'react';
 import {
   createContext,
@@ -10,7 +10,7 @@ import type { Canvas } from 'fabric';
 export type contextType = {
   files: File[];
   setFiles: (files: File[]) => void;
-  canvasArrayRef: RefObject<Canvas[]>;
+  canvasArrayRef: MutableRefObject<Canvas[]>;
 };
 
 export const FileDropContext = createContext<contextType>({

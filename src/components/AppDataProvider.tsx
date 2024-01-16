@@ -13,6 +13,9 @@ type AppDataContextProps = {
 export const AppDataContextProvider: FC<AppDataContextProps> = ({
   children,
 }) => {
+  const [isIdle, setIsIdle] = useState<contextType['isIdle']>(
+    defaultContextValue.isIdle,
+  );
   const [originalColors, setOriginalColors] = useState<
     contextType['originalColors']
   >(defaultContextValue.originalColors);
@@ -39,12 +42,14 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       templateKey,
       printerTemplate,
       printerTemplateKey,
+      isIdle,
       setOriginalColors,
       setCustomColors,
       setTemplate,
       setTemplateKey,
       setPrinterTemplate,
       setPrinterTemplateKey,
+      setIsIdle,
     }),
     [
       originalColors,
@@ -53,6 +58,7 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       templateKey,
       printerTemplate,
       printerTemplateKey,
+      isIdle,
       setOriginalColors,
       setCustomColors,
       setTemplate,

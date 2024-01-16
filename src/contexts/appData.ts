@@ -12,6 +12,7 @@ import {
 const noop = () => {};
 
 export type contextType = {
+  isIdle: boolean;
   originalColors: string[];
   customColors: string[];
   template: templateType;
@@ -24,9 +25,12 @@ export type contextType = {
   setTemplateKey: (templateKey: string) => void;
   setPrinterTemplate: (template: PrintTemplate) => void;
   setPrinterTemplateKey: (templateKey: string) => void;
+  setIsIdle: (value: boolean) => void;
 };
 
 export const defaultContextValue = {
+  isIdle: false,
+  setIsIdle: noop,
   originalColors: [],
   customColors: [],
   template: defaultTemplate,

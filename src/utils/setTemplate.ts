@@ -1,11 +1,7 @@
-import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, type FabricObject, Color, Gradient, type Canvas } from 'fabric';
+import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, FabricObject, Color, Gradient, type Canvas, type SerializedGroupProps } from 'fabric';
 import { cardLikeOptions, type templateType } from '../constants';
 
-const parseSvg = (url: string): Promise<Group> => 
-  loadSVGFromURL(url).then(({ objects }) => {
-    const nonNullObjects = objects.filter(objects => !!objects) as FabricObject[];
-    return new Group(nonNullObjects);
-  });
+FabricObject.ownDefaults.objectCaching = false;
 
 /**
  * extract and normalizes to hex format colors in the objects
@@ -36,19 +32,23 @@ const extractUniqueColorsFromGroup = (group: Group): string[] => {
   return colors;
 }
 
+const parseSvg = (url: string): Promise<SerializedGroupProps> => 
+  loadSVGFromURL(url).then(({ objects }) => {
+    const nonNullObjects = objects.filter(objects => !!objects) as FabricObject[];
+    const group = new Group(nonNullObjects);
+    extractUniqueColorsFromGroup(group);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return group.toObject(['original_stroke', 'original_fill']);
+  });
+
 export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: templateType): Promise<string[]> => {
   const { overlay, background, shadow } = template || {};
-  const [overlayImageElement, backgroundImageElement] = await Promise.all([
-    overlay && (overlay.isSvg 
-      ? overlay.parsed ?? (overlay.parsed = parseSvg(overlay.url)) 
-      : util.loadImage(overlay.url)
-    ),
-    background && util.loadImage(background.url),
+  const [overlayImageSource, backgroundImageElement] = await Promise.all([
+    overlay && (overlay.parsed ? overlay.parsed : (overlay.isSvg ? (overlay.parsed = parseSvg(overlay.url)) : (overlay.parsed = util.loadImage(overlay.url)))),
+    background && (background.parsed ? background.parsed : (background.parsed = util.loadImage(background.url))) as unknown as HTMLImageElement,
   ]);
-  let colors: string[] = [];
-  if (overlayImageElement instanceof Group) {
-    colors = extractUniqueColorsFromGroup(overlayImageElement);
-  }
+  const overlayImageElement = overlayImageSource && (overlayImageSource instanceof Image ? overlayImageSource : await Group.fromObject(overlayImageSource))
   for (const canvas of canvases ) {
     const mainImage = canvas.getObjects('image')[0];
     mainImage.shadow = shadow ? new Shadow(shadow) : null;
@@ -61,8 +61,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
       });
       let overlayImg;
       if (overlayImageElement instanceof Group) {
-        overlayImg = await overlayImageElement.clone();
-        extractUniqueColorsFromGroup(overlayImg);
+        overlayImg = await Group.fromObject(overlayImageSource);
         overlayImg.canvas = canvas as Canvas;
       } else {
         overlayImg = new FabricImage(overlayImageElement, {
@@ -169,6 +168,11 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
     }
 
     canvas.requestRenderAll();
+  }
+  // this could returned by the promise right away
+  let colors: string[] = [];
+  if (overlayImageElement instanceof Group) {
+    colors = extractUniqueColorsFromGroup(overlayImageElement);
   }
   return colors;
 }

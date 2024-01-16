@@ -1,7 +1,6 @@
 import { useEffect, DragEventHandler, startTransition } from 'react';
 import type { FC, JSX, DragEvent as ReactDragEvent, ReactNode } from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
-import './FileDropper.css';
 
 const acceptDrag: DragEventHandler<HTMLDivElement> = (
   evt: ReactDragEvent<HTMLDivElement>,
@@ -29,9 +28,5 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
     };
   }, [setFiles, files]);
 
-  return (
-    <div className="labelsContent" onDragOver={acceptDrag}>
-      {children}
-    </div>
-  );
+  return <div onDragOver={acceptDrag}>{children}</div>;
 };

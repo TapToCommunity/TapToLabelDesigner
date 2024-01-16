@@ -1,0 +1,14 @@
+.colorChanger-container {
+  border: 1px solid gray;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  height: 64px;
+  padding-left: 16px;
+  padding-right: 16px;
+  align-items: center;
+  border-radius: 24px;
+  transition: all 0.5s;
+  background-color: white;
+  transform: translate(-50%, -50%);
+}
