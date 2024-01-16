@@ -30,6 +30,7 @@ function App() {
           </Suspense>
         )}
       </FileDropper>
+      <div id="react-color-portal" style={{ position: 'relative' }}></div>
     </>
   );
 }

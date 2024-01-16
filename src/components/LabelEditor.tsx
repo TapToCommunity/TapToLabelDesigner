@@ -14,15 +14,19 @@ import { setTemplateOnCanvases } from '../utils/setTemplate';
 import { useAppDataContext } from '../contexts/appData';
 import { colorsDiffer } from '../utils/utils';
 import { updateColors } from '../utils/updateColors';
-import { ColorChanger } from './ColorChanger';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
 import { useFileDropperContext } from '../contexts/fileDropper';
+import { PortalMenu } from './PortalMenu';
 
 type LabelEditorProps = {
   file: File;
   canvasArrayRef: MutableRefObject<StaticCanvas[]>;
   index: number;
+};
+
+type MenuInfo = {
+  open: boolean;
+  top: number;
+  left: number;
 };
 
 const resizeFunction = (
@@ -73,6 +77,11 @@ export const LabelEditor = ({
 }: LabelEditorProps) => {
   const [fabricCanvas, setFabricCanvas] = useState<StaticCanvas | null>(null);
   const [ready, setReady] = useState<boolean>(false);
+  const [isMenuOpen, setMenuOpen] = useState<MenuInfo>({
+    open: false,
+    top: 0,
+    left: 0,
+  });
   const padderRef = useRef<HTMLDivElement | null>(null);
   const { template, customColors, originalColors, isIdle } =
     useAppDataContext();
@@ -80,6 +89,16 @@ export const LabelEditor = ({
   const [localColors, setLocalColors] = useState<string[]>(customColors);
 
   const { setFiles, files } = useFileDropperContext();
+
+  const openMenu = useCallback(() => {
+    const divRef = padderRef.current!;
+    const bbox = divRef.getBoundingClientRect();
+    setMenuOpen({
+      open: true,
+      left: bbox.left + bbox.width / 2,
+      top: bbox.top + bbox.height / 2,
+    });
+  }, [setMenuOpen]);
 
   const deleteLabel = useCallback(() => {
     if (canvasArrayRef.current) {
@@ -141,26 +160,26 @@ export const LabelEditor = ({
   }, [template, fabricCanvas, isIdle, ready]);
 
   return (
-    <div className={`labelContainer ${template.layout}`} ref={padderRef}>
+    <div
+      className={`labelContainer ${template.layout}`}
+      ref={padderRef}
+      onClick={openMenu}
+    >
       <FabricCanvasWrapper
         key={`canvas_${file.name}`}
         setFabricCanvas={setFabricCanvas}
         file={file}
       />
-      <div className="colorChanger-container">
-        <ColorChanger
-          originalColors={customColors}
-          setCustomColors={setLocalColors}
-          customColors={localColors}
+      {isMenuOpen.open && (
+        <PortalMenu
+          deleteLabel={deleteLabel}
+          top={isMenuOpen.top}
+          left={isMenuOpen.left}
+          localColors={localColors}
+          setLocalColors={setLocalColors}
+          setIsOpen={setMenuOpen}
         />
-        <IconButton
-          onClick={() => {
-            deleteLabel();
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </div>
+      )}
     </div>
   );
 };
