@@ -12,3 +12,11 @@
   background-color: white;
   transform: translate(-50%, -50%);
 }
+
+.colorChanger-container > button {
+  outline: none;
+}
+
+.spacer {
+  width: 15px;
+}

@@ -38,14 +38,15 @@ export const PortalMenu = ({
           left,
         }}
       >
+        <IconButton onClick={deleteLabel}>
+          <DeleteIcon />
+        </IconButton>
+        <div className="spacer" />
         <ColorChanger
           originalColors={customColors}
           setCustomColors={setLocalColors}
           customColors={localColors}
         />
-        <IconButton onClick={deleteLabel}>
-          <DeleteIcon />
-        </IconButton>
         <IconButton onClick={rotateMainImage}>
           <Rotate90DegreesCwIcon />
         </IconButton>
