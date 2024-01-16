@@ -5,14 +5,17 @@ import tapToBg from './assets/tapto_pattern_bg.svg';
 import tapToBgV from './assets/tapto_pattern_bg_vertical.svg';
 import tapToHu from './assets/tapto_hucard.svg';
 import tapToHuBg from './assets/tapto_hucard_bg.svg';
+import emptyVertical from './assets/empty_vertical.svg';
+import emptyHorizontal from './assets/empty_horizontal.svg';
+
 import { type SerializedGroupProps } from 'fabric';
 
 // those should be changed in accordance with LabelEditor.css
 export const cardLikeOptions = {
   width: 1009,
   height: 637,
-  rx: 30,
-  ry: 30,
+  rx: 32,
+  ry: 32,
   strokeWidth: 2,
   stroke: 'black',
   fill: 'white',
@@ -55,11 +58,41 @@ export type templateType = {
 export const templates: Record<string, templateType> = {
   blank: {
     layout: 'horizontal',
-    label: 'Blank H',
+    label: 'Blank H cover',
   },
   blankV: {
     layout: 'vertical',
-    label: 'Blank V',
+    label: 'Blank V cover',
+  },
+  blankHF: {
+    layout: 'horizontal',
+    label: 'Blank H fit',
+    overlay: {
+      // full card size
+      url: emptyHorizontal,
+      layerWidth: 1009,
+      layerHeight: 637,
+      x: 0.04,
+      width: 0.92,
+      y: 0.02,
+      height: 0.96,
+      isSvg: true,
+    }
+  },
+  blankVF: {
+    layout: 'vertical',
+    label: 'Blank V fit',
+    overlay: {
+      // full card size
+      url: emptyVertical,
+      layerWidth: 637,
+      layerHeight: 1009,
+      x: 0.02,
+      width: 0.96,
+      y: 0.04,
+      height: 0.92,
+      isSvg: true,
+    }
   },
   tapto2: {
     layout: 'horizontal',

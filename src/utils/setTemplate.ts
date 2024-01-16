@@ -55,7 +55,7 @@ const extractUniqueColorsFromGroup = (group: Group): string[] => {
   const colors: string[] = [];
   group.forEachObject((object) => {
     (['stroke', 'fill'] as const).forEach((property) => {
-      if (object[property] && !(object[property] as Gradient<'linear'>).colorStops) {
+      if (object[property] && object[property] !== 'transparent' && !(object[property] as Gradient<'linear'>).colorStops) {
         const colorInstance = new Color(object[property] as string);
         const hexValue = `#${colorInstance.toHex()}`;
         const opacity = colorInstance.getAlpha();
