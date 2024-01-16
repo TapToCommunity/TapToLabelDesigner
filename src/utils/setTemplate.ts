@@ -3,6 +3,48 @@ import { cardLikeOptions, type templateType } from '../constants';
 
 FabricObject.ownDefaults.objectCaching = false;
 
+export const scaleImageToOverlayArea = (template: templateType, overlayImg: FabricObject, mainImage: FabricImage) => {
+  const { overlay } = template;
+  // scale the art to the designed area in the template. to fit
+  // TODO: add option later for fit or cover
+  const isRotated = mainImage.angle % 180 !== 0;
+  const scaledTemplateOverlaySize =
+    overlayImg._getTransformedDimensions();
+  const pictureScaleToTemplate = util.findScaleToFit({ 
+    width: isRotated ? mainImage.height : mainImage.width,
+    height: isRotated ? mainImage.width : mainImage.height,
+  },
+  {
+    width: scaledTemplateOverlaySize.x * overlay!.width,
+    height: scaledTemplateOverlaySize.y * overlay!.height,
+  });
+  mainImage.set({
+    scaleX: pictureScaleToTemplate,
+    scaleY: pictureScaleToTemplate,
+  });
+  // get the top left corner of the template overlay
+  const templatePostion = overlayImg.translateToGivenOrigin(
+    overlayImg.getRelativeXY(),
+    'center',
+    'center',
+    'left',
+    'top',
+  );
+  mainImage.setPositionByOrigin(
+    new Point(
+      scaledTemplateOverlaySize.x *
+        (overlay!.x + overlay!.width / 2) +
+        templatePostion.x,
+      scaledTemplateOverlaySize.y *
+        (overlay!.y + overlay!.height / 2) +
+        templatePostion.y,
+    ),
+    'center',
+    'center',
+  );
+}
+
+
 /**
  * extract and normalizes to hex format colors in the objects
  * remove opacity from colors and sets it on the objects
@@ -50,7 +92,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
   ]);
   const overlayImageElement = overlayImageSource && (overlayImageSource instanceof Image ? overlayImageSource : await Group.fromObject(overlayImageSource))
   for (const canvas of canvases ) {
-    const mainImage = canvas.getObjects('image')[0];
+    const mainImage = canvas.getObjects('image')[0] as FabricImage;
     mainImage.shadow = shadow ? new Shadow(shadow) : null;
     if (overlayImageElement) {
       // scale the overlay asset to cover the designed layer size
@@ -79,38 +121,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
         overlayImg.left = cardLikeOptions.height / 2;
         overlayImg.top = cardLikeOptions.width / 2;
       }
-      // scale the art to the designed area in the template. to fit
-      // TODO: add option later for fit or cover
-      const scaledTemplateOverlaySize =
-        overlayImg._getTransformedDimensions();
-      const pictureScaleToTemplate = util.findScaleToFit(mainImage, {
-        width: scaledTemplateOverlaySize.x * overlay!.width,
-        height: scaledTemplateOverlaySize.y * overlay!.height,
-      });
-      mainImage.set({
-        scaleX: pictureScaleToTemplate,
-        scaleY: pictureScaleToTemplate,
-      });
-      // get the top left corner of the template overlay
-      const templatePostion = overlayImg.translateToGivenOrigin(
-        overlayImg.getRelativeXY(),
-        'center',
-        'center',
-        'left',
-        'top',
-      );
-      mainImage.setPositionByOrigin(
-        new Point(
-          scaledTemplateOverlaySize.x *
-            (overlay!.x + overlay!.width / 2) +
-            templatePostion.x,
-          scaledTemplateOverlaySize.y *
-            (overlay!.y + overlay!.height / 2) +
-            templatePostion.y,
-        ),
-        'center',
-        'center',
-      );
+      scaleImageToOverlayArea(template, overlayImg, mainImage)
     } else {
       // reset to BLANK
       canvas.overlayImage = undefined;

@@ -31,12 +31,17 @@ export const LabelEditor = ({
   });
   const padderRef = useRef<HTMLDivElement | null>(null);
   const { template } = useAppDataContext();
-  const { deleteLabel, setFabricCanvas, localColors, setLocalColors } =
-    useLabelEditor({
-      canvasArrayRef,
-      index,
-      padderRef,
-    });
+  const {
+    deleteLabel,
+    setFabricCanvas,
+    localColors,
+    setLocalColors,
+    rotateMainImage,
+  } = useLabelEditor({
+    canvasArrayRef,
+    index,
+    padderRef,
+  });
 
   const openMenu = useCallback(() => {
     const divRef = padderRef.current!;
@@ -61,6 +66,7 @@ export const LabelEditor = ({
       />
       {isMenuOpen.open && (
         <PortalMenu
+          rotateMainImage={rotateMainImage}
           deleteLabel={deleteLabel}
           top={isMenuOpen.top}
           left={isMenuOpen.left}

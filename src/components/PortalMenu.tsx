@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom';
 import { ColorChanger } from './ColorChanger';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Rotate90DegreesCwIcon from '@mui/icons-material/Rotate90DegreesCw';
 import IconButton from '@mui/material/IconButton';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { useAppDataContext } from '../contexts/appData';
@@ -13,6 +14,7 @@ type PortalMenuType = {
   deleteLabel: () => void;
   setLocalColors: (colors: string[]) => void;
   localColors: string[];
+  rotateMainImage: () => void;
 };
 
 export const PortalMenu = ({
@@ -22,6 +24,7 @@ export const PortalMenu = ({
   deleteLabel,
   setLocalColors,
   localColors,
+  rotateMainImage,
 }: PortalMenuType) => {
   const { customColors } = useAppDataContext();
   return createPortal(
@@ -42,6 +45,9 @@ export const PortalMenu = ({
         />
         <IconButton onClick={deleteLabel}>
           <DeleteIcon />
+        </IconButton>
+        <IconButton onClick={rotateMainImage}>
+          <Rotate90DegreesCwIcon />
         </IconButton>
       </div>
     </ClickAwayListener>,

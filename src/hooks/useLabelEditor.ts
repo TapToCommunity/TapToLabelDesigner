@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, MutableRefObject } from 'react';
 import { colorsDiffer } from '../utils/utils';
 import { updateColors } from '../utils/updateColors';
 import { useFileDropperContext } from '../contexts/fileDropper';
-import { setTemplateOnCanvases } from '../utils/setTemplate';
+import { scaleImageToOverlayArea, setTemplateOnCanvases } from '../utils/setTemplate';
 import {
   cardLikeOptions,
   cardRatio,
@@ -10,7 +10,7 @@ import {
 } from '../constants';
 import { util } from 'fabric';
 import { throttle } from '../utils';
-import type { StaticCanvas } from 'fabric';
+import type { FabricImage, StaticCanvas } from 'fabric';
 import { useAppDataContext } from '../contexts/appData';
 
 const resizeFunction = (
@@ -77,6 +77,16 @@ export const useLabelEditor = ({ canvasArrayRef, index, padderRef }: useLabelEdi
     setFiles(files.slice(0, index).concat(files.slice(index + 1)));
   }, [canvasArrayRef, files, index, setFiles]);
 
+  const rotateMainImage = useCallback(() => {
+    if (ready && isIdle && fabricCanvas) {
+      const mainImage = fabricCanvas.getObjects()[0] as FabricImage;
+      mainImage.angle += 90;
+      mainImage.angle %= 360;
+      scaleImageToOverlayArea(template, fabricCanvas.overlayImage!, mainImage);
+      fabricCanvas.requestRenderAll();
+    }
+  }, [ready, isIdle, fabricCanvas, template])
+
   useEffect(() => {
     const divRef = padderRef.current;
     if (fabricCanvas && divRef) {
@@ -132,5 +142,6 @@ export const useLabelEditor = ({ canvasArrayRef, index, padderRef }: useLabelEdi
     setLocalColors,
     deleteLabel,
     setFabricCanvas,
+    rotateMainImage,
   }
 }
