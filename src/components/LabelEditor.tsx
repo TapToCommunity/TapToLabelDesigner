@@ -9,7 +9,7 @@ import {
   type layoutOrientation,
 } from '../constants';
 import { util } from 'fabric';
-import { debounce } from '../utils';
+import { throttle } from '../utils';
 import { setTemplateOnCanvases } from '../utils/setTemplate';
 import { useAppDataContext } from '../contexts/appData';
 import { colorsDiffer } from '../utils/utils';
@@ -30,6 +30,12 @@ const resizeFunction = (
   orientation: layoutOrientation,
   bbox: DOMRectReadOnly,
 ) => {
+  if (fabricCanvas.disposed) {
+    console.warn(
+      'canvas disposed quickly you should not see this in production',
+    );
+    return;
+  }
   const chosenWidth = Math.floor(bbox.width - 20);
   const ratio = orientation === 'horizontal' ? cardRatio : 1 / cardRatio;
   fabricCanvas.setDimensions({
@@ -55,10 +61,10 @@ const resizerFunctionCreator = (
   fabricCanvas: StaticCanvas,
   orientation: layoutOrientation,
 ): ResizeObserverCallback =>
-  debounce<ResizeObserverCallback>((entries) => {
+  throttle<ResizeObserverCallback>((entries) => {
     const bbox = entries[0].contentRect;
     resizeFunction(fabricCanvas, orientation, bbox);
-  }, 10);
+  }, 33);
 
 export const LabelEditor = ({
   file,
@@ -66,8 +72,10 @@ export const LabelEditor = ({
   index,
 }: LabelEditorProps) => {
   const [fabricCanvas, setFabricCanvas] = useState<StaticCanvas | null>(null);
+  const [ready, setReady] = useState<boolean>(false);
   const padderRef = useRef<HTMLDivElement | null>(null);
-  const { template, customColors, originalColors } = useAppDataContext();
+  const { template, customColors, originalColors, isIdle } =
+    useAppDataContext();
 
   const [localColors, setLocalColors] = useState<string[]>(customColors);
 
@@ -89,6 +97,7 @@ export const LabelEditor = ({
         canvasArrayRef.current[index] = fabricCanvas;
       }
       setTemplateOnCanvases([fabricCanvas], template).then((colors) => {
+        setReady(true);
         if (colorsDiffer(colors, localColors)) {
           setLocalColors(colors);
         }
@@ -101,25 +110,27 @@ export const LabelEditor = ({
 
   useEffect(() => {
     // every time customColors change reset the local
-    setLocalColors(customColors);
-  }, [customColors]);
+    isIdle && setLocalColors(customColors);
+  }, [customColors, isIdle]);
 
   useEffect(() => {
     // every time local colors change update the canvas
     // only if we have colors in place
     // this could also be detected by inspecting the template
     if (
+      isIdle &&
       fabricCanvas &&
       originalColors.length === localColors.length &&
       localColors.length
     ) {
       updateColors([fabricCanvas], localColors, originalColors);
     }
-  }, [localColors, fabricCanvas, originalColors]);
+  }, [localColors, fabricCanvas, originalColors, isIdle]);
 
   useEffect(() => {
     const divRef = padderRef.current;
-    if (fabricCanvas && divRef) {
+    // only start observing after mounting is complete.
+    if (fabricCanvas && divRef && isIdle && ready) {
       const callback = resizerFunctionCreator(fabricCanvas, template.layout);
       const resizeObserver = new ResizeObserver(callback);
       resizeObserver.observe(divRef);
@@ -127,7 +138,7 @@ export const LabelEditor = ({
         resizeObserver.unobserve(divRef);
       };
     }
-  }, [template, fabricCanvas]);
+  }, [template, fabricCanvas, isIdle, ready]);
 
   return (
     <div className={`labelContainer ${template.layout}`} ref={padderRef}>

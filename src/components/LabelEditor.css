@@ -5,6 +5,7 @@
   align-items: center;
   max-width: 49.9%;
   width: 49.9%;
+  min-height: 100px;
   height: fit-content;
   margin-bottom: 20px;
 }
@@ -16,6 +17,7 @@
   align-items: center;
   max-width: 33.2%;
   width: 33.2%;
+  min-height: 100px;
   height: fit-content;
   margin-bottom: 20px;
 }
