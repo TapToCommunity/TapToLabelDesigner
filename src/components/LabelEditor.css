@@ -3,9 +3,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 49.9%;
+  max-width: 1029px;
   width: 49.9%;
-  min-height: 100px;
+  max-height: 657px;
   height: fit-content;
   margin-bottom: 20px;
 }
@@ -15,9 +15,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 33.2%;
+  max-width: 657px;
   width: 33.2%;
-  min-height: 100px;
+  max-height: 1029px;
   height: fit-content;
   margin-bottom: 20px;
 }

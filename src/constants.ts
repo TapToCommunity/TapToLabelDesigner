@@ -7,6 +7,7 @@ import tapToHu from './assets/tapto_hucard.svg';
 import tapToHuBg from './assets/tapto_hucard_bg.svg';
 import { type SerializedGroupProps } from 'fabric';
 
+// those should be changed in accordance with LabelEditor.css
 export const cardLikeOptions = {
   width: 1009,
   height: 637,
