@@ -3,7 +3,7 @@
   overflow-x: hidden;
   overflow-y: scroll;
   display: flex;
-  min-height: 100%;
+  min-height: 100vh;
   flex-direction: row;
   flex-wrap: wrap;
   height: fit-content;
