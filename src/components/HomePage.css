@@ -1,0 +1,14 @@
+.somePadding {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px;
+  align-items: center;
+}
+
+.tapToImg {
+  display: flex;
+  max-width: 800px;
+  height: auto;
+}
