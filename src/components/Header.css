@@ -3,11 +3,12 @@
   position: fixed;
   display: flex;
   justify-content: flex-start;
-  background-color: #0F0F0F;
+  background-color: rgba(15, 15, 15, 0.5);
   height: 80px;
   flex-direction: row;
   align-items: center;
   width: 100%;
+  backdrop-filter: blur(50px);
 }
 
 #logo {

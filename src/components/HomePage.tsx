@@ -30,9 +30,12 @@ export const HomePage = () => {
           </Typography>
         </div>
       </div>
-      <h2>
-        Made with ❤️ by <a href="https://github.com/asturur">Andrea Bogazzi</a>
-      </h2>
+      <div className="content">
+        <h2>
+          Made with ❤️ by{' '}
+          <a href="https://github.com/asturur">Andrea Bogazzi</a>
+        </h2>
+      </div>
     </div>
   );
 };

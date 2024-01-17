@@ -33,12 +33,28 @@
   padding-top: 30px;
   font-weight: 500;
   max-width: 900px;
+  align-content: flex-start;
+}
+
+.textLayout li {
+  list-style-position: inside;
 }
 
 .textLayout h3 {
   font-size: 32px;
+  line-height: 50px;
+  margin-bottom: 10px;
+  text-align: left;
 }
 
 .textLayout p {
+  text-align: left;
   color: #fff;
+}
+
+.homepage .content {
+  display: flex;
+  background-color: rgba(244, 244, 244, 1);
+  min-height: 600px;
+  padding: 10px;
 }
