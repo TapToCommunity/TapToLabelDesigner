@@ -1,0 +1,24 @@
+.homepage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0;
+  padding-top: 80px;
+}
+
+.homepage .topBanner {
+  display: flex;
+  min-height: 523px;
+  background-size: cover;
+}
+
+.homepage .topBanner .bannerContent {
+  flex-grow: 1;
+  background: linear-gradient(180deg, rgba(41, 44, 52, 0.9) 0%, rgba(41, 44, 52, 0.603) 100%);
+}
+
+.homepage .intro {
+  min-height: 285px;
+  background-color: #202744;
+}
