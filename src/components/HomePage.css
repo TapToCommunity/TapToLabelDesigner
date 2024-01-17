@@ -19,6 +19,26 @@
 }
 
 .homepage .intro {
+  flex-direction: column;
+  display: flex;
+  gap: 10;
+  align-items: center;
   min-height: 285px;
   background-color: #202744;
+}
+
+.intro .textLayout {
+  flex-direction: column;
+  display: flex;
+  padding-top: 30px;
+  font-weight: 500;
+  max-width: 900px;
+}
+
+.textLayout h3 {
+  font-size: 32px;
+}
+
+.textLayout p {
+  color: #fff;
 }
