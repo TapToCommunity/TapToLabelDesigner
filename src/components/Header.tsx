@@ -9,6 +9,10 @@ import {
 } from 'react';
 import { ColorChanger } from './ColorChanger';
 import { useAppDataContext } from '../contexts/appData';
+import logoUrl from '../assets/log.svg';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
 
 const FilterDropdown = lazy(() => import('./FilterDropdown'));
 const PdfButton = lazy(() => import('./PdfButton'));
@@ -48,7 +52,16 @@ export const Header = () => {
         onChange={fileLoader}
         style={{ display: 'none' }}
       />
-
+      <img id="logo" src={logoUrl} />
+      <Button
+        variant="contained"
+        size="large"
+        color="primary"
+        onClick={openInputFile}
+      >
+        <AddCircleOutlineIcon />
+        <Typography>Add files</Typography>
+      </Button>
       {hasFiles && (
         <ColorChanger
           setCustomColors={setCustomColors}
@@ -58,7 +71,6 @@ export const Header = () => {
       )}
       {hasFiles && <TemplateDropdown />}
       {false && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
-      <button onClick={openInputFile}>Add files</button>
       {hasFiles && <PrinterTemplateDropdown />}
       {hasFiles && <PdfButton canvasArrayRef={canvasArrayRef} />}
     </div>
