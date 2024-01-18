@@ -21,39 +21,58 @@
 .homepage .intro {
   flex-direction: column;
   display: flex;
-  gap: 10;
   align-items: center;
   min-height: 285px;
   background-color: #202744;
 }
 
-.intro .textLayout {
-  flex-direction: column;
-  display: flex;
-  padding-top: 30px;
-  font-weight: 500;
-  max-width: 900px;
-  align-content: flex-start;
-}
-
-.textLayout li {
-  list-style-position: inside;
-}
-
-.textLayout h3 {
+.homepage h3 {
   font-size: 32px;
   line-height: 50px;
   margin-bottom: 10px;
   text-align: left;
 }
 
-.textLayout p {
-  text-align: left;
+.homepage .textLayout {
+  flex-direction: column;
+  display: flex;
+  padding-top: 30px;
+  font-weight: 500;
+  width: 800px;
+  max-width: 900px;
+  align-content: flex-start;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.intro .textLayout {
   color: #fff;
 }
 
+.textLayout a {
+  color: inherit;
+  text-decoration-color: inherit;
+}
+
+.textLayout li {
+  list-style-position: inside;
+}
+
+.textLayout p, .textLayout ul {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.content .textLayout {
+  color: rgba(19, 19, 19, 1);
+  text-align: left;
+  margin-bottom: 48px;
+}
+
 .homepage .content {
+  flex-direction: column;
   display: flex;
+  align-items: center;
   background-color: rgba(244, 244, 244, 1);
   min-height: 600px;
   padding: 10px;
