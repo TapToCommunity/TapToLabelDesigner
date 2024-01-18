@@ -1,13 +1,36 @@
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import bgUrl from '../assets/homebg.jpg';
+import logoUrl from '../assets/log.svg';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
 import './HomePage.css';
+import { Height } from '@mui/icons-material';
 
 export const HomePage = () => {
   return (
     <div className="homepage">
       <div className="topBanner" style={{ backgroundImage: `url(${bgUrl})` }}>
-        <div className="bannerContent"></div>
+        <div className="bannerContent">
+          <div className="central">
+            <div>
+              <img
+                style={{ width: '260px', height: 'auto', marginBottom: '18px' }}
+                src={logoUrl}
+              />
+              <Typography sx={{ fontSize: '24px' }}>LABEL GENERATOR</Typography>
+            </div>
+            <div className="dropzone">
+              <AddCircleOutlineIcon
+                sx={{ width: '48px', height: '48px', marginBottom: '12px' }}
+              />
+              <Typography>
+                Drag images here
+                <br /> or browse
+              </Typography>
+            </div>
+          </div>
+        </div>
       </div>
       <div className="intro">
         <div className="textLayout">
