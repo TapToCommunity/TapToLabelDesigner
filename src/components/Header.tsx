@@ -66,7 +66,7 @@ export const Header = () => {
         }}
       >
         <AddCircleOutlineIcon />
-        <Typography>Add files</Typography>
+        <Typography>&nbsp;Add files</Typography>
       </Button>
       {hasFiles && (
         <ColorChanger

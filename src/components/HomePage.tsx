@@ -18,7 +18,7 @@ export const HomePage = () => {
                 style={{ width: '260px', height: 'auto', marginBottom: '18px' }}
                 src={logoUrl}
               />
-              <Typography sx={{ fontSize: '24px' }}>LABEL GENERATOR</Typography>
+              <Typography variant="h4">LABEL GENERATOR</Typography>
             </div>
             <FileDropper>
               <div className="dropzone">
