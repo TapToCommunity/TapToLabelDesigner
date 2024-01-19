@@ -1,5 +1,4 @@
 import { lazy, Suspense } from 'react';
-import { FileDropper } from './components/FileDropper';
 import { useFileDropperContext } from './contexts/fileDropper';
 import { Header } from './components/Header';
 import { HomePage } from './components/HomePage';

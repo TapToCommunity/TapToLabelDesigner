@@ -1,5 +1,4 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { FileDropper } from './FileDropper';
 import Typography from '@mui/material/Typography';
 import { useFileDropper } from './FileDropper';
 import './SmallDropZone.css';
