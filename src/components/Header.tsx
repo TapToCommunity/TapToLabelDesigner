@@ -9,8 +9,12 @@ import {
 } from 'react';
 import { ColorChanger } from './ColorChanger';
 import { useAppDataContext } from '../contexts/appData';
+import logoUrl from '../assets/log.svg';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { boxShadow } from '../constants';
 
-const FilterDropdown = lazy(() => import('./FilterDropdown'));
 const PdfButton = lazy(() => import('./PdfButton'));
 const TemplateDropdown = lazy(() => import('./TemplateDropdown'));
 const PrinterTemplateDropdown = lazy(() => import('./PrinterTemplateDropdown'));
@@ -48,19 +52,39 @@ export const Header = () => {
         onChange={fileLoader}
         style={{ display: 'none' }}
       />
-
+      <img id="logo" src={logoUrl} />
+      <Button
+        variant="contained"
+        size="large"
+        color="primary"
+        onClick={openInputFile}
+        sx={{
+          boxShadow,
+          fontSize: '0.9375rem',
+          textTransform: 'none',
+        }}
+      >
+        <AddCircleOutlineIcon />
+        <Typography>&nbsp;Add files</Typography>
+      </Button>
+      <div className="centerContent">
+        {hasFiles && (
+          <>
+            <TemplateDropdown />
+            <ColorChanger
+              setCustomColors={setCustomColors}
+              customColors={customColors}
+              originalColors={originalColors}
+            />
+          </>
+        )}
+      </div>
       {hasFiles && (
-        <ColorChanger
-          setCustomColors={setCustomColors}
-          customColors={customColors}
-          originalColors={originalColors}
-        />
+        <>
+          <PrinterTemplateDropdown />
+          <PdfButton canvasArrayRef={canvasArrayRef} />
+        </>
       )}
-      {hasFiles && <TemplateDropdown />}
-      {false && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
-      <button onClick={openInputFile}>Add files</button>
-      {hasFiles && <PrinterTemplateDropdown />}
-      {hasFiles && <PdfButton canvasArrayRef={canvasArrayRef} />}
     </div>
   );
 };

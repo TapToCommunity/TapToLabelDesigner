@@ -1,16 +1,16 @@
 .colorChanger-container {
-  border: 1px solid gray;
   display: flex;
   flex-direction: row;
   position: absolute;
-  height: 64px;
+  height: 80px;
   padding-left: 16px;
   padding-right: 16px;
   align-items: center;
   border-radius: 24px;
   transition: all 0.5s;
-  background-color: white;
   transform: translate(-50%, -50%);
+  background-color: rgba(15, 15, 15, 0.9);
+  box-shadow: 0px 4px 9px 0px rgba(0, 0, 0, 0.35);
 }
 
 .colorChanger-container > button {
@@ -18,5 +18,8 @@
 }
 
 .spacer {
-  width: 15px;
+  height: 42px;
+  width: 1px;
+  background-color: #FFF;
+  margin: 2px;
 }

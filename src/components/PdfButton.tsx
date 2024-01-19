@@ -3,6 +3,10 @@ import type { JSX, RefObject } from 'react';
 import type { Canvas } from 'fabric';
 import { util } from 'fabric';
 import { useAppDataContext } from '../contexts/appData';
+import Button from '@mui/material/Button';
+import { boxShadow } from '../constants';
+import Typography from '@mui/material/Typography';
+import PrintOutlined from '@mui/icons-material/PrintOutlined';
 
 type PdfButtonProps = {
   canvasArrayRef: RefObject<Canvas[]>;
@@ -84,7 +88,22 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
     });
   }, [canvasArrayRef, template.layout, printerTemplate]);
 
-  return <button onClick={preparePdf}>make PDF</button>;
+  return (
+    <Button
+      variant="contained"
+      size="large"
+      color="primary"
+      sx={{
+        boxShadow,
+        fontSize: '0.9375rem',
+        textTransform: 'none',
+      }}
+      onClick={preparePdf}
+    >
+      <PrintOutlined />
+      <Typography>&nbsp;Create PDF</Typography>
+    </Button>
+  );
 };
 
 export default PdfButton;

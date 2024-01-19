@@ -20,11 +20,6 @@ export const ColorChanger = ({
 
   return (
     <>
-      {originalColors.length > 0 && (
-        <IconButton onClick={reset}>
-          <RestartAltIcon />
-        </IconButton>
-      )}
       {originalColors.map((color, index) => (
         <ColorButtons
           key={color}
@@ -36,6 +31,11 @@ export const ColorChanger = ({
           }}
         />
       ))}
+      {originalColors.length > 0 && (
+        <IconButton onClick={reset}>
+          <RestartAltIcon />
+        </IconButton>
+      )}
     </>
   );
 };

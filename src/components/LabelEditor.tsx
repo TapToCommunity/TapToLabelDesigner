@@ -1,9 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import type { MutableRefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
-import './LabelEditor.css';
 import type { StaticCanvas } from 'fabric';
-import { useAppDataContext } from '../contexts/appData';
 import { PortalMenu } from './PortalMenu';
 import { useLabelEditor } from '../hooks/useLabelEditor';
 
@@ -11,6 +9,7 @@ type LabelEditorProps = {
   file: File;
   canvasArrayRef: MutableRefObject<StaticCanvas[]>;
   index: number;
+  className: string;
 };
 
 type MenuInfo = {
@@ -23,6 +22,7 @@ export const LabelEditor = ({
   file,
   canvasArrayRef,
   index,
+  className,
 }: LabelEditorProps) => {
   const [isMenuOpen, setMenuOpen] = useState<MenuInfo>({
     open: false,
@@ -30,7 +30,6 @@ export const LabelEditor = ({
     left: 0,
   });
   const padderRef = useRef<HTMLDivElement | null>(null);
-  const { template } = useAppDataContext();
   const {
     deleteLabel,
     setFabricCanvas,
@@ -54,11 +53,7 @@ export const LabelEditor = ({
   }, [setMenuOpen]);
 
   return (
-    <div
-      className={`labelContainer ${template.layout}`}
-      ref={padderRef}
-      onClick={openMenu}
-    >
+    <div className={className} ref={padderRef} onClick={openMenu}>
       <FabricCanvasWrapper
         key={`canvas_${file.name}`}
         setFabricCanvas={setFabricCanvas}

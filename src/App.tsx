@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
-import { FileDropper } from './components/FileDropper';
 import { useFileDropperContext } from './contexts/fileDropper';
 import { Header } from './components/Header';
+import { HomePage } from './components/HomePage';
 
 import './App.css';
 
@@ -14,22 +14,12 @@ function App() {
   return (
     <>
       <Header />
-      <FileDropper>
-        {!hasFiles && (
-          <div className="somePadding">
-            <h1>
-              Start by dropping in the browser one or more images you want to
-              use on your labels
-            </h1>
-            <h4>Or click the button to load your files</h4>
-          </div>
-        )}
-        {hasFiles && (
-          <Suspense fallback={null}>
-            <LabelsView />
-          </Suspense>
-        )}
-      </FileDropper>
+      {!hasFiles && <HomePage />}
+      {hasFiles && (
+        <Suspense fallback={null}>
+          <LabelsView />
+        </Suspense>
+      )}
     </>
   );
 }

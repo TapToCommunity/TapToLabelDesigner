@@ -4,12 +4,5 @@
   margin: 0 auto;
   padding: 0;
   text-align: center;
-}
-
-.somePadding {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 16px;
+  background-color: #292C34;
 }
