@@ -15,14 +15,14 @@ function App() {
   return (
     <>
       <Header />
-      <FileDropper>
-        {!hasFiles && <HomePage />}
-        {hasFiles && (
+      {!hasFiles && <HomePage />}
+      {hasFiles && (
+        <FileDropper>
           <Suspense fallback={null}>
             <LabelsView />
           </Suspense>
-        )}
-      </FileDropper>
+        </FileDropper>
+      )}
     </>
   );
 }

@@ -3,9 +3,9 @@ import Link from '@mui/material/Link';
 import bgUrl from '../assets/homebg.jpg';
 import logoUrl from '../assets/log.svg';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { FileDropper } from './FileDropper';
 
 import './HomePage.css';
-import { Height } from '@mui/icons-material';
 
 export const HomePage = () => {
   return (
@@ -20,15 +20,17 @@ export const HomePage = () => {
               />
               <Typography sx={{ fontSize: '24px' }}>LABEL GENERATOR</Typography>
             </div>
-            <div className="dropzone">
-              <AddCircleOutlineIcon
-                sx={{ width: '48px', height: '48px', marginBottom: '12px' }}
-              />
-              <Typography>
-                Drag images here
-                <br /> or browse
-              </Typography>
-            </div>
+            <FileDropper>
+              <div className="dropzone">
+                <AddCircleOutlineIcon
+                  sx={{ width: '48px', height: '48px', marginBottom: '12px' }}
+                />
+                <Typography>
+                  Drag images here
+                  <br /> or browse
+                </Typography>
+              </div>
+            </FileDropper>
           </div>
         </div>
       </div>
