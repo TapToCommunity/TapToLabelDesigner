@@ -7,6 +7,10 @@
   padding-top: 80px;
 }
 
+.dropzoneExtra {
+  margin-left: 60px;
+}
+
 .homepage .topBanner {
   display: flex;
   min-height: 523px;
@@ -28,25 +32,6 @@
   align-items: center;
   justify-content: center;
 }
-
-.bannerContent .dropzone {
-  flex-direction: column;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  margin-left: 60px;
-  width: 320px;
-  height: 320px;
-}
-
-.bannerContent .dropzone .theIcon {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
 
 .homepage .intro {
   flex-direction: column;

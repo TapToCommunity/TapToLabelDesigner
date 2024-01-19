@@ -2,9 +2,7 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import bgUrl from '../assets/homebg.jpg';
 import logoUrl from '../assets/log.svg';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { FileDropper } from './FileDropper';
-
+import { SmallDropZone } from './SmallDropZone';
 import './HomePage.css';
 
 export const HomePage = () => {
@@ -20,34 +18,7 @@ export const HomePage = () => {
               />
               <Typography variant="h4">LABEL GENERATOR</Typography>
             </div>
-            <FileDropper>
-              <div className="dropzone">
-                <svg width="320" height="320">
-                  <rect
-                    rx="40"
-                    ry="40"
-                    width="314"
-                    height="314"
-                    x="3"
-                    y="3"
-                    stroke-width="6"
-                    stroke-linecap="round"
-                    stroke="rgba(255, 255, 254, 0.75)"
-                    stroke-dasharray="40"
-                    fill="rgba(255, 255, 254, 0.15)"
-                  />
-                </svg>
-                <div className="theIcon">
-                  <AddCircleOutlineIcon
-                    sx={{ width: '48px', height: '48px', marginBottom: '12px' }}
-                  />
-                  <Typography>
-                    Drag images here
-                    <br /> or browse
-                  </Typography>
-                </div>
-              </div>
-            </FileDropper>
+            <SmallDropZone className="dropzoneExtra" />
           </div>
         </div>
       </div>

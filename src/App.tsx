@@ -17,11 +17,9 @@ function App() {
       <Header />
       {!hasFiles && <HomePage />}
       {hasFiles && (
-        <FileDropper>
-          <Suspense fallback={null}>
-            <LabelsView />
-          </Suspense>
-        </FileDropper>
+        <Suspense fallback={null}>
+          <LabelsView />
+        </Suspense>
       )}
     </>
   );
