@@ -7,14 +7,27 @@
   height: 80px;
   flex-direction: row;
   align-items: center;
-  width: 100%;
+  width: calc(100vw - 36px);
   backdrop-filter: blur(50px);
+  justify-content: space-between;
+  padding-right: 18px;
+  padding-left: 18px;
+}
+
+.topHeader > div.centerContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-grow: 1;
 }
 
 #logo {
-  margin-left: 18px;
   margin-right: 24px;
   height: 42px;
   width: 127px;
   display: flex;
+}
+
+.dropdowns {
+  color: #fff;
 }

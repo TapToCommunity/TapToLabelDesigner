@@ -21,15 +21,23 @@ const TemplateDropdown = (): JSX.Element => {
 
   return (
     <FormControl size="small" sx={{ m: 1, minWidth: 120 }}>
-      <InputLabel id="template-select">Card template</InputLabel>
+      <InputLabel id="template-select" sx={{ fontWeight: 400 }}>
+        Card template
+      </InputLabel>
       <Select
         labelId="template-select"
         value={templateKey}
         label="Card template"
         onChange={toggleTemplate}
+        sx={{ fontWeight: 400 }}
       >
         {Object.entries(templates).map(([key, value]) => (
-          <MenuItem key={key} value={key} selected={key === templateKey}>
+          <MenuItem
+            key={key}
+            value={key}
+            selected={key === templateKey}
+            sx={{ fontWeight: 400 }}
+          >
             {value.label}
           </MenuItem>
         ))}

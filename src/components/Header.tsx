@@ -12,15 +12,12 @@ import { useAppDataContext } from '../contexts/appData';
 import logoUrl from '../assets/log.svg';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Button from '@mui/material/Button';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { boxShadow } from '../constants';
 
-const FilterDropdown = lazy(() => import('./FilterDropdown'));
 const PdfButton = lazy(() => import('./PdfButton'));
 const TemplateDropdown = lazy(() => import('./TemplateDropdown'));
 const PrinterTemplateDropdown = lazy(() => import('./PrinterTemplateDropdown'));
-
-const boxShadow =
-  '0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)';
 
 export const Header = () => {
   const hiddenInput = useRef<HTMLInputElement>(null);
@@ -63,22 +60,31 @@ export const Header = () => {
         onClick={openInputFile}
         sx={{
           boxShadow,
+          fontSize: '0.9375rem',
+          textTransform: 'none',
         }}
       >
         <AddCircleOutlineIcon />
         <Typography>&nbsp;Add files</Typography>
       </Button>
+      <div className="centerContent">
+        {hasFiles && (
+          <>
+            <TemplateDropdown />
+            <ColorChanger
+              setCustomColors={setCustomColors}
+              customColors={customColors}
+              originalColors={originalColors}
+            />
+          </>
+        )}
+      </div>
       {hasFiles && (
-        <ColorChanger
-          setCustomColors={setCustomColors}
-          customColors={customColors}
-          originalColors={originalColors}
-        />
+        <>
+          <PrinterTemplateDropdown />
+          <PdfButton canvasArrayRef={canvasArrayRef} />
+        </>
       )}
-      {hasFiles && <TemplateDropdown />}
-      {false && <FilterDropdown canvasArrayRef={canvasArrayRef} />}
-      {hasFiles && <PrinterTemplateDropdown />}
-      {hasFiles && <PdfButton canvasArrayRef={canvasArrayRef} />}
     </div>
   );
 };

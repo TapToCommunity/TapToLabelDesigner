@@ -22,15 +22,23 @@ const PrinterTemplateDropdown = (): JSX.Element => {
 
   return (
     <FormControl size="small" sx={{ m: 1, minWidth: 120 }}>
-      <InputLabel id="template-select">Print template</InputLabel>
+      <InputLabel id="template-select" sx={{ fontWeight: 400 }}>
+        Print template
+      </InputLabel>
       <Select
         labelId="printer-select"
         value={printerTemplateKey}
         label="Print sheet"
         onChange={toggleTemplate}
+        sx={{ fontWeight: 400 }}
       >
         {Object.entries(printTemplates).map(([key, value]) => (
-          <MenuItem key={key} value={key} selected={key === printerTemplateKey}>
+          <MenuItem
+            key={key}
+            value={key}
+            selected={key === printerTemplateKey}
+            sx={{ fontWeight: 400 }}
+          >
             {value.label}
           </MenuItem>
         ))}
