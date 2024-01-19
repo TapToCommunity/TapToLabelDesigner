@@ -22,14 +22,30 @@ export const HomePage = () => {
             </div>
             <FileDropper>
               <div className="dropzone">
-                <rect />
-                <AddCircleOutlineIcon
-                  sx={{ width: '48px', height: '48px', marginBottom: '12px' }}
-                />
-                <Typography>
-                  Drag images here
-                  <br /> or browse
-                </Typography>
+                <svg width="320" height="320">
+                  <rect
+                    rx="40"
+                    ry="40"
+                    width="314"
+                    height="314"
+                    x="3"
+                    y="3"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                    stroke="rgba(255, 255, 254, 0.75)"
+                    stroke-dasharray="40"
+                    fill="rgba(255, 255, 254, 0.15)"
+                  />
+                </svg>
+                <div className="theIcon">
+                  <AddCircleOutlineIcon
+                    sx={{ width: '48px', height: '48px', marginBottom: '12px' }}
+                  />
+                  <Typography>
+                    Drag images here
+                    <br /> or browse
+                  </Typography>
+                </div>
               </div>
             </FileDropper>
           </div>
