@@ -22,6 +22,7 @@ export const HomePage = () => {
             </div>
             <FileDropper>
               <div className="dropzone">
+                <rect />
                 <AddCircleOutlineIcon
                   sx={{ width: '48px', height: '48px', marginBottom: '12px' }}
                 />

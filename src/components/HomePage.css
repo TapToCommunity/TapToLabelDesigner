@@ -32,15 +32,20 @@
 .bannerContent .dropzone {
   flex-direction: column;
   display: flex;
-  width: 320px;
-  height: 320px;
   align-items: center;
   justify-content: center;
-  border: 6px solid rgba(255, 255, 254, 0.75);
-  border-radius: 28px;
   background-color: rgba(255, 255, 254, 0.15);
   margin-left: 60px;
-  border-style: dashed;
+}
+
+.bannerContent .dropzone > rect {
+  stroke-width: 6px;
+  stroke: rgba(255, 255, 254, 0.75);
+  stroke-dasharray: 40px;
+  border-radius: 28px;
+  width: 320px;
+  height: 320px;
+
 }
 
 .homepage .intro {
