@@ -7,4 +7,6 @@ body {
   min-height: 100vh;
   overflow-y: scroll;
   background-color: #292C34;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
 }
