@@ -1,5 +1,6 @@
 import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, FabricObject, Color, Gradient, type Canvas, type SerializedGroupProps } from 'fabric';
-import { cardLikeOptions, type templateType } from '../constants';
+import { cardLikeOptions } from '../constants';
+import { type templateType } from '../cardsTemplates';
 
 FabricObject.ownDefaults.objectCaching = false;
 

@@ -1,4 +1,4 @@
-import { IconButton } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import { ColorButtons } from './ColorButton';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { useCallback } from 'react';
@@ -39,3 +39,5 @@ export const ColorChanger = ({
     </>
   );
 };
+
+export default ColorChanger;

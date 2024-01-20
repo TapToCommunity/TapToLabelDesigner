@@ -28,7 +28,7 @@ const PrinterTemplateDropdown = (): JSX.Element => {
       <Select
         labelId="printer-select"
         value={printerTemplateKey}
-        label="Print sheet"
+        label="Print template"
         onChange={toggleTemplate}
         sx={{ fontWeight: 400 }}
       >

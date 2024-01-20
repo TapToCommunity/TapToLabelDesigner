@@ -3,11 +3,12 @@ import {
   type templateType,
   defaultTemplate,
   defaultTemplateKey,
-} from '../constants';
+} from '../cardsTemplates';
 import {
   type PrintTemplate,
   defaultPrinterTemplate,
   defaultPrinterTemplateKey,
+  ZipDownloader,
 } from '../printTemplates';
 const noop = () => {};
 
@@ -17,13 +18,13 @@ export type contextType = {
   customColors: string[];
   template: templateType;
   templateKey: string;
-  printerTemplate: PrintTemplate;
+  printerTemplate: PrintTemplate | ZipDownloader;
   printerTemplateKey: string;
   setOriginalColors: (colors: string[]) => void;
   setCustomColors: (colors: string[]) => void;
   setTemplate: (template: templateType) => void;
   setTemplateKey: (templateKey: string) => void;
-  setPrinterTemplate: (template: PrintTemplate) => void;
+  setPrinterTemplate: (template: PrintTemplate | ZipDownloader) => void;
   setPrinterTemplateKey: (templateKey: string) => void;
   setIsIdle: (value: boolean) => void;
 };
