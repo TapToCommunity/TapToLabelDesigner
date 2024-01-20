@@ -7,7 +7,6 @@ import {
   useCallback,
   useRef,
 } from 'react';
-import { ColorChanger } from './ColorChanger';
 import { useAppDataContext } from '../contexts/appData';
 import logoUrl from '../assets/log.svg';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -18,6 +17,7 @@ import { boxShadow } from '../constants';
 const PdfButton = lazy(() => import('./PdfButton'));
 const TemplateDropdown = lazy(() => import('./TemplateDropdown'));
 const PrinterTemplateDropdown = lazy(() => import('./PrinterTemplateDropdown'));
+const ColorChanger = lazy(() => import('./ColorChanger'));
 
 export const Header = () => {
   const hiddenInput = useRef<HTMLInputElement>(null);

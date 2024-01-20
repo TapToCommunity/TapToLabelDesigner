@@ -39,3 +39,5 @@ export const ColorChanger = ({
     </>
   );
 };
+
+export default ColorChanger;

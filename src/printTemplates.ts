@@ -10,7 +10,11 @@ export type PrintTemplate = {
   paperSize: 'a4' | 'letter';
 }
 
-export const printTemplates: Record<string, PrintTemplate> = { 
+export type ZipDownloader = {
+  label: string;
+}
+
+export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
   horizontal: {
     gridSize: [90, 59],
     label: 'A4, Horizontal 3x3',
@@ -32,6 +36,9 @@ export const printTemplates: Record<string, PrintTemplate> = {
     topMargin: 9,
     layout: 'portrait',
     paperSize: 'a4'
+  },
+  zip: {
+    label: 'Images in a zip'
   }
 };
 
