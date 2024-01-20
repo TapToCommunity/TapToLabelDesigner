@@ -12,6 +12,7 @@ export type PrintTemplate = {
 
 export type ZipDownloader = {
   label: string;
+  paperSize: 'zip';
 }
 
 export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
@@ -38,7 +39,8 @@ export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
     paperSize: 'a4'
   },
   zip: {
-    label: 'Images in a zip'
+    label: 'Images in a zip',
+    paperSize: 'zip',
   }
 };
 
