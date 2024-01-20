@@ -3,7 +3,7 @@ import {
   type templateType,
   defaultTemplate,
   defaultTemplateKey,
-} from '../constants';
+} from '../cardsTemplates';
 import {
   type PrintTemplate,
   defaultPrinterTemplate,

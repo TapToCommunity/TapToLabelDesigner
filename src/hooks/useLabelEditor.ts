@@ -6,8 +6,9 @@ import { scaleImageToOverlayArea, setTemplateOnCanvases } from '../utils/setTemp
 import {
   cardLikeOptions,
   cardRatio,
-  type layoutOrientation,
 } from '../constants';
+import {   type layoutOrientation,
+} from '../cardsTemplates';
 import { util } from 'fabric';
 import { throttle } from '../utils';
 import type { FabricImage, StaticCanvas } from 'fabric';
