@@ -8,7 +8,7 @@ export const prepareZip = async (canvasArrayRef: RefObject<Canvas[]>) => {
   if (canvases) {
     const inputs = await Promise.all(canvases.map<Promise<InputWithSizeMeta>>((canvas, index) => {
       const { top, left, width, height } =
-        canvas.clipPath!.getBoundingRect();
+        (canvas.overlayImage || canvas.clipPath)!.getBoundingRect();
       // TODO: the top and left values should take in account of viewport translations
       const htmlCanvas = canvas.toCanvasElement(2 / canvas.getZoom(), {
         top: top * canvas.getZoom(),

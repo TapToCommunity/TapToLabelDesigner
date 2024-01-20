@@ -6,6 +6,8 @@ import Button from '@mui/material/Button';
 import { boxShadow } from '../constants';
 import Typography from '@mui/material/Typography';
 import PrintOutlined from '@mui/icons-material/PrintOutlined';
+import FolderZipOutlined from '@mui/icons-material/FolderZipOutlined';
+
 import { preparePdf } from '../utils/preparePdf';
 import { prepareZip } from '../utils/prepareZip';
 
@@ -15,10 +17,9 @@ type PdfButtonProps = {
 
 export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
   const { printerTemplate, template } = useAppDataContext();
-
+  const isZip = printerTemplate.paperSize === 'zip';
   const prepareOutput = useCallback(async () => {
-    console.log(printerTemplate.paperSize);
-    if (printerTemplate.paperSize === 'zip') {
+    if (isZip) {
       await prepareZip(canvasArrayRef);
     } else {
       await preparePdf(printerTemplate, template, canvasArrayRef);
@@ -37,8 +38,8 @@ export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
       }}
       onClick={prepareOutput}
     >
-      <PrintOutlined />
-      <Typography>&nbsp;Create PDF</Typography>
+      {isZip ? <FolderZipOutlined /> : <PrintOutlined />}
+      <Typography>&nbsp;{isZip ? 'Download Zip' : 'Create PDF'}</Typography>
     </Button>
   );
 };
