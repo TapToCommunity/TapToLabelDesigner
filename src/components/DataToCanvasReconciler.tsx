@@ -19,7 +19,7 @@ export const DataToCanvasReconciler = () => {
         setIsIdle(true);
       });
     }
-  }, [template, setCustomColors, canvasArrayRef, setOriginalColors]);
+  }, [template, setCustomColors, canvasArrayRef, setOriginalColors, setIsIdle]);
 
   return null;
 };
