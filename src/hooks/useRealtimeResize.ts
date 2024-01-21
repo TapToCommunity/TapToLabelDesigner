@@ -51,7 +51,7 @@ const resizerFunctionCreator = (
   }, 33);
 
 type useRealTimeResizeParams = {
-  fabricCanvas: StaticCanvas;
+  fabricCanvas: StaticCanvas | null;
   padderRef: MutableRefObject<HTMLDivElement | null>;
   ready: boolean;
   layout: 'vertical' | 'horizontal';
