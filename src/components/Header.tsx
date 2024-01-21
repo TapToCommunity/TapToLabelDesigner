@@ -52,39 +52,45 @@ export const Header = () => {
         onChange={fileLoader}
         style={{ display: 'none' }}
       />
-      <img id="logo" src={logoUrl} />
-      <Button
-        variant="contained"
-        size="large"
-        color="primary"
-        onClick={openInputFile}
-        sx={{
-          boxShadow,
-          fontSize: '0.9375rem',
-          textTransform: 'none',
-        }}
-      >
-        <AddCircleOutlineIcon />
-        <Typography>&nbsp;Add files</Typography>
-      </Button>
-      <div className="centerContent">
-        {hasFiles && (
-          <>
-            <TemplateDropdown />
+      <div className="spacedContent">
+        <div className="content">
+          <img id="logo" src={logoUrl} />
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={openInputFile}
+            sx={{
+              boxShadow,
+              fontSize: '0.9375rem',
+              textTransform: 'none',
+            }}
+          >
+            <AddCircleOutlineIcon />
+            <Typography>&nbsp;Add files</Typography>
+          </Button>
+        </div>
+        <div className="content">{hasFiles && <TemplateDropdown />}</div>
+      </div>
+      <div className="spacedContent">
+        <div className="content">
+          {hasFiles && (
             <ColorChanger
               setCustomColors={setCustomColors}
               customColors={customColors}
               originalColors={originalColors}
             />
-          </>
-        )}
+          )}
+        </div>
+        <div className="content">
+          {hasFiles && (
+            <>
+              <PrinterTemplateDropdown />
+              <PdfButton canvasArrayRef={canvasArrayRef} />
+            </>
+          )}
+        </div>
       </div>
-      {hasFiles && (
-        <>
-          <PrinterTemplateDropdown />
-          <PdfButton canvasArrayRef={canvasArrayRef} />
-        </>
-      )}
     </div>
   );
 };

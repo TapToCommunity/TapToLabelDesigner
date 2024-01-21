@@ -4,21 +4,26 @@
   display: flex;
   justify-content: flex-start;
   background-color: rgba(15, 15, 15, 0.5);
-  height: 80px;
   flex-direction: row;
-  align-items: center;
+  flex-wrap: wrap;
   width: calc(100vw - 36px);
   backdrop-filter: blur(50px);
-  justify-content: space-between;
   padding-right: 18px;
   padding-left: 18px;
 }
 
-.topHeader > div.centerContent {
+.topHeader .spacedContent {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.topHeader .content {
+  align-items: center;
+  height: 80px;
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  flex-grow: 1;
 }
 
 #logo {
