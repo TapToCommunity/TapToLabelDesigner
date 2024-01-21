@@ -10,6 +10,7 @@
   width: 100%;
   align-items: center;
   justify-content: center;
+  column-gap: 20px;
 }
 
 .labelContainer {
@@ -24,13 +25,13 @@
 
 .labelContainer.horizontal {
   max-width: 1029px;
-  width: 49.9%;
+  width: calc(49.9% - 10px);
   max-height: 657px;
 }
 
 .labelContainer.vertical {
   max-width: 657px;
-  width: 33.2%;
+  width: calc(33.2% - 10px);
   max-height: 1029px;
 }
 
@@ -43,7 +44,7 @@
   
   .labelContainer.vertical {
     max-width: 657px;
-    width: 49%;
+    width: calc(49.9% - 10px);
     max-height: 1029px;
   }
 }

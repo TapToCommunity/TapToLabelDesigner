@@ -5,7 +5,6 @@ import { useFileDropperContext } from '../contexts/fileDropper';
 import { scaleImageToOverlayArea, setTemplateOnCanvases } from '../utils/setTemplate';
 import type { FabricImage, StaticCanvas } from 'fabric';
 import { useAppDataContext } from '../contexts/appData';
-import { useRealTimeResize } from './useRealtimeResize';
 
 type useLabelEditorParams = {
   canvasArrayRef: MutableRefObject<StaticCanvas[]>;
@@ -44,6 +43,10 @@ export const useLabelEditor = ({ canvasArrayRef, index, padderRef }: useLabelEdi
     const divRef = padderRef.current;
     if (fabricCanvas && divRef) {
       if (canvasArrayRef.current) {
+        fabricCanvas.setDimensions(
+          { width: '100%' as unknown as number, height: 'auto' as unknown as number},
+          { cssOnly: true }
+        );
         canvasArrayRef.current[index] = fabricCanvas;
       }
       setTemplateOnCanvases([fabricCanvas], template).then((colors) => {
@@ -76,8 +79,6 @@ export const useLabelEditor = ({ canvasArrayRef, index, padderRef }: useLabelEdi
       updateColors([fabricCanvas], localColors, originalColors);
     }
   }, [localColors, fabricCanvas, originalColors, isIdle]);
-
-  useRealTimeResize({ padderRef, ready: isIdle && ready, layout: template.layout, fabricCanvas });
 
   return {
     localColors,
