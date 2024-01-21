@@ -55,7 +55,8 @@
   font-weight: 500;
   padding-left: 16px;
   padding-right: 16px;
-  width: auto;
+  width: calc(100% - 32px);
+  flex-grow: 1;
   max-width: 900px;
   align-content: flex-start;
 }
@@ -91,4 +92,8 @@
   background-color: rgba(244, 244, 244, 1);
   min-height: 600px;
   padding: 10px;
+}
+
+@media (max-width: 768px){
+
 }
