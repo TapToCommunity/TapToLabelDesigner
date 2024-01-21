@@ -19,6 +19,8 @@
   background: linear-gradient(180deg, rgba(41, 44, 52, 0.9) 0%, rgba(41, 44, 52, 0.603) 100%);
   justify-content: center;
   backdrop-filter: blur(3px);
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .bannerContent .central {
