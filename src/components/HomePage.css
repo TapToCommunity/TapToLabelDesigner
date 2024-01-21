@@ -7,10 +7,6 @@
   padding-top: 80px;
 }
 
-.dropzoneExtra {
-  margin-left: 60px;
-}
-
 .homepage .topBanner {
   display: flex;
   min-height: 523px;
@@ -28,6 +24,8 @@
 .bannerContent .central {
   color: #FFF;
   display: flex;
+  flex-wrap: wrap;
+  column-gap: 60px;
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -53,7 +51,9 @@
   display: flex;
   padding-top: 30px;
   font-weight: 500;
-  width: 800px;
+  padding-left: 16px;
+  padding-right: 16px;
+  width: auto;
   max-width: 900px;
   align-content: flex-start;
 }

@@ -18,7 +18,7 @@ export const HomePage = () => {
               />
               <Typography variant="h4">LABEL GENERATOR</Typography>
             </div>
-            <SmallDropZone className="dropzoneExtra" />
+            <SmallDropZone />
           </div>
         </div>
       </div>
