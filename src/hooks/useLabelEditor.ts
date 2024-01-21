@@ -3,57 +3,9 @@ import { colorsDiffer } from '../utils/utils';
 import { updateColors } from '../utils/updateColors';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { scaleImageToOverlayArea, setTemplateOnCanvases } from '../utils/setTemplate';
-import {
-  cardLikeOptions,
-  cardRatio,
-} from '../constants';
-import {   type layoutOrientation,
-} from '../cardsTemplates';
-import { util } from 'fabric';
-import { throttle } from '../utils';
 import type { FabricImage, StaticCanvas } from 'fabric';
 import { useAppDataContext } from '../contexts/appData';
-
-const resizeFunction = (
-  fabricCanvas: StaticCanvas,
-  orientation: layoutOrientation,
-  bbox: DOMRectReadOnly,
-) => {
-  if (fabricCanvas.disposed) {
-    console.warn(
-      'canvas disposed quickly you should not see this in production',
-    );
-    return;
-  }
-  const chosenWidth = Math.floor(bbox.width - 20);
-  const ratio = orientation === 'horizontal' ? cardRatio : 1 / cardRatio;
-  fabricCanvas.setDimensions({
-    width: chosenWidth,
-    height: Math.ceil(chosenWidth / ratio),
-  });
-  let scale;
-  if (orientation === 'horizontal') {
-    scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
-  } else {
-    scale = util.findScaleToFit(
-      {
-        width: cardLikeOptions.height,
-        height: cardLikeOptions.width,
-      },
-      fabricCanvas,
-    );
-  }
-  fabricCanvas.setZoom(scale);
-};
-
-const resizerFunctionCreator = (
-  fabricCanvas: StaticCanvas,
-  orientation: layoutOrientation,
-): ResizeObserverCallback =>
-  throttle<ResizeObserverCallback>((entries) => {
-    const bbox = entries[0].contentRect;
-    resizeFunction(fabricCanvas, orientation, bbox);
-  }, 33);
+import { useRealTimeResize } from './useRealtimeResize';
 
 type useLabelEditorParams = {
   canvasArrayRef: MutableRefObject<StaticCanvas[]>;
@@ -125,18 +77,7 @@ export const useLabelEditor = ({ canvasArrayRef, index, padderRef }: useLabelEdi
     }
   }, [localColors, fabricCanvas, originalColors, isIdle]);
 
-  useEffect(() => {
-    const divRef = padderRef.current;
-    // only start observing after mounting is complete.
-    if (fabricCanvas && divRef && isIdle && ready) {
-      const callback = resizerFunctionCreator(fabricCanvas, template.layout);
-      const resizeObserver = new ResizeObserver(callback);
-      resizeObserver.observe(divRef);
-      return () => {
-        resizeObserver.unobserve(divRef);
-      };
-    }
-  }, [template, fabricCanvas, isIdle, ready, padderRef]);
+  useRealTimeResize({ padderRef, ready: isIdle && ready, layout: template.layout, fabricCanvas });
 
   return {
     localColors,
