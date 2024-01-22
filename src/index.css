@@ -10,22 +10,22 @@ body {
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
   scrollbar-width: 'thin';
-  scrollbar-color: #babac0;
+  scrollbar-color: rgba(15,15,15,0.3);
 }
 
 ::-webkit-scrollbar {
   transition: background-color 0.2s ease;
-  width: 5;
-  height: 5;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #babac0;
-  border-radius: 10;
-  width: 3;
-  height: 3;
+  background-color: rgba(15,15,15,0.3);
+  border-radius: 16px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: 'transparent';
+  background: transparent;
 }
