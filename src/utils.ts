@@ -4,11 +4,11 @@ export const debounce = <T extends (...args: any[]) => ReturnType<T>>(
   fn: T,
   timeout: number,
 ): ((...args: Parameters<T>) => void) => {
-  let timeoutId: number | null = null;
+  let timeoutId: number | NodeJS.Timeout | null = null;
 
   return (...args: any[]) => {
     if (timeoutId) {
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId as number);
     }
 
     timeoutId = setTimeout(() => {
@@ -23,7 +23,7 @@ export const throttle = <T extends (...args: any[]) => ReturnType<T>>(
   fn: T,
   timeout: number
 ): ((...args: Parameters<T>) => void) => {
-  let timeoutId: number | null = null;
+  let timeoutId: number | NodeJS.Timeout | null = null;
   let lastArgs: any[] | null = null;
 
   return function throttledFn(...args: any[]) {

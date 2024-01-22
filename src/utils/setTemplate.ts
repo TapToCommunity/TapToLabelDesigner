@@ -43,6 +43,7 @@ export const scaleImageToOverlayArea = (template: templateType, overlayImg: Fabr
     'center',
     'center',
   );
+  mainImage.setCoords();
 }
 
 
@@ -95,10 +96,15 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
   for (const canvas of canvases ) {
     const isHorizontal = layout === 'horizontal';
     const { width, height } = cardLikeOptions;
-    canvas.setDimensions({
-      width: isHorizontal ? width : height,
-      height: isHorizontal ? height : width,
-    }, { backstoreOnly: true });
+    const finalWidth = isHorizontal ? width : height;
+    const finalHeight = isHorizontal ? height : width;
+    // resize only if necessary
+    if (finalHeight !== canvas.height || finalWidth !== canvas.width) {
+      canvas.setDimensions({
+        width: finalWidth,
+        height: finalHeight,
+      }, { backstoreOnly: true });
+    }
     const mainImage = canvas.getObjects('image')[0] as FabricImage;
     mainImage.shadow = shadow ? new Shadow(shadow) : null;
     if (overlayImageElement) {
@@ -128,6 +134,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
         overlayImg.left = cardLikeOptions.height / 2;
         overlayImg.top = cardLikeOptions.width / 2;
       }
+      overlayImg.setCoords();
       scaleImageToOverlayArea(template, overlayImg, mainImage)
     } else {
       // reset to BLANK
@@ -146,6 +153,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
         left: destination.width / 2,
         top: destination.height / 2,
       });
+      mainImage.setCoords();
     }
     if (backgroundImageElement) {
       // scale the overlay asset to cover the designed layer size
@@ -163,6 +171,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
     } else {
       canvas.backgroundImage = canvas.clipPath;
     }
+    
     const backgroundImg = canvas.backgroundImage!;
     if (template?.layout === 'horizontal') {
       backgroundImg.left = cardLikeOptions.width / 2;
@@ -171,6 +180,8 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
       backgroundImg.left = cardLikeOptions.height / 2;
       backgroundImg.top = cardLikeOptions.width / 2;
     }
+    backgroundImg.setCoords();
+
     const { clipPath } = canvas;
     if (clipPath) {
       if (template.layout === 'horizontal') {

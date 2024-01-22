@@ -20,7 +20,11 @@ const FilterDropdown = ({
   const toggleFilter = useCallback(
     (evt: SelectChangeEvent<string>) => {
       const value = evt.target.value;
-      const filter = value !== 'none' && new (classRegistry.getClass(value))();
+      const filter =
+        value !== 'none' &&
+        new (classRegistry.getClass(
+          value,
+        ) as unknown as typeof filters.BaseFilter)();
       const canvases = canvasArrayRef.current;
       if (canvases) {
         canvases.forEach((canvas) => {
