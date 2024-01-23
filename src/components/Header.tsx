@@ -6,13 +6,17 @@ import {
   startTransition,
   useCallback,
   useRef,
+  useState,
 } from 'react';
 import { useAppDataContext } from '../contexts/appData';
 import logoUrl from '../assets/log.svg';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { boxShadow } from '../constants';
+import Stack from '@mui/material/Stack';
+import { ImageSearch } from './ImageSearch';
 
 const PdfButton = lazy(() => import('./PdfButton'));
 const TemplateDropdown = lazy(() => import('./TemplateDropdown'));
@@ -24,6 +28,8 @@ export const Header = () => {
 
   const { files, setFiles, canvasArrayRef } = useFileDropperContext();
   const { originalColors, customColors, setCustomColors } = useAppDataContext();
+
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const openInputFile = useCallback(() => {
     hiddenInput.current && hiddenInput.current.click();
@@ -45,6 +51,7 @@ export const Header = () => {
 
   return (
     <div className="topHeader">
+      <ImageSearch open={searchOpen} setOpen={setSearchOpen} />
       <input
         multiple
         ref={hiddenInput}
@@ -54,21 +61,37 @@ export const Header = () => {
       />
       <div className="spacedContent">
         <div className="content">
-          <img id="logo" src={logoUrl} />
-          <Button
-            variant="contained"
-            size="large"
-            color="primary"
-            onClick={openInputFile}
-            sx={{
-              boxShadow,
-              fontSize: '0.9375rem',
-              textTransform: 'none',
-            }}
-          >
-            <AddCircleOutlineIcon />
-            <Typography>&nbsp;Add files</Typography>
-          </Button>
+          <Stack direction="row" spacing="10px">
+            <img id="logo" src={logoUrl} />
+            <Button
+              variant="contained"
+              size="large"
+              color="primary"
+              onClick={openInputFile}
+              sx={{
+                boxShadow,
+                fontSize: '0.9375rem',
+                textTransform: 'none',
+              }}
+            >
+              <AddCircleOutlineIcon />
+              <Typography>&nbsp;Add files</Typography>
+            </Button>
+            <Button
+              variant="contained"
+              size="large"
+              color="primary"
+              onClick={() => setSearchOpen(true)}
+              sx={{
+                boxShadow,
+                fontSize: '0.9375rem',
+                textTransform: 'none',
+              }}
+            >
+              <SearchIcon />
+              <Typography>&nbsp;Search image</Typography>
+            </Button>
+          </Stack>
         </div>
         <div className="content">{hasFiles && <TemplateDropdown />}</div>
       </div>
