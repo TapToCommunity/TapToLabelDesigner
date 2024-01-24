@@ -1,11 +1,12 @@
 // those should be changed in accordance with LabelEditor.css
 export const cardLikeOptions = {
-  width: 975,
-  height: 600,
-  rx: 32,
-  ry: 32,
+  width: 1004, // 3.346inch * 300dpi (85mm)
+  height: 638, // 2.126inch * 300dpi, (54mm)
+  rx: 35,
+  ry: 35,
   strokeWidth: 2,
-  stroke: 'black',
+  strokeDashArray: [10, 10],
+  stroke: 'red',
   fill: 'white',
 };
 
