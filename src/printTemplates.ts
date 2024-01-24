@@ -38,7 +38,6 @@ export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
   printTest: {
     gridSize: [90, 56],
     label: '152cm adhesive vinyl',
-    labelsPerPage: 10,
     rows: 26,
     columns: 16,
     leftMargin: 10,
