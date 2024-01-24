@@ -1,6 +1,8 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Typography from '@mui/material/Typography';
-import { useFileDropper } from './FileDropper';
+import { useFileDropper } from '../hooks/useFileDropper';
+import { useFileAdder } from '../hooks/useFileAdder';
+
 import './SmallDropZone.css';
 import { useRef } from 'react';
 
@@ -11,12 +13,14 @@ type SmallDropZoneProps = {
 export const SmallDropZone = ({ className }: SmallDropZoneProps) => {
   const dropRef = useRef<HTMLDivElement>(null);
   const { onDragOver } = useFileDropper({ elementRef: dropRef });
+  const { inputElement, openInputFile } = useFileAdder();
   return (
     <div
       className={`dropzone ${className}`}
       ref={dropRef}
       onDragOver={onDragOver}
     >
+      {inputElement}
       <svg width="320" height="320">
         <rect
           rx="40"
@@ -38,7 +42,10 @@ export const SmallDropZone = ({ className }: SmallDropZoneProps) => {
         />
         <Typography>
           Drag images here
-          <br /> or browse
+          <br /> or{' '}
+          <a onClick={openInputFile} href="#">
+            browse
+          </a>
         </Typography>
       </div>
     </div>
