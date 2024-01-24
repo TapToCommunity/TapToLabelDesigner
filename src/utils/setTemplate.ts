@@ -1,6 +1,6 @@
 import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, FabricObject, Color, Gradient, type Canvas, type SerializedGroupProps } from 'fabric';
 import { cardLikeOptions } from '../constants';
-import { type templateType } from '../cardsTemplates';
+import { type templateType, type templateOverlay } from '../cardsTemplates';
 
 FabricObject.ownDefaults.objectCaching = false;
 
@@ -86,19 +86,33 @@ const parseSvg = (url: string): Promise<SerializedGroupProps> =>
     return group.toObject(['original_stroke', 'original_fill']);
   });
 
+const reposition = (fabricLayer: FabricObject, layout: 'horizontal' | 'vertical'): void => {
+  if (layout === 'horizontal') {
+    fabricLayer.left = cardLikeOptions.width / 2;
+    fabricLayer.top = cardLikeOptions.height / 2;
+  } else {
+    fabricLayer.left = cardLikeOptions.height / 2;
+    fabricLayer.top = cardLikeOptions.width / 2;
+  }
+  fabricLayer.setCoords();
+}
+
 export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: templateType): Promise<string[]> => {
   const { overlay, background, shadow, layout } = template || {};
-  const [overlayImageSource, backgroundImageElement] = await Promise.all([
+  const [overlayImageSource, backgroundImageSource] = await Promise.all([
     overlay && (overlay.parsed ? overlay.parsed : (overlay.isSvg ? (overlay.parsed = parseSvg(overlay.url)) : (overlay.parsed = util.loadImage(overlay.url)))),
-    background && (background.parsed ? background.parsed : (background.parsed = util.loadImage(background.url))) as unknown as HTMLImageElement,
+    background && (background.parsed ? background.parsed : (background.isSvg ? (background.parsed = parseSvg(background.url)) : (background.parsed = util.loadImage(background.url)))) as unknown as HTMLImageElement,
   ]);
-  const overlayImageElement = overlayImageSource && (overlayImageSource instanceof Image ? overlayImageSource : await Group.fromObject(overlayImageSource))
+
+  const overlayImageElement = overlayImageSource && (overlayImageSource instanceof HTMLImageElement ? overlayImageSource : await Group.fromObject(overlayImageSource))
+  const backgroundImageElement = backgroundImageSource && (backgroundImageSource instanceof HTMLImageElement ? backgroundImageSource : await Group.fromObject(backgroundImageSource))
+  const isHorizontal = layout === 'horizontal';
+  const { width, height } = cardLikeOptions;
+  const finalWidth = isHorizontal ? width : height;
+  const finalHeight = isHorizontal ? height : width;
+
   for (const canvas of canvases ) {
-    const isHorizontal = layout === 'horizontal';
-    const { width, height } = cardLikeOptions;
-    const finalWidth = isHorizontal ? width : height;
-    const finalHeight = isHorizontal ? height : width;
-    // resize only if necessary
+    // resize only if necessary 
     if (finalHeight !== canvas.height || finalWidth !== canvas.width) {
       canvas.setDimensions({
         width: finalWidth,
@@ -107,93 +121,82 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
     }
     const mainImage = canvas.getObjects('image')[0] as FabricImage;
     mainImage.shadow = shadow ? new Shadow(shadow) : null;
-    if (overlayImageElement) {
-      // scale the overlay asset to cover the designed layer size
-      // example: the template is supposed to be smaller than the card
-      const scale = util.findScaleToCover(overlayImageElement, {
-        width: overlay!.layerWidth,
-        height: overlay!.layerHeight,
-      });
-      let overlayImg;
-      if (overlayImageElement instanceof Group) {
-        overlayImg = await Group.fromObject(overlayImageSource);
-        overlayImg.canvas = canvas as Canvas;
-      } else {
-        overlayImg = new FabricImage(overlayImageElement, {
-          canvas,
-          scaleX: scale,
-          scaleY: scale,
-        });
-      }
-      canvas.overlayImage = overlayImg;
-      // set the overlay of the template in the center of the card
-      if (template?.layout === 'horizontal') {
-        overlayImg.left = cardLikeOptions.width / 2;
-        overlayImg.top = cardLikeOptions.height / 2;
-      } else {
-        overlayImg.left = cardLikeOptions.height / 2;
-        overlayImg.top = cardLikeOptions.width / 2;
-      }
-      overlayImg.setCoords();
-      scaleImageToOverlayArea(template, overlayImg, mainImage)
-    } else {
-      // reset to BLANK
-      canvas.overlayImage = undefined;
-      const destination = template?.layout === 'horizontal' ? cardLikeOptions : {
-        width: cardLikeOptions.height,
-        height:  cardLikeOptions.width,
-      }
-      const pictureScale = util.findScaleToCover(
-        mainImage,
-        destination,
-      );
-      mainImage.set({
-        scaleX: pictureScale,
-        scaleY: pictureScale,
-        left: destination.width / 2,
-        top: destination.height / 2,
-      });
-      mainImage.setCoords();
-    }
-    if (backgroundImageElement) {
-      // scale the overlay asset to cover the designed layer size
-      // example: the template is supposed to be smaller than the card
-      const scale = util.findScaleToFit(backgroundImageElement, {
-        width: background!.layerWidth,
-        height: background!.layerHeight,
-      });
-      const backgroundImg = new FabricImage(backgroundImageElement, {
-        canvas,
-        scaleX: scale,
-        scaleY: scale,
-      });
-      canvas.backgroundImage = backgroundImg;
-    } else {
-      canvas.backgroundImage = canvas.clipPath;
-    }
-    
-    const backgroundImg = canvas.backgroundImage!;
-    if (template?.layout === 'horizontal') {
-      backgroundImg.left = cardLikeOptions.width / 2;
-      backgroundImg.top = cardLikeOptions.height / 2;
-    } else {
-      backgroundImg.left = cardLikeOptions.height / 2;
-      backgroundImg.top = cardLikeOptions.width / 2;
-    }
-    backgroundImg.setCoords();
 
+    const couple1 = [overlayImageElement, overlay, overlayImageSource] as [Group | HTMLImageElement, templateOverlay, SerializedGroupProps | HTMLImageElement | undefined];
+    const couple2 = [backgroundImageElement, background, backgroundImageSource] as [Group | HTMLImageElement, templateOverlay, SerializedGroupProps | HTMLImageElement | undefined];
+    const couples = [
+      couple1, couple2
+    ] as const;
+
+    for (const [layer, templateLayer, layerSource] of couples) {
+      if (layer) {
+      // scale the overlay asset to cover the designed layer size
+      // example: the template is supposed to be smaller than the card
+        const source = {
+          width: layer.width,
+          height: layer.height
+        }
+        const scale = util.findScaleToCover(source, {
+          width: templateLayer!.layerWidth,
+          height: templateLayer!.layerHeight,
+        });
+        let fabricLayer;
+        if (layer instanceof Group) {
+          fabricLayer = await Group.fromObject(layerSource as SerializedGroupProps);
+          fabricLayer.canvas = canvas as Canvas;
+        } else {
+          fabricLayer = new FabricImage(layer, {
+            canvas,
+            scaleX: scale,
+            scaleY: scale,
+          });
+        }
+        // set the overlay of the template in the center of the card
+        reposition(fabricLayer, template.layout);
+        if (templateLayer === overlay) {
+          scaleImageToOverlayArea(template, fabricLayer, mainImage);
+          canvas.overlayImage = fabricLayer;
+        }
+        if (templateLayer === background) {
+          canvas.backgroundImage = fabricLayer;
+        }
+      } else {
+        // reset to blank
+        if (templateLayer === overlay) {
+          canvas.overlayImage = undefined;
+          // reset image size
+          const destination = template?.layout === 'horizontal' ? cardLikeOptions : {
+            width: cardLikeOptions.height,
+            height:  cardLikeOptions.width,
+          }
+          const pictureScale = util.findScaleToCover(
+            mainImage,
+            destination,
+          );
+          mainImage.set({
+            scaleX: pictureScale,
+            scaleY: pictureScale,
+            left: destination.width / 2,
+            top: destination.height / 2,
+          });
+          mainImage.setCoords();
+        }
+        if (templateLayer === background) {
+          canvas.backgroundImage = canvas.clipPath;
+          const backgroundImg = canvas.backgroundImage!;
+          reposition(backgroundImg, template.layout);
+        }
+      }
+    }    
+    
     const { clipPath } = canvas;
     if (clipPath) {
       if (template.layout === 'horizontal') {
-        clipPath.left = cardLikeOptions.width / 2;
-        clipPath.top = cardLikeOptions.height / 2;
         clipPath.angle = 0;
       } else {
-        clipPath.top = cardLikeOptions.width / 2;
-        clipPath.left = cardLikeOptions.height / 2;
         clipPath.angle = 90;
       }
-      clipPath.setCoords();
+      reposition(clipPath, template.layout);
     }
 
     canvas.requestRenderAll();

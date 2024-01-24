@@ -9,7 +9,7 @@ import emptyHorizontal from './assets/empty_horizontal.svg';
 
 import { type SerializedGroupProps } from 'fabric';
 
-type templateLayer = {
+export type templateLayer = {
   url: string;
   /* how large the overlay is */
   layerWidth: number;
@@ -19,7 +19,7 @@ type templateLayer = {
   parsed?: Promise<SerializedGroupProps | HTMLImageElement>;
 };
 
-type templateOverlay = templateLayer & {
+export type templateOverlay = templateLayer & {
   /* percentage width where the overlaye transparent area begins */
   x: number;
   /* percentage height where the overlaye transparent area begins */
