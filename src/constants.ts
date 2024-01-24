@@ -5,8 +5,7 @@ export const cardLikeOptions = {
   rx: 35,
   ry: 35,
   strokeWidth: 2,
-  strokeDashArray: [10, 10],
-  stroke: 'red',
+  stroke: 'black',
   fill: 'white',
 };
 
