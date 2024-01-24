@@ -1,0 +1,25 @@
+.colorChanger-container {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  height: 80px;
+  padding-left: 16px;
+  padding-right: 16px;
+  align-items: center;
+  border-radius: 24px;
+  transition: all 0.5s;
+  transform: translate(-50%, -50%);
+  background-color: rgba(15, 15, 15, 0.9);
+  box-shadow: 0px 4px 9px 0px rgba(0, 0, 0, 0.35);
+}
+
+.colorChanger-container > button {
+  outline: none;
+}
+
+.spacer {
+  height: 42px;
+  width: 1px;
+  background-color: #FFF;
+  margin: 2px;
+}

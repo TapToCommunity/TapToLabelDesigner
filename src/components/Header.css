@@ -1,10 +1,38 @@
 .topHeader {
   z-index: 10;
-  position: relative;
+  position: fixed;
   display: flex;
-  justify-content: flex-end;
-  height: 64px;
+  justify-content: flex-start;
+  background-color: rgba(15, 15, 15, 0.5);
   flex-direction: row;
+  flex-wrap: wrap;
+  width: calc(100vw - 36px);
+  backdrop-filter: blur(50px);
+  padding-right: 18px;
+  padding-left: 18px;
+}
+
+.topHeader .spacedContent {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.topHeader .content {
   align-items: center;
-  width: 100%;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+}
+
+#logo {
+  margin-right: 24px;
+  height: 42px;
+  width: 127px;
+  display: flex;
+}
+
+.dropdowns {
+  color: #fff;
 }

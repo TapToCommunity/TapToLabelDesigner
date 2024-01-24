@@ -1,11 +1,51 @@
-import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, type FabricObject, Color, Gradient, type Canvas } from 'fabric';
-import { cardLikeOptions, type templateType } from '../constants';
+import { FabricImage, util, Point, type StaticCanvas, Shadow, loadSVGFromURL, Group, FabricObject, Color, Gradient, type Canvas, type SerializedGroupProps } from 'fabric';
+import { cardLikeOptions } from '../constants';
+import { type templateType } from '../cardsTemplates';
 
-const parseSvg = (url: string): Promise<Group> => 
-  loadSVGFromURL(url).then(({ objects }) => {
-    const nonNullObjects = objects.filter(objects => !!objects) as FabricObject[];
-    return new Group(nonNullObjects);
+FabricObject.ownDefaults.objectCaching = false;
+
+export const scaleImageToOverlayArea = (template: templateType, overlayImg: FabricObject, mainImage: FabricImage) => {
+  const { overlay } = template;
+  // scale the art to the designed area in the template. to fit
+  // TODO: add option later for fit or cover
+  const isRotated = mainImage.angle % 180 !== 0;
+  const scaledTemplateOverlaySize =
+    overlayImg._getTransformedDimensions();
+  const pictureScaleToTemplate = util.findScaleToFit({ 
+    width: isRotated ? mainImage.height : mainImage.width,
+    height: isRotated ? mainImage.width : mainImage.height,
+  },
+  {
+    width: scaledTemplateOverlaySize.x * overlay!.width,
+    height: scaledTemplateOverlaySize.y * overlay!.height,
   });
+  mainImage.set({
+    scaleX: pictureScaleToTemplate,
+    scaleY: pictureScaleToTemplate,
+  });
+  // get the top left corner of the template overlay
+  const templatePostion = overlayImg.translateToGivenOrigin(
+    overlayImg.getRelativeXY(),
+    'center',
+    'center',
+    'left',
+    'top',
+  );
+  mainImage.setPositionByOrigin(
+    new Point(
+      scaledTemplateOverlaySize.x *
+        (overlay!.x + overlay!.width / 2) +
+        templatePostion.x,
+      scaledTemplateOverlaySize.y *
+        (overlay!.y + overlay!.height / 2) +
+        templatePostion.y,
+    ),
+    'center',
+    'center',
+  );
+  mainImage.setCoords();
+}
+
 
 /**
  * extract and normalizes to hex format colors in the objects
@@ -17,7 +57,7 @@ const extractUniqueColorsFromGroup = (group: Group): string[] => {
   const colors: string[] = [];
   group.forEachObject((object) => {
     (['stroke', 'fill'] as const).forEach((property) => {
-      if (object[property] && !(object[property] as Gradient<'linear'>).colorStops) {
+      if (object[property] && object[property] !== 'transparent' && !(object[property] as Gradient<'linear'>).colorStops) {
         const colorInstance = new Color(object[property] as string);
         const hexValue = `#${colorInstance.toHex()}`;
         const opacity = colorInstance.getAlpha();
@@ -36,21 +76,36 @@ const extractUniqueColorsFromGroup = (group: Group): string[] => {
   return colors;
 }
 
+const parseSvg = (url: string): Promise<SerializedGroupProps> => 
+  loadSVGFromURL(url).then(({ objects }) => {
+    const nonNullObjects = objects.filter(objects => !!objects) as FabricObject[];
+    const group = new Group(nonNullObjects);
+    extractUniqueColorsFromGroup(group);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return group.toObject(['original_stroke', 'original_fill']);
+  });
+
 export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: templateType): Promise<string[]> => {
-  const { overlay, background, shadow } = template || {};
-  const [overlayImageElement, backgroundImageElement] = await Promise.all([
-    overlay && (overlay.isSvg 
-      ? overlay.parsed ?? (overlay.parsed = parseSvg(overlay.url)) 
-      : util.loadImage(overlay.url)
-    ),
-    background && util.loadImage(background.url),
+  const { overlay, background, shadow, layout } = template || {};
+  const [overlayImageSource, backgroundImageElement] = await Promise.all([
+    overlay && (overlay.parsed ? overlay.parsed : (overlay.isSvg ? (overlay.parsed = parseSvg(overlay.url)) : (overlay.parsed = util.loadImage(overlay.url)))),
+    background && (background.parsed ? background.parsed : (background.parsed = util.loadImage(background.url))) as unknown as HTMLImageElement,
   ]);
-  let colors: string[] = [];
-  if (overlayImageElement instanceof Group) {
-    colors = extractUniqueColorsFromGroup(overlayImageElement);
-  }
+  const overlayImageElement = overlayImageSource && (overlayImageSource instanceof Image ? overlayImageSource : await Group.fromObject(overlayImageSource))
   for (const canvas of canvases ) {
-    const mainImage = canvas.getObjects('image')[0];
+    const isHorizontal = layout === 'horizontal';
+    const { width, height } = cardLikeOptions;
+    const finalWidth = isHorizontal ? width : height;
+    const finalHeight = isHorizontal ? height : width;
+    // resize only if necessary
+    if (finalHeight !== canvas.height || finalWidth !== canvas.width) {
+      canvas.setDimensions({
+        width: finalWidth,
+        height: finalHeight,
+      }, { backstoreOnly: true });
+    }
+    const mainImage = canvas.getObjects('image')[0] as FabricImage;
     mainImage.shadow = shadow ? new Shadow(shadow) : null;
     if (overlayImageElement) {
       // scale the overlay asset to cover the designed layer size
@@ -61,8 +116,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
       });
       let overlayImg;
       if (overlayImageElement instanceof Group) {
-        overlayImg = await overlayImageElement.clone();
-        extractUniqueColorsFromGroup(overlayImg);
+        overlayImg = await Group.fromObject(overlayImageSource);
         overlayImg.canvas = canvas as Canvas;
       } else {
         overlayImg = new FabricImage(overlayImageElement, {
@@ -80,50 +134,26 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
         overlayImg.left = cardLikeOptions.height / 2;
         overlayImg.top = cardLikeOptions.width / 2;
       }
-      // scale the art to the designed area in the template. to fit
-      // TODO: add option later for fit or cover
-      const scaledTemplateOverlaySize =
-        overlayImg._getTransformedDimensions();
-      const pictureScaleToTemplate = util.findScaleToFit(mainImage, {
-        width: scaledTemplateOverlaySize.x * overlay!.width,
-        height: scaledTemplateOverlaySize.y * overlay!.height,
-      });
-      mainImage.set({
-        scaleX: pictureScaleToTemplate,
-        scaleY: pictureScaleToTemplate,
-      });
-      // get the top left corner of the template overlay
-      const templatePostion = overlayImg.translateToGivenOrigin(
-        overlayImg.getRelativeXY(),
-        'center',
-        'center',
-        'left',
-        'top',
-      );
-      mainImage.setPositionByOrigin(
-        new Point(
-          scaledTemplateOverlaySize.x *
-            (overlay!.x + overlay!.width / 2) +
-            templatePostion.x,
-          scaledTemplateOverlaySize.y *
-            (overlay!.y + overlay!.height / 2) +
-            templatePostion.y,
-        ),
-        'center',
-        'center',
-      );
+      overlayImg.setCoords();
+      scaleImageToOverlayArea(template, overlayImg, mainImage)
     } else {
       // reset to BLANK
       canvas.overlayImage = undefined;
+      const destination = template?.layout === 'horizontal' ? cardLikeOptions : {
+        width: cardLikeOptions.height,
+        height:  cardLikeOptions.width,
+      }
       const pictureScale = util.findScaleToCover(
         mainImage,
-        cardLikeOptions,
+        destination,
       );
       mainImage.set({
         scaleX: pictureScale,
         scaleY: pictureScale,
+        left: destination.width / 2,
+        top: destination.height / 2,
       });
-      mainImage.setPositionByOrigin(new Point(0, 0), 'left', 'top');
+      mainImage.setCoords();
     }
     if (backgroundImageElement) {
       // scale the overlay asset to cover the designed layer size
@@ -138,16 +168,20 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
         scaleY: scale,
       });
       canvas.backgroundImage = backgroundImg;
-      if (template?.layout === 'horizontal') {
-        backgroundImg.left = cardLikeOptions.width / 2;
-        backgroundImg.top = cardLikeOptions.height / 2;
-      } else {
-        backgroundImg.left = cardLikeOptions.height / 2;
-        backgroundImg.top = cardLikeOptions.width / 2;
-      }
     } else {
       canvas.backgroundImage = canvas.clipPath;
     }
+    
+    const backgroundImg = canvas.backgroundImage!;
+    if (template?.layout === 'horizontal') {
+      backgroundImg.left = cardLikeOptions.width / 2;
+      backgroundImg.top = cardLikeOptions.height / 2;
+    } else {
+      backgroundImg.left = cardLikeOptions.height / 2;
+      backgroundImg.top = cardLikeOptions.width / 2;
+    }
+    backgroundImg.setCoords();
+
     const { clipPath } = canvas;
     if (clipPath) {
       if (template.layout === 'horizontal') {
@@ -163,6 +197,11 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
     }
 
     canvas.requestRenderAll();
+  }
+  // this could returned by the promise right away
+  let colors: string[] = [];
+  if (overlayImageElement instanceof Group) {
+    colors = extractUniqueColorsFromGroup(overlayImageElement);
   }
   return colors;
 }

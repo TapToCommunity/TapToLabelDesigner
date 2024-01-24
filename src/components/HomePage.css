@@ -1,0 +1,99 @@
+.homepage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0;
+  padding-top: 80px;
+}
+
+.homepage .topBanner {
+  display: flex;
+  min-height: 523px;
+  background-size: cover;
+}
+
+.homepage .topBanner .bannerContent {
+  display: flex;
+  flex-grow: 1;
+  background: linear-gradient(180deg, rgba(41, 44, 52, 0.9) 0%, rgba(41, 44, 52, 0.603) 100%);
+  justify-content: center;
+  backdrop-filter: blur(3px);
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.bannerContent .central {
+  color: #FFF;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 60px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.homepage .intro {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  min-height: 285px;
+  background-color: #202744;
+}
+
+.homepage h3 {
+  font-size: 32px;
+  line-height: 50px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.homepage .textLayout {
+  flex-direction: column;
+  display: flex;
+  padding-top: 30px;
+  font-weight: 500;
+  padding-left: 16px;
+  padding-right: 16px;
+  width: calc(100% - 32px);
+  flex-grow: 1;
+  max-width: 900px;
+  align-content: flex-start;
+}
+
+.intro .textLayout {
+  color: #fff;
+}
+
+.textLayout a {
+  color: inherit;
+  text-decoration-color: inherit;
+}
+
+.textLayout li {
+  list-style-position: inside;
+}
+
+.textLayout p, .textLayout ul {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.content .textLayout {
+  color: rgba(19, 19, 19, 1);
+  text-align: left;
+  margin-bottom: 48px;
+}
+
+.homepage .content {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  background-color: rgba(244, 244, 244, 1);
+  min-height: 600px;
+  padding: 10px;
+}
+
+@media (max-width: 768px){
+
+}

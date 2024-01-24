@@ -1,20 +1,21 @@
 import { useEffect, DragEventHandler, startTransition } from 'react';
-import type { FC, JSX, DragEvent as ReactDragEvent, ReactNode } from 'react';
+import type { MutableRefObject, DragEvent as ReactDragEvent } from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
-import './FileDropper.css';
 
 const acceptDrag: DragEventHandler<HTMLDivElement> = (
   evt: ReactDragEvent<HTMLDivElement>,
 ) => evt.preventDefault();
 
-type FileDropperProps = {
-  children: JSX.Element | JSX.Element[] | ReactNode;
+type useFileDropperParams = {
+  elementRef: MutableRefObject<HTMLElement | null>;
 };
 
-export const FileDropper: FC<FileDropperProps> = ({ children }) => {
+export const useFileDropper = ({ elementRef }: useFileDropperParams) => {
   const { files, setFiles } = useFileDropperContext();
 
   useEffect(() => {
+    const el = elementRef.current;
+    if (!el) return;
     const eventListener = (evt: DragEvent) => {
       evt.preventDefault();
       startTransition(() => {
@@ -23,15 +24,13 @@ export const FileDropper: FC<FileDropperProps> = ({ children }) => {
         }
       });
     };
-    window.addEventListener('drop', eventListener);
+    el.addEventListener('drop', eventListener);
     return () => {
-      window.removeEventListener('drop', eventListener);
+      el.removeEventListener('drop', eventListener);
     };
-  }, [setFiles, files]);
+  }, [setFiles, files, elementRef]);
 
-  return (
-    <div className="labelsContent" onDragOver={acceptDrag}>
-      {children}
-    </div>
-  );
+  return {
+    onDragOver: acceptDrag,
+  };
 };

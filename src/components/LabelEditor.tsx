@@ -1,106 +1,75 @@
-import { useEffect, useState, useRef } from 'react';
-import type { RefObject } from 'react';
+import { useState, useRef, useCallback } from 'react';
+import type { MutableRefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
-import './LabelEditor.css';
 import type { StaticCanvas } from 'fabric';
-import {
-  cardLikeOptions,
-  cardRatio,
-  type layoutOrientation,
-} from '../constants';
-import { util } from 'fabric';
-import { debounce } from '../utils';
-import { setTemplateOnCanvases } from '../utils/setTemplate';
-import { useAppDataContext } from '../contexts/appData';
-import { colorsDiffer } from '../utils/utils';
-import { updateColors } from '../utils/updateColors';
+import { PortalMenu } from './PortalMenu';
+import { useLabelEditor } from '../hooks/useLabelEditor';
 
 type LabelEditorProps = {
   file: File;
-  canvasArrayRef: RefObject<StaticCanvas[]>;
+  canvasArrayRef: MutableRefObject<StaticCanvas[]>;
   index: number;
+  className: string;
 };
 
-const resizeFunction = (
-  fabricCanvas: StaticCanvas,
-  orientation: layoutOrientation,
-  bbox: DOMRectReadOnly,
-) => {
-  const chosenWidth = Math.floor(bbox.width - 20);
-  const ratio = orientation === 'horizontal' ? cardRatio : 1 / cardRatio;
-  fabricCanvas.setDimensions({
-    width: chosenWidth,
-    height: Math.ceil(chosenWidth / ratio),
-  });
-  let scale;
-  if (orientation === 'horizontal') {
-    scale = util.findScaleToFit(cardLikeOptions, fabricCanvas);
-  } else {
-    scale = util.findScaleToFit(
-      {
-        width: cardLikeOptions.height,
-        height: cardLikeOptions.width,
-      },
-      fabricCanvas,
-    );
-  }
-  fabricCanvas.setZoom(scale);
+type MenuInfo = {
+  open: boolean;
+  top: number | string;
+  left: number | string;
 };
-
-const resizerFunctionCreator = (
-  fabricCanvas: StaticCanvas,
-  orientation: layoutOrientation,
-): ResizeObserverCallback =>
-  debounce<ResizeObserverCallback>((entries) => {
-    const bbox = entries[0].contentRect;
-    resizeFunction(fabricCanvas, orientation, bbox);
-  }, 10);
 
 export const LabelEditor = ({
   file,
   canvasArrayRef,
   index,
+  className,
 }: LabelEditorProps) => {
-  const [fabricCanvas, setFabricCanvas] = useState<StaticCanvas | null>(null);
+  const [isMenuOpen, setMenuOpen] = useState<MenuInfo>({
+    open: false,
+    top: 0,
+    left: 0,
+  });
   const padderRef = useRef<HTMLDivElement | null>(null);
-  const { template, customColors } = useAppDataContext();
-  useEffect(() => {
-    const divRef = padderRef.current;
-    if (fabricCanvas && divRef) {
-      if (canvasArrayRef.current) {
-        canvasArrayRef.current[index] = fabricCanvas;
-      }
-      setTemplateOnCanvases([fabricCanvas], template).then((colors) => {
-        if (colorsDiffer(colors, customColors)) {
-          updateColors([fabricCanvas], customColors, colors);
-        }
-      });
-    }
-    // shouldn't retrigger for index change or template change or colors
-    // the data reconciler does that
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvasArrayRef, fabricCanvas]);
+  const {
+    deleteLabel,
+    setFabricCanvas,
+    localColors,
+    setLocalColors,
+    rotateMainImage,
+  } = useLabelEditor({
+    canvasArrayRef,
+    index,
+    padderRef,
+  });
 
-  useEffect(() => {
-    const divRef = padderRef.current;
-    if (fabricCanvas && divRef) {
-      const callback = resizerFunctionCreator(fabricCanvas, template.layout);
-      const resizeObserver = new ResizeObserver(callback);
-      resizeObserver.observe(divRef);
-      return () => {
-        resizeObserver.unobserve(divRef);
-      };
-    }
-  }, [template, fabricCanvas]);
+  const openMenu = useCallback(() => {
+    const divRef = padderRef.current!;
+    const bbox = divRef.getBoundingClientRect();
+    setMenuOpen({
+      open: true,
+      left: `${(100 * (bbox.left + bbox.width / 2)) / window.innerWidth}%`,
+      top: bbox.top + bbox.height / 2 + window.scrollY,
+    });
+  }, [setMenuOpen]);
 
   return (
-    <div className={`labelContainer ${template.layout}`} ref={padderRef}>
-      <div className={`labelPadder ${template.layout}`}></div>
+    <div className={className} ref={padderRef} onClick={openMenu}>
       <FabricCanvasWrapper
         key={`canvas_${file.name}`}
         setFabricCanvas={setFabricCanvas}
         file={file}
       />
+      {isMenuOpen.open && (
+        <PortalMenu
+          rotateMainImage={rotateMainImage}
+          deleteLabel={deleteLabel}
+          top={isMenuOpen.top}
+          left={isMenuOpen.left}
+          localColors={localColors}
+          setLocalColors={setLocalColors}
+          setIsOpen={setMenuOpen}
+        />
+      )}
     </div>
   );
 };

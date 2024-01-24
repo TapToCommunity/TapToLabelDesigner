@@ -2,7 +2,6 @@ import { useState, useRef, useMemo } from 'react';
 import type { Canvas } from 'fabric';
 import type { FC, JSX } from 'react';
 import { FileDropContext, type contextType } from '../contexts/fileDropper';
-import './FileDropper.css';
 
 type FileDropperProps = {
   children: JSX.Element | JSX.Element[];

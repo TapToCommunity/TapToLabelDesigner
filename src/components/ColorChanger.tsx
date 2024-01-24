@@ -1,19 +1,25 @@
-import { IconButton } from '@mui/material';
-import { useAppDataContext } from '../contexts/appData';
+import IconButton from '@mui/material/IconButton';
 import { ColorButtons } from './ColorButton';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import { useCallback } from 'react';
 
-export const ColorChanger = () => {
-  const { originalColors, customColors, setCustomColors } = useAppDataContext();
+type ColorChangerProps = {
+  setCustomColors: (colors: string[]) => void;
+  customColors: string[];
+  originalColors: string[];
+};
+
+export const ColorChanger = ({
+  setCustomColors,
+  customColors,
+  originalColors,
+}: ColorChangerProps) => {
+  const reset = useCallback(() => {
+    setCustomColors(originalColors);
+  }, [originalColors, setCustomColors]);
+
   return (
     <>
-      <IconButton
-        onClick={() => {
-          setCustomColors(originalColors);
-        }}
-      >
-        <RestartAltIcon />
-      </IconButton>
       {originalColors.map((color, index) => (
         <ColorButtons
           key={color}
@@ -25,6 +31,13 @@ export const ColorChanger = () => {
           }}
         />
       ))}
+      {originalColors.length > 0 && (
+        <IconButton onClick={reset}>
+          <RestartAltIcon />
+        </IconButton>
+      )}
     </>
   );
 };
+
+export default ColorChanger;
