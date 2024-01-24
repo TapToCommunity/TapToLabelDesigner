@@ -7,13 +7,15 @@ import { util } from 'fabric';
 export const preparePdf = async (printerTemplate: PrintTemplate, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
   const {
     gridSize,
-    labelsPerPage,
     leftMargin,
     topMargin,
     layout,
+    paperSize,
     columns,
     rows,
   } = printerTemplate;
+
+  const labelsPerPage = rows * columns;
 
   const imageNeedsRotation = template.layout === 'vertical';
 
@@ -21,7 +23,7 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
     const doc = new jsPDF({
       orientation: layout,
       unit: 'mm',
-      format: 'a4',
+      format: paperSize,
       putOnlyUsedFonts: true,
       floatPrecision: 16, // or "smart", default is 16
     });
@@ -33,7 +35,7 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
           canvas.clipPath!.getBoundingRect();
         const newPageNumber = Math.floor(index / labelsPerPage);
         if (newPageNumber > pageNumber) {
-          doc.addPage('a4', layout);
+          doc.addPage(paperSize, layout);
           pageNumber = newPageNumber;
         }
         const column = index % columns;

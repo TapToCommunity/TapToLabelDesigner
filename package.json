@@ -16,7 +16,7 @@
     "@mui/material": "^5.15.1",
     "@uiw/react-color-compact": "^2.0.5",
     "client-zip": "^2.4.4",
-    "fabric": "6.0.0-beta17",
+    "fabric": "6.0.0-beta18",
     "jspdf": "^2.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
