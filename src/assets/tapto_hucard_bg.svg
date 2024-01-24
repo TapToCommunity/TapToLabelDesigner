@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="600" height="975" viewBox="0 0 600 975" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+   <rect fill="transparent" x="0" y="0" width="600" height="975" />
     <g id="Backgrounds" transform="matrix(1,0,0,0.999904,-18.75,-18.6544)">
         <g id="Color-Fill-Backgroun" serif:id="Color Fill Backgroun" transform="matrix(1.04031,0,0,1.03033,-24.9431,-30.1389)">
             <path d="M618.75,286.12L618.75,964.63C618.75,980.702 605.828,993.75 589.912,993.75L70.838,993.75C54.922,993.75 42,980.702 42,964.63L42,286.12C42,270.048 54.922,257 70.838,257L589.912,257C605.828,257 618.75,270.048 618.75,286.12Z" style="fill:white;"/>

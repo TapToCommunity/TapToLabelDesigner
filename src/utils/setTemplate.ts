@@ -198,7 +198,6 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
       }
       reposition(clipPath, template.layout);
     }
-
     canvas.requestRenderAll();
   }
   // this could returned by the promise right away

@@ -139,7 +139,7 @@ export const templates: Record<string, templateType> = {
       layerWidth: 600,
       layerHeight: 975,
       url: tapToHuBg,
-      isSvg: false,
+      isSvg: true,
     },
     label: 'HuCard'
   }
