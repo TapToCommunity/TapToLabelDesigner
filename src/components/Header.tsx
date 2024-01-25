@@ -1,13 +1,6 @@
 import { useFileDropperContext } from '../contexts/fileDropper';
 import './Header.css';
-import {
-  type ReactEventHandler,
-  lazy,
-  startTransition,
-  useCallback,
-  useRef,
-  useState,
-} from 'react';
+import { lazy, useState } from 'react';
 import { useAppDataContext } from '../contexts/appData';
 import logoUrl from '../assets/log.svg';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
