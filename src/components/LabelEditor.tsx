@@ -6,7 +6,7 @@ import { PortalMenu } from './PortalMenu';
 import { useLabelEditor } from '../hooks/useLabelEditor';
 
 type LabelEditorProps = {
-  file: File;
+  file: File | string;
   canvasArrayRef: MutableRefObject<StaticCanvas[]>;
   index: number;
   className: string;
@@ -55,7 +55,7 @@ export const LabelEditor = ({
   return (
     <div className={className} ref={padderRef} onClick={openMenu}>
       <FabricCanvasWrapper
-        key={`canvas_${file.name || file}`}
+        key={`canvas_${(file as File).name || file}`}
         setFabricCanvas={setFabricCanvas}
         file={file}
       />

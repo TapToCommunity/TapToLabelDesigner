@@ -50,10 +50,7 @@ export function ImageSearch({
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
 
-  const addImage = async (
-    e: MouseEvent<HTMLImageElement, MouseEvent>,
-    url: string,
-  ) => {
+  const addImage = async (e: MouseEvent<HTMLImageElement>, url: string) => {
     const currentIndex = files.length;
     setOpen(false);
     setFiles([...files, (e.target as HTMLImageElement).src]);
