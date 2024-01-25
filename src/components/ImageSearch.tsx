@@ -61,6 +61,17 @@ export function ImageSearch({
     });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const executeSearch = (e: any) => {
+    e.preventDefault();
+    setSearching(true);
+    setSearchResults([]);
+    searchImage(searchQuery).then((res) => {
+      setSearching(false);
+      setSearchResults(res);
+    });
+  };
+
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
       <Box
@@ -82,31 +93,24 @@ export function ImageSearch({
         }}
       >
         <Stack spacing={1}>
-          <Stack
-            direction="row"
-            spacing="10px"
-            sx={{ justifyContent: 'center' }}
-          >
-            <TextField
-              label="Game name"
-              value={searchQuery}
-              onChange={(evt) => setSearchQuery(evt.target.value)}
-              style={{ width: '30%' }}
-            />
-            <Button
-              variant="contained"
-              onClick={() => {
-                setSearchResults([]);
-                setSearching(true);
-                searchImage(searchQuery).then((res) => {
-                  setSearching(false);
-                  setSearchResults(res);
-                });
-              }}
+          <form onSubmit={executeSearch}>
+            <Stack
+              direction="row"
+              spacing="10px"
+              sx={{ justifyContent: 'center' }}
             >
-              {searching ? <CircularProgress color="secondary" /> : 'Search'}
-            </Button>
-          </Stack>
+              <TextField
+                autoComplete="off"
+                label="Game name"
+                value={searchQuery}
+                onChange={(evt) => setSearchQuery(evt.target.value)}
+                style={{ width: '30%' }}
+              />
+              <Button variant="contained" onClick={executeSearch}>
+                {searching ? <CircularProgress color="secondary" /> : 'Search'}
+              </Button>
+            </Stack>
+          </form>
           <Typography variant="h3">
             {searchResults.length > 0 ? searchResults[0].gameName : ''}
           </Typography>
