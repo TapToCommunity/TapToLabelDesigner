@@ -55,7 +55,7 @@ export const LabelEditor = ({
   return (
     <div className={className} ref={padderRef} onClick={openMenu}>
       <FabricCanvasWrapper
-        key={`canvas_${(file as File).name || file}`}
+        key={`canvas_${(file as File).name || (file as HTMLImageElement).src}`}
         setFabricCanvas={setFabricCanvas}
         file={file}
       />

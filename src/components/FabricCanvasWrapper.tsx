@@ -53,5 +53,10 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
     }
   }, [setFabricCanvas, file]);
 
-  return <canvas ref={canvasRef} key={`${(file as File).name || file}`} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      key={`${(file as File).name || (file as HTMLImageElement).src}`}
+    />
+  );
 };
