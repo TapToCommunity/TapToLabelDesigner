@@ -7,11 +7,17 @@ import {
   Rect,
   FabricObject,
   type Canvas,
+  TOptions,
 } from 'fabric';
+
 type WrapperProp = {
   file: File;
   setFabricCanvas: (canvas: StaticCanvas | null) => void;
 };
+
+interface ImageProps {
+  originalFile?: File;
+}
 
 export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -27,12 +33,15 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
       const cardBorder = new Rect(cardLikeOptions);
       cardBorder.canvas = fabricCanvas as Canvas;
       fabricCanvas.clipPath = cardBorder;
+      fabricCanvas.backgroundColor = 'white';
       fabricCanvas.backgroundImage = cardBorder;
       fabricCanvas.centerObject(cardBorder);
       const imageUrl = URL.createObjectURL(file);
       if (file) {
         util.loadImage(imageUrl).then((image) => {
-          const fabricImage = new FabricImage(image);
+          const fabricImage = new FabricImage<TOptions<ImageProps>>(image, {
+            originalFile: file,
+          });
           const scale = util.findScaleToCover(fabricImage, fabricCanvas);
           fabricImage.scaleX = scale;
           fabricImage.scaleY = scale;

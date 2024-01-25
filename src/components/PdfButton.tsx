@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import PrintOutlined from '@mui/icons-material/PrintOutlined';
 import FolderZipOutlined from '@mui/icons-material/FolderZipOutlined';
 
-import { preparePdf } from '../utils/preparePdf';
+import { preparePdf } from '../utils/preparePdfKit';
 import { prepareZip } from '../utils/prepareZip';
 
 type PdfButtonProps = {

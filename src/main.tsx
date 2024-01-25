@@ -8,6 +8,8 @@ import createTheme from '@mui/material/styles/createTheme';
 
 import { ThemeProvider } from '@emotion/react';
 
+window.global = window;
+
 const theme = createTheme({
   palette: {
     mode: 'dark',

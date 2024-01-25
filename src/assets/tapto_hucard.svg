@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="600" height="975" viewBox="0 0 600 975" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="Label-Edge" serif:id="Label Edge" transform="matrix(1.02389,0,0,1.32293,-7.16724,-305.597)">
+        <path d="M593,244.606L593,954.394C593,961.903 585.123,968 575.42,968L24.58,968C14.877,968 7,961.903 7,954.394L7,244.606C7,237.097 14.877,231 24.58,231L575.42,231C585.123,231 593,237.097 593,244.606Z" style="fill:transparent;"/>
+    </g>
     <g id="Card-Frame" serif:id="Card Frame" transform="matrix(1,0,0,0.999904,-18.75,-18.6544)">
         <g id="Artwork-Area" serif:id="Artwork Area">
             <g transform="matrix(0.972696,0,0,0.98924,26.9411,21.1639)">
