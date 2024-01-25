@@ -14,7 +14,7 @@ export const LabelsView = () => {
       {files.map((file, index) => (
         <LabelEditor
           className={`labelContainer ${template.layout}`}
-          key={`key-susp-${file.name}`}
+          key={`key-susp-${file.name || file}`}
           index={index}
           file={file}
           canvasArrayRef={canvasArrayRef}

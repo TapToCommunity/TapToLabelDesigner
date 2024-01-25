@@ -4,9 +4,9 @@ import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
-import { CircularProgress, LinearProgress, Stack } from '@mui/material';
+import { CircularProgress, Stack } from '@mui/material';
 
 const SEARCH_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/search/';
 const IMAGE_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/image/';
@@ -37,7 +37,10 @@ async function getImage(cdnUrl: string): Promise<File> {
   });
 }
 
-export function ImageSearch(props: {
+export function ImageSearch({
+  open,
+  setOpen,
+}: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
@@ -46,19 +49,23 @@ export function ImageSearch(props: {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
-  const [fetching, setFetching] = useState<boolean>(false);
 
-  const addImage = async (url: string) => {
-    setFetching(true);
+  const addImage = async (
+    e: MouseEvent<HTMLImageElement, MouseEvent>,
+    url: string,
+  ) => {
+    const currentIndex = files.length;
+    setOpen(false);
+    setFiles([...files, (e.target as HTMLImageElement).src]);
     getImage(url).then((file) => {
-      setFiles([...files, file]);
-      props.setOpen(false);
-      setFetching(false);
+      files[currentIndex] = file;
+      const newFiles = [...files];
+      setFiles(newFiles);
     });
   };
 
   return (
-    <Modal open={props.open} onClose={() => props.setOpen(false)}>
+    <Modal open={open} onClose={() => setOpen(false)}>
       <Box
         sx={{
           position: 'absolute',
@@ -66,9 +73,9 @@ export function ImageSearch(props: {
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '90%',
-          height: !fetching ? '70%' : "15%",
           bgcolor: 'background.paper',
           border: '2px solid #000',
+          height: '70%',
           boxShadow: 24,
           p: 4,
           color: 'text.primary',
@@ -77,58 +84,47 @@ export function ImageSearch(props: {
           textAlign: 'center',
         }}
       >
-        {fetching ? (
-          <>
-            <Typography variant="h3">Fetching image...</Typography>
-            <LinearProgress />
-          </>
-        ) : (
-          <>
-            <Stack spacing={1}>
-              <Stack
-                direction="row"
-                spacing="10px"
-                sx={{ justifyContent: 'center' }}
-              >
-                <TextField
-                  label="Game name"
-                  value={searchQuery}
-                  onChange={(evt) => setSearchQuery(evt.target.value)}
-                  style={{ width: '30%' }}
+        <Stack spacing={1}>
+          <Stack
+            direction="row"
+            spacing="10px"
+            sx={{ justifyContent: 'center' }}
+          >
+            <TextField
+              label="Game name"
+              value={searchQuery}
+              onChange={(evt) => setSearchQuery(evt.target.value)}
+              style={{ width: '30%' }}
+            />
+            <Button
+              variant="contained"
+              onClick={() => {
+                setSearchResults([]);
+                setSearching(true);
+                searchImage(searchQuery).then((res) => {
+                  setSearching(false);
+                  setSearchResults(res);
+                });
+              }}
+            >
+              {searching ? <CircularProgress color="secondary" /> : 'Search'}
+            </Button>
+          </Stack>
+          <Typography variant="h3">
+            {searchResults.length > 0 ? searchResults[0].gameName : ''}
+          </Typography>
+          <Grid container spacing={1}>
+            {searchResults.map((result) => (
+              <Grid item xs={3}>
+                <img
+                  src={result.thumbnailUrl}
+                  onClick={(e) => addImage(e, result.imageUrl)}
+                  style={{ cursor: 'pointer' }}
                 />
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setSearchResults([]);
-                    setSearching(true);
-                    searchImage(searchQuery).then((res) => {
-                      setSearching(false);
-                      setSearchResults(res);
-                    });
-                  }}
-                >
-                  {searching ? <CircularProgress color='secondary' /> : 'Search'}
-                </Button>
-              </Stack>
-              <Typography variant="h3">
-                {searchResults.length > 0
-                  ? searchResults[0].gameName
-                  : ''}
-              </Typography>
-              <Grid container spacing={1}>
-                {searchResults.map((result) => (
-                  <Grid item xs={3}>
-                    <img
-                      src={result.thumbnailUrl}
-                      onClick={() => addImage(result.imageUrl)}
-                      style={{ cursor: 'pointer' }}
-                    />
-                  </Grid>
-                ))}
               </Grid>
-            </Stack>
-          </>
-        )}
+            ))}
+          </Grid>
+        </Stack>
       </Box>
     </Modal>
   );

@@ -9,7 +9,7 @@ import type { Canvas } from 'fabric';
 
 export type contextType = {
   files: File[];
-  setFiles: (files: File[]) => void;
+  setFiles: (files: (File | string)[]) => void;
   canvasArrayRef: MutableRefObject<Canvas[]>;
 };
 

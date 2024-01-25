@@ -8,8 +8,9 @@ import {
   FabricObject,
   type Canvas,
 } from 'fabric';
+
 type WrapperProp = {
-  file: File;
+  file: File | string;
   setFabricCanvas: (canvas: StaticCanvas | null) => void;
 };
 
@@ -29,7 +30,7 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
       fabricCanvas.clipPath = cardBorder;
       fabricCanvas.backgroundImage = cardBorder;
       fabricCanvas.centerObject(cardBorder);
-      const imageUrl = URL.createObjectURL(file);
+      const imageUrl = file instanceof Blob ? URL.createObjectURL(file) : file;
       if (file) {
         util.loadImage(imageUrl).then((image) => {
           const fabricImage = new FabricImage(image);
@@ -49,5 +50,5 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
     }
   }, [setFabricCanvas, file]);
 
-  return <canvas ref={canvasRef} key={`${file.name}`} />;
+  return <canvas ref={canvasRef} key={`${(file as File).name || file}`} />;
 };
