@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FabricImage, type FabricObject, Group, ImageProps, Path, StaticCanvas, util, Color, Rect } from 'fabric';
-import BlobStream from 'blob-stream/.js';
+import BlobStream from '../utils/blob-stream';
 
 export const createDownloadStream = (pdfDoc: any): Promise<Blob> => new Promise((resolve) => {
   const stream = pdfDoc.pipe(new BlobStream());
