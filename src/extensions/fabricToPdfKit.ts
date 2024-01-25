@@ -1,14 +1,16 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FabricImage, type FabricObject, Group, ImageProps, Path, StaticCanvas, util, Color, Rect } from 'fabric';
-import BlobStream from '../utils/blob-stream';
 
-export const createDownloadStream = (pdfDoc: any): Promise<Blob> => new Promise((resolve) => {
+export const createDownloadStream = async (pdfDoc: any): Promise<Blob> => {
+  // @ts-expect-error yeah no definitions
+  const { default: BlobStream } = await import('blob-stream/blob-stream.js');
   const stream = pdfDoc.pipe(new BlobStream());
-  stream.on('finish', () => {
-    resolve(stream.toBlob('application/pdf'));
+  return new Promise((resolve) => {
+    stream.on('finish', () => {
+      resolve(stream.toBlob('application/pdf'));
+    });
   });
-});
+}
 
 type box = {
   x: number;
