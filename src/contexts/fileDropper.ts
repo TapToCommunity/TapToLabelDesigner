@@ -8,8 +8,8 @@ import {
 import type { Canvas } from 'fabric';
 
 export type contextType = {
-  files: (File | string)[];
-  setFiles: (files: (File | string)[]) => void;
+  files: (File | HTMLImageElement)[];
+  setFiles: (files: (File | HTMLImageElement)[]) => void;
   canvasArrayRef: MutableRefObject<Canvas[]>;
 };
 

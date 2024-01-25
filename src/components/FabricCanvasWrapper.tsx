@@ -10,7 +10,7 @@ import {
 } from 'fabric';
 
 type WrapperProp = {
-  file: File | string;
+  file: File | HTMLImageElement;
   setFabricCanvas: (canvas: StaticCanvas | null) => void;
 };
 
@@ -30,9 +30,12 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
       fabricCanvas.clipPath = cardBorder;
       fabricCanvas.backgroundImage = cardBorder;
       fabricCanvas.centerObject(cardBorder);
-      const imageUrl = file instanceof Blob ? URL.createObjectURL(file) : file;
+      const imagePromise =
+        file instanceof Blob
+          ? util.loadImage(URL.createObjectURL(file))
+          : Promise.resolve(file);
       if (file) {
-        util.loadImage(imageUrl).then((image) => {
+        imagePromise.then((image) => {
           const fabricImage = new FabricImage(image);
           const scale = util.findScaleToCover(fabricImage, fabricCanvas);
           fabricImage.scaleX = scale;

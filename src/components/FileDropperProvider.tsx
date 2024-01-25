@@ -10,7 +10,7 @@ type FileDropperProps = {
 export const FileDropperContextProvider: FC<FileDropperProps> = ({
   children,
 }) => {
-  const [files, setFiles] = useState<(File | string)[]>([]);
+  const [files, setFiles] = useState<(File | HTMLImageElement)[]>([]);
   const canvasArrayRef = useRef<Canvas[]>([]);
 
   const contextValue = useMemo<contextType>(

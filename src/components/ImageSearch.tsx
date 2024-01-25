@@ -53,7 +53,7 @@ export function ImageSearch({
   const addImage = async (e: MouseEvent<HTMLImageElement>, url: string) => {
     const currentIndex = files.length;
     setOpen(false);
-    setFiles([...files, (e.target as HTMLImageElement).src]);
+    setFiles([...files, e.target as HTMLImageElement]);
     getImage(url).then((file) => {
       files[currentIndex] = file;
       const newFiles = [...files];
