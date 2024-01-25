@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FabricImage, FabricObject, ImageProps, StaticCanvas } from "fabric";
-import BlobStream from 'blob-stream';
+import { FabricImage, type FabricObject, Group, ImageProps, Path, StaticCanvas, util, Color, Rect } from 'fabric';
+import BlobStream from 'blob-stream/.js';
 
-export const createDownloadStream = (pdfDoc: any) => new Promise((resolve) => {
-  const stream = pdfDoc.pipe(BlobStream());
+export const createDownloadStream = (pdfDoc: any): Promise<Blob> => new Promise((resolve) => {
+  const stream = pdfDoc.pipe(new BlobStream());
   stream.on('finish', () => {
     resolve(stream.toBlob('application/pdf'));
   });
@@ -16,33 +17,74 @@ type box = {
   height: number;
 }
 
-// fabric.EditorPath.prototype.renderPdfKit = function (pdfDoc, artboard) {
-//   const fill = new fabric.Color(this.fill);
-//   const stroke = new fabric.Color(this.stroke);
-//   pdfDoc.save();
-//   const objectMatrix = this.calcTransformMatrix();
-//   const matrix = fabric.util.multiplyTransformMatrices(
-//     objectMatrix,
-//     [1, 0, 0, 1, -this.pathOffset.x, -this.pathOffset.y],
-//   );
-//   const pathString = getPathScaledForTransform(this.path, matrix);
-//   const multiplier = this.strokeUniform ? getStrokeMultiplier({ backgroundImage: artboard }) : 1;
-//   if (!this.strokeNofill && this.hasStroke()) {
-//     pdfDoc.lineWidth(this.strokeWidth * multiplier);
-//     pdfDoc.path(pathString);
-//     if (this.strokeDashArray && this.strokeDashArray[0] !== 0 && this.strokeDashArray[1] !== 0) {
-//       pdfDoc.dash(
-//         this.strokeDashArray[0] * multiplier * this.strokeWidth,
-//         { space: this.strokeDashArray[1] * this.strokeWidth * multiplier });
-//     }
-//     pdfDoc.stroke(stroke._source.slice(0, 3));
-//   }
-//   if (!this.nofill && this.hasFill()) {
-//     pdfDoc.path(pathString);
-//     pdfDoc.fill(fill._source.slice(0, 3));
-//   }
-//   pdfDoc.restore();
-// };
+const addRectToPdf = (rect: Rect, pdfDoc: any, box: box) => {
+  pdfDoc.save();
+  pdfDoc.transform(1,0,0,1, -box.width / 2 / 0.24, -box.height / 2 / 0.24);
+
+  transformPdf(rect, pdfDoc);
+
+  const fill = new Color(rect.fill as string);
+  const stroke = new Color(rect.stroke as string);
+
+  const paintStroke = () => {
+    if (rect.stroke && rect.stroke !== 'transparent') {
+      pdfDoc.lineWidth(rect.strokeWidth);
+      pdfDoc.rect(-rect.width / 2, -rect.height / 2, rect.width, rect.height);
+      // pdfDoc.strokeOpacity(this.opacity);
+      if (rect.strokeDashArray && rect.strokeDashArray[0] !== 0 && rect.strokeDashArray[1] !== 0) {
+        pdfDoc.dash(
+          rect.strokeDashArray[0]  / rect.scaleX,
+          { space: rect.strokeDashArray[1] * rect.strokeWidth });
+      }
+      pdfDoc.stroke(stroke.getSource().slice(0, 3));
+    }
+  };
+
+  const paintFill = () => {
+    if (rect.fill && rect.fill !== 'transparent') {
+      // pdfDoc.fillOpacity(this.opacity);
+      pdfDoc.rect(-rect.width / 2, -rect.height / 2, rect.width, rect.height);
+      pdfDoc.fill(fill.getSource().slice(0, 3));
+    }
+  };
+  if (rect.paintFirst === 'stroke') {
+    paintStroke();
+    paintFill();
+  } else {
+    paintFill();
+    paintStroke();
+  }
+  pdfDoc.restore();
+};
+
+const addPathToPdf = (path: Path, pdfDoc: any, box: box) => {
+  const fill = new Color(path.fill as string);
+  const stroke = new Color(path.stroke as string);
+  pdfDoc.save();
+  const objectMatrix = path.calcTransformMatrix();
+
+  pdfDoc.transform(1,0,0,1, -box.width / 2 / 0.24, -box.height / 2/ 0.24);
+
+  const pathString = util.transformPath(
+    path.path, objectMatrix, path.pathOffset
+  ).map(c => c.join(' ')).join(' ');
+
+  if (path.stroke && path.stroke !== 'transparent') {
+    pdfDoc.lineWidth(path.strokeWidth);
+    pdfDoc.path(pathString);
+    if (path.strokeDashArray && path.strokeDashArray[0] !== 0 && path.strokeDashArray[1] !== 0) {
+      pdfDoc.dash(
+        path.strokeDashArray[0] * path.strokeWidth,
+        { space: path.strokeDashArray[1] * path.strokeWidth });
+    }
+    pdfDoc.stroke(stroke.getSource().slice(0, 3));
+  }
+  if (path.fill && path.fill !== 'transparent') {
+    pdfDoc.path(pathString);
+    pdfDoc.fill(fill.getSource().slice(0, 3));
+  }
+  pdfDoc.restore();
+};
 
 const transformPdf = (fabricObject: FabricObject, pdfDoc: any) => {
   const matrix = fabricObject.calcTransformMatrix();
@@ -51,6 +93,7 @@ const transformPdf = (fabricObject: FabricObject, pdfDoc: any) => {
 
 const addImageToPdfKit = async (fabricImage: FabricImage<ImageProps>, pdfDoc: any) => {
 
+  // @ts-expect-error this isn't typed
   const arrayBuffer = await (fabricImage.originalFile as File).arrayBuffer()
   arrayBuffer.toString = () => `image-${Date.now()}}`;
   
@@ -62,7 +105,21 @@ const addImageToPdfKit = async (fabricImage: FabricImage<ImageProps>, pdfDoc: an
   pdfDoc.restore();
 }
 
-export const addCanvasToPdfPage = (canvas: StaticCanvas, pdfDoc: any, box: box) => {
+const addGroupToPdf = (group: Group, pdfDoc: any, box: box) => {
+  pdfDoc.save();
+  transformPdf(group, pdfDoc);
+  group.forEachObject((object) => {
+    if (object instanceof Path) {
+      addPathToPdf(object, pdfDoc, box);
+    }
+    if (object instanceof Rect) {
+      addRectToPdf(object, pdfDoc, box);
+    }
+  })
+  pdfDoc.restore();
+}
+
+export const addCanvasToPdfPage = async (canvas: StaticCanvas, pdfDoc: any, box: box) => {
   // translate to position.
   // skip background color, but draw the clip region
 
@@ -71,14 +128,15 @@ export const addCanvasToPdfPage = (canvas: StaticCanvas, pdfDoc: any, box: box) 
     // parse it back to SVG and try to paint it svg like
   }
   pdfDoc.save();
-  pdfDoc.transform(1, 0, 0, 1, box.x, box.y);
+  // 0.24 is a scale factor between px and points to keep the 300dpi
+  pdfDoc.transform(0.24, 0, 0, 0.24, box.x, box.y);
 
   const mainImage = canvas.getObjects('image')[0] as FabricImage;
-  addImageToPdfKit(mainImage, pdfDoc);
+  await addImageToPdfKit(mainImage, pdfDoc);
 
-  // if (canvas.overlayImage instanceof Group) {
-  //   addGroupToPdf(canvas.overlayImage, pdfDoc, box);
-  // }
+  if (canvas.overlayImage instanceof Group) {
+    addGroupToPdf(canvas.overlayImage, pdfDoc, box);
+  }
 
   pdfDoc.restore();
 }

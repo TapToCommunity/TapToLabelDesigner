@@ -23,7 +23,7 @@ export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
     leftMargin: 15,
     topMargin: 15,
     layout: 'landscape',
-    paperSize: 'a4'
+    paperSize: [297, 210],
   }, 
   vertical: {
     gridSize: [90, 56],
@@ -33,7 +33,7 @@ export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
     leftMargin: 15,
     topMargin: 9,
     layout: 'portrait',
-    paperSize: 'a4'
+    paperSize: [210, 297],
   },
   horizontalLetter: {
     gridSize: [88, 59],
