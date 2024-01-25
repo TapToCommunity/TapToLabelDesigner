@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useTransition } from 'react';
 import { cardLikeOptions } from '../constants';
 import {
   StaticCanvas,
@@ -16,6 +16,7 @@ type WrapperProp = {
 
 export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -42,7 +43,9 @@ export const FabricCanvasWrapper = ({ file, setFabricCanvas }: WrapperProp) => {
           fabricImage.scaleY = scale;
           fabricCanvas.add(fabricImage);
           fabricCanvas.centerObject(fabricImage);
-          setFabricCanvas(fabricCanvas);
+          startTransition(() => {
+            setFabricCanvas(fabricCanvas);
+          });
         });
       }
       return () => {

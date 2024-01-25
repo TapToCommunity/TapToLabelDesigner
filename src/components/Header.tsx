@@ -1,6 +1,6 @@
 import { useFileDropperContext } from '../contexts/fileDropper';
 import './Header.css';
-import { lazy, useState } from 'react';
+import { lazy, useState, useTransition } from 'react';
 import { useAppDataContext } from '../contexts/appData';
 import logoUrl from '../assets/log.svg';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -9,25 +9,26 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { boxShadow } from '../constants';
 import Stack from '@mui/material/Stack';
-import { ImageSearch } from './ImageSearch';
 import { useFileAdder } from '../hooks/useFileAdder';
 
 const PdfButton = lazy(() => import('./PdfButton'));
 const TemplateDropdown = lazy(() => import('./TemplateDropdown'));
 const PrinterTemplateDropdown = lazy(() => import('./PrinterTemplateDropdown'));
 const ColorChanger = lazy(() => import('./ColorChanger'));
+const ImageSearch = lazy(() => import('./ImageSearch'));
 
 export const Header = () => {
   const { files, canvasArrayRef } = useFileDropperContext();
   const { originalColors, customColors, setCustomColors } = useAppDataContext();
   const [searchOpen, setSearchOpen] = useState(false);
   const { inputElement, openInputFile } = useFileAdder();
+  const [, startTransition] = useTransition();
 
   const hasFiles = !!files.length;
 
   return (
     <div className="topHeader">
-      <ImageSearch open={searchOpen} setOpen={setSearchOpen} />
+      {searchOpen && <ImageSearch open={searchOpen} setOpen={setSearchOpen} />}
       {inputElement}
       <div className="spacedContent">
         <div className="content">
@@ -51,7 +52,7 @@ export const Header = () => {
               variant="contained"
               size="large"
               color="primary"
-              onClick={() => setSearchOpen(true)}
+              onClick={() => startTransition(() => setSearchOpen(true))}
               sx={{
                 boxShadow,
                 fontSize: '0.9375rem',

@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState, type MouseEvent } from 'react';
+import { useState, type MouseEvent, useTransition } from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { CircularProgress, Stack } from '@mui/material';
 
@@ -37,7 +37,7 @@ async function getImage(cdnUrl: string): Promise<File> {
   });
 }
 
-export function ImageSearch({
+export default function ImageSearch({
   open,
   setOpen,
 }: {
@@ -49,11 +49,14 @@ export function ImageSearch({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
+  const [, startTransition] = useTransition();
 
   const addImage = async (e: MouseEvent<HTMLImageElement>, url: string) => {
     const currentIndex = files.length;
-    setOpen(false);
-    setFiles([...files, e.target as HTMLImageElement]);
+    startTransition(() => {
+      setOpen(false);
+      setFiles([...files, e.target as HTMLImageElement]);
+    });
     getImage(url).then((file) => {
       files[currentIndex] = file;
       const newFiles = [...files];
@@ -116,7 +119,7 @@ export function ImageSearch({
           </Typography>
           <Grid container spacing={1}>
             {searchResults.map((result) => (
-              <Grid item xs={3}>
+              <Grid item xs={3} key={result.imageUrl}>
                 <img
                   src={result.thumbnailUrl}
                   onClick={(e) => addImage(e, result.imageUrl)}
