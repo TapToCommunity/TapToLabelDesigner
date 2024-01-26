@@ -28,13 +28,11 @@ async function searchImage(query: string): Promise<ImageSearchResult[]> {
     });
 }
 
-async function getImage(cdnUrl: string): Promise<File> {
+async function getImage(cdnUrl: string, previousUrl: string): Promise<File> {
   const proxyUrl = IMAGE_ENDPOINT + cdnUrl.replace('https://', '');
-  return fetch(proxyUrl).then(async (r) => {
-    const blob = await r.blob();
-    const filename = proxyUrl.split('/').pop() || 'image.png';
-    return new File([blob], filename, { type: blob.type });
-  });
+  return fetch(proxyUrl)
+    .then((r) => r.blob())
+    .then((blob) => new File([blob], previousUrl, { type: blob.type }));
 }
 
 export default function ImageSearch({
@@ -53,11 +51,12 @@ export default function ImageSearch({
 
   const addImage = async (e: MouseEvent<HTMLImageElement>, url: string) => {
     const currentIndex = files.length;
+    const target = e.target as HTMLImageElement;
     startTransition(() => {
       setOpen(false);
-      setFiles([...files, e.target as HTMLImageElement]);
+      setFiles([...files, target as HTMLImageElement]);
     });
-    getImage(url).then((file) => {
+    getImage(url, target.src).then((file) => {
       files[currentIndex] = file;
       const newFiles = [...files];
       setFiles(newFiles);

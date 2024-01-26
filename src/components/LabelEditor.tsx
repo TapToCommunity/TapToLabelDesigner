@@ -1,7 +1,7 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import type { MutableRefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
-import type { StaticCanvas } from 'fabric';
+import { util, type StaticCanvas, FabricImage } from 'fabric';
 import { PortalMenu } from './PortalMenu';
 import { useLabelEditor } from '../hooks/useLabelEditor';
 
@@ -39,6 +39,7 @@ export const LabelEditor = ({
   } = useLabelEditor({
     canvasArrayRef,
     index,
+    file,
     padderRef,
   });
 
@@ -54,11 +55,7 @@ export const LabelEditor = ({
 
   return (
     <div className={className} ref={padderRef} onClick={openMenu}>
-      <FabricCanvasWrapper
-        key={`canvas_${(file as File).name || (file as HTMLImageElement).src}`}
-        setFabricCanvas={setFabricCanvas}
-        file={file}
-      />
+      <FabricCanvasWrapper setFabricCanvas={setFabricCanvas} />
       {isMenuOpen.open && (
         <PortalMenu
           rotateMainImage={rotateMainImage}
