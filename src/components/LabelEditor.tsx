@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import type { MutableRefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import { type StaticCanvas } from 'fabric';
