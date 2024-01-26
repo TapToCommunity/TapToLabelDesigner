@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import type { MutableRefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
-import { util, type StaticCanvas, FabricImage } from 'fabric';
+import { type StaticCanvas } from 'fabric';
 import { PortalMenu } from './PortalMenu';
 import { useLabelEditor } from '../hooks/useLabelEditor';
 
