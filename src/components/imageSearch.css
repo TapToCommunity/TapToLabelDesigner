@@ -1,0 +1,20 @@
+.searchHeader {
+  max-height: 64px;
+  padding: 8px;
+  justify-content: center;
+}
+
+.searchResultsContainer {
+  flex-wrap: wrap;
+  row-gap: 24px;
+  column-gap: 24px;
+  justify-content: space-between;
+}
+
+.searchResult {
+  width: 22%
+}
+
+.searchResult img {
+  width: 100%
+}
