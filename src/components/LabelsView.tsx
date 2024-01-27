@@ -22,7 +22,10 @@ export const LabelsView = () => {
           canvasArrayRef={canvasArrayRef}
         />
       ))}
-      <SmallDropZone className={`labelContainer ${template.layout}`} />
+      {files.length % 2 && (
+        <div className={`labelContainer ${template.layout}`} />
+      )}
+      <SmallDropZone className={`labelContainer ${template.layout} dropzone`} />
       <DataToCanvasReconciler />
     </div>
   );
