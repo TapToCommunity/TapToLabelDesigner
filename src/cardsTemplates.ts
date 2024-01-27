@@ -125,8 +125,8 @@ export const templates: Record<string, templateType> = {
   hucard: {
     layout: 'vertical',
     overlay: {
-      layerWidth: 600,
-      layerHeight: 975,
+      layerWidth: 619,
+      layerHeight: 994,
       url: tapToHu,
       height: 1 - (84 + 272) / 975,
       width: 1 - (37 * 2) / 600,
@@ -136,10 +136,10 @@ export const templates: Record<string, templateType> = {
     },
     shadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
     background: {
-      layerWidth: 600,
-      layerHeight: 975,
+      layerWidth: 619,
+      layerHeight: 994,
       url: tapToHuBg,
-      isSvg: false,
+      isSvg: true,
     },
     label: 'HuCard'
   }

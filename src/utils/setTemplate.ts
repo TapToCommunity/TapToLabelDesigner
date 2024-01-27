@@ -201,9 +201,12 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
     canvas.requestRenderAll();
   }
   // this could returned by the promise right away
-  let colors: string[] = [];
+  const colors: string[] = [];
   if (overlayImageElement instanceof Group) {
-    colors = extractUniqueColorsFromGroup(overlayImageElement);
+    colors.push(...extractUniqueColorsFromGroup(overlayImageElement));
+  }
+  if (backgroundImageElement instanceof Group) {
+    colors.push(...extractUniqueColorsFromGroup(backgroundImageElement));
   }
   return colors;
 }
