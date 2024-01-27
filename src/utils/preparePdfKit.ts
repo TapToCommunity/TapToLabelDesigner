@@ -2,7 +2,7 @@ import type { RefObject } from 'react';
 import type { templateType } from '../cardsTemplates';
 import type { PrintTemplate } from '../printTemplates';
 import type { Canvas } from 'fabric';
-// import { addCanvasToPdfPage, createDownloadStream } from '../extensions/fabricToPdfKit';
+import { addCanvasToPdfPage, createDownloadStream } from '../extensions/fabricToPdfKit';
 
 const fromMMtoPoint = (x: number): number => x / 25.4 * 72;
 
@@ -27,7 +27,7 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
 
   const {  default: PDFDocument } = await import('pdfkit/js/pdfkit.standalone.js');
   const pdfDoc = new PDFDocument({ autoFirstPage: false });
-  // const downloadPromise = createDownloadStream(pdfDoc);
+  const downloadPromise = createDownloadStream(pdfDoc);
   const canvases = canvasArrayRef.current;
   if (canvases) {
     let pageNumber = 0;
@@ -44,12 +44,12 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
       const column = index % columns;
       const row = Math.floor(index / columns) % rows;
     
-      // await addCanvasToPdfPage(canvas, pdfDoc, {
-      //   x: fromMMtoPoint(column * gridSize[0] + leftMargin),
-      //   y: fromMMtoPoint(row * gridSize[1] + topMargin),
-      //   width: fromMMtoPoint(85),
-      //   height: fromMMtoPoint(54),
-      // });
+      await addCanvasToPdfPage(canvas, pdfDoc, {
+        x: fromMMtoPoint(column * gridSize[0] + leftMargin),
+        y: fromMMtoPoint(row * gridSize[1] + topMargin),
+        width: fromMMtoPoint(85),
+        height: fromMMtoPoint(54),
+      });
 
       if (imageNeedsRotation) {
         console.log('...');
@@ -57,11 +57,11 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
     }
   }
   pdfDoc.end();
-  // downloadPromise.then((blob) => {
-  //   const link = document.createElement("a")
-  //   link.href = URL.createObjectURL(blob)
-  //   link.download = "test.pdf"
-  //   link.click()
-  //   link.remove()
-  // });
+  downloadPromise.then((blob) => {
+    const link = document.createElement("a")
+    link.href = URL.createObjectURL(blob)
+    link.download = "test.pdf"
+    link.click()
+    link.remove()
+  });
 }

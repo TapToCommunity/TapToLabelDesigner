@@ -57,6 +57,7 @@ export const useLabelEditor = ({ canvasArrayRef, index, padderRef, file }: useLa
         setImageReady(false);
         imagePromise.then((image) => {
           const fabricImage = new FabricImage(image);
+          fabricImage.originalFile = file;
           const scale = util.findScaleToCover(fabricImage, fabricCanvas);
           fabricImage.scaleX = scale;
           fabricImage.scaleY = scale;
