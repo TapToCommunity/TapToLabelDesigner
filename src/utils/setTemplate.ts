@@ -106,7 +106,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
       }, { backstoreOnly: true });
     }
     const mainImage = canvas.getObjects('image')[0] as FabricImage;
-    mainImage.shadow = shadow ? new Shadow(shadow) : null;
+    mainImage.shadow = shadow ? new Shadow({ ...Shadow.parseShadow(shadow), nonScaling: true }) : null;
     if (overlayImageElement) {
       // scale the overlay asset to cover the designed layer size
       // example: the template is supposed to be smaller than the card
