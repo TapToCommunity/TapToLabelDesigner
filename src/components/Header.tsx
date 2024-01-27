@@ -5,10 +5,9 @@ import { useAppDataContext } from '../contexts/appData';
 import logoUrl from '../assets/log.svg';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import SearchIcon from '@mui/icons-material/Search';
-import Button from '@mui/material/Button';
+import { Button } from './ResponsiveIconButton';
 import Typography from '@mui/material/Typography';
 import { boxShadow } from '../constants';
-import Stack from '@mui/material/Stack';
 import { useFileAdder } from '../hooks/useFileAdder';
 
 const PdfButton = lazy(() => import('./PdfButton'));
@@ -27,64 +26,58 @@ export const Header = () => {
   const hasFiles = !!files.length;
 
   return (
-    <div className="topHeader">
+    <div className={`${hasFiles ? 'fullHeader' : 'emptyHeader'} topHeader`}>
       {searchOpen && <ImageSearch open={searchOpen} setOpen={setSearchOpen} />}
       {inputElement}
       <div className="spacedContent">
-        <div className="content">
-          <Stack direction="row" spacing="10px">
-            <img id="logo" src={logoUrl} />
-            <Button
-              variant="contained"
-              size="large"
-              color="primary"
-              onClick={openInputFile}
-              sx={{
-                boxShadow,
-                fontSize: '0.9375rem',
-                textTransform: 'none',
-              }}
-            >
-              <AddCircleOutlineIcon />
-              <Typography>&nbsp;Add files</Typography>
-            </Button>
-            <Button
-              variant="contained"
-              size="large"
-              color="primary"
-              onClick={() => startTransition(() => setSearchOpen(true))}
-              sx={{
-                boxShadow,
-                fontSize: '0.9375rem',
-                textTransform: 'none',
-              }}
-            >
-              <SearchIcon />
-              <Typography>&nbsp;Search image</Typography>
-            </Button>
-          </Stack>
+        <div className="content" style={{ columnGap: 10 }}>
+          <img id="logo" src={logoUrl} />
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={openInputFile}
+            sx={{
+              boxShadow,
+              fontSize: '0.9375rem',
+              textTransform: 'none',
+            }}
+          >
+            <AddCircleOutlineIcon />
+            <Typography>&nbsp;Add files</Typography>
+          </Button>
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={() => startTransition(() => setSearchOpen(true))}
+            sx={{
+              boxShadow,
+              fontSize: '0.9375rem',
+              textTransform: 'none',
+            }}
+          >
+            <SearchIcon />
+            <Typography>&nbsp;Search image</Typography>
+          </Button>
         </div>
         <div className="content">{hasFiles && <TemplateDropdown />}</div>
       </div>
-      <div className="spacedContent">
-        <div className="content">
-          {hasFiles && (
+      {hasFiles && (
+        <div className="spacedContent">
+          <div className="content">
             <ColorChanger
               setCustomColors={setCustomColors}
               customColors={customColors}
               originalColors={originalColors}
             />
-          )}
+          </div>
+          <div className="content">
+            <PrinterTemplateDropdown />
+            <PdfButton canvasArrayRef={canvasArrayRef} />
+          </div>
         </div>
-        <div className="content">
-          {hasFiles && (
-            <>
-              <PrinterTemplateDropdown />
-              <PdfButton canvasArrayRef={canvasArrayRef} />
-            </>
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 };

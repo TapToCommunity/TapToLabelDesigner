@@ -36,6 +36,12 @@
   max-height: 1029px;
 }
 
+@media (max-width: 920px) {
+  .labelsView {
+    padding-top: 170px;
+  }
+}
+
 @media (max-width: 768px){
   .labelContainer.horizontal {
     max-width: 1029px;

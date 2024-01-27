@@ -21,7 +21,11 @@ const PrinterTemplateDropdown = (): JSX.Element => {
   );
 
   return (
-    <FormControl size="small" sx={{ m: 1, minWidth: 120, maxWidth: 160 }}>
+    <FormControl
+      size="small"
+      className="printerDropdown"
+      sx={{ m: 1, maxWidth: 160 }}
+    >
       <InputLabel id="template-select" sx={{ fontWeight: 400 }}>
         Print template
       </InputLabel>
