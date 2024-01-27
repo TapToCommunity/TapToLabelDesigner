@@ -120,7 +120,7 @@ export const setTemplateOnCanvases = async (canvases: StaticCanvas[], template: 
       }, { backstoreOnly: true });
     }
     const mainImage = canvas.getObjects('image')[0] as FabricImage;
-    mainImage.shadow = shadow ? new Shadow(shadow) : null;
+    mainImage.shadow = shadow ? new Shadow({ ...Shadow.parseShadow(shadow), nonScaling: true }) : null;
 
     const couple1 = [overlayImageElement, overlay, overlayImageSource] as [Group | HTMLImageElement, templateOverlay, SerializedGroupProps | HTMLImageElement | undefined];
     const couple2 = [backgroundImageElement, background, backgroundImageSource] as [Group | HTMLImageElement, templateOverlay, SerializedGroupProps | HTMLImageElement | undefined];

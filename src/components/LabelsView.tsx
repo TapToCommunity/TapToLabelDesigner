@@ -14,13 +14,18 @@ export const LabelsView = () => {
       {files.map((file, index) => (
         <LabelEditor
           className={`labelContainer ${template.layout}`}
-          key={`key-susp-${file.name}`}
+          key={`key-susp-${
+            (file as File).name || (file as HTMLImageElement).src
+          }`}
           index={index}
           file={file}
           canvasArrayRef={canvasArrayRef}
         />
       ))}
-      <SmallDropZone className={`labelContainer ${template.layout}`} />
+      {files.length % 2 && (
+        <div className={`labelContainer ${template.layout}`} />
+      )}
+      <SmallDropZone className={`labelContainer ${template.layout} dropzone`} />
       <DataToCanvasReconciler />
     </div>
   );

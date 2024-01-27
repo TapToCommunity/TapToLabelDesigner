@@ -26,13 +26,13 @@ export const PortalMenu = ({
   localColors,
   rotateMainImage,
 }: PortalMenuType) => {
-  const { customColors } = useAppDataContext();
+  const { customColors, template } = useAppDataContext();
   return createPortal(
     <ClickAwayListener
       onClickAway={() => setIsOpen({ open: false, top: 0, left: 0 })}
     >
       <div
-        className="colorChanger-container"
+        className={`colorChangerContainer ${template.layout}`}
         style={{
           top,
           left,

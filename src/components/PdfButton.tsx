@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import type { JSX, RefObject } from 'react';
 import type { Canvas } from 'fabric';
 import { useAppDataContext } from '../contexts/appData';
-import Button from '@mui/material/Button';
+import { Button } from './ResponsiveIconButton';
 import { boxShadow } from '../constants';
 import Typography from '@mui/material/Typography';
 import PrintOutlined from '@mui/icons-material/PrintOutlined';
