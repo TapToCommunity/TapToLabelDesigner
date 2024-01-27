@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useTransition } from 'react';
 import { cardLikeOptions } from '../constants';
 import { StaticCanvas, Rect, FabricObject, type Canvas } from 'fabric';
 
@@ -8,6 +8,7 @@ type WrapperProp = {
 
 export const FabricCanvasWrapper = ({ setFabricCanvas }: WrapperProp) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -23,7 +24,9 @@ export const FabricCanvasWrapper = ({ setFabricCanvas }: WrapperProp) => {
       fabricCanvas.clipPath = cardBorder;
       fabricCanvas.backgroundImage = cardBorder;
       fabricCanvas.centerObject(cardBorder);
-      setFabricCanvas(fabricCanvas);
+      startTransition(() => {
+        setFabricCanvas(fabricCanvas);
+      });
       return () => {
         if (fabricCanvas) {
           fabricCanvas.dispose();

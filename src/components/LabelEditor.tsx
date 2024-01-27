@@ -6,7 +6,7 @@ import { PortalMenu } from './PortalMenu';
 import { useLabelEditor } from '../hooks/useLabelEditor';
 
 type LabelEditorProps = {
-  file: File;
+  file: File | HTMLImageElement;
   canvasArrayRef: MutableRefObject<StaticCanvas[]>;
   index: number;
   className: string;
