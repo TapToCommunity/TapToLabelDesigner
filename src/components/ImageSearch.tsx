@@ -56,7 +56,7 @@ export default function ImageSearch({
     const currentIndex = files.length;
     const target = e.target as HTMLImageElement;
     startTransition(() => {
-      setOpen(false);
+      setTimeout(() => setOpen(false), 250);
       setFiles([...files, target as HTMLImageElement]);
     });
     getImage(url, target.src).then((file) => {
@@ -118,13 +118,13 @@ export default function ImageSearch({
           </Typography>
           <div className="searchResultsContainer horizontalStack">
             {searchResults.map((result) => (
-              <div className="searchResult" key={result.imageUrl}>
+              <Button className="searchResult" key={result.imageUrl}>
                 <img
                   src={result.thumbnailUrl}
                   onClick={(e) => addImage(e, result.imageUrl)}
                   style={{ cursor: 'pointer' }}
                 />
-              </div>
+              </Button>
             ))}
             {new Array(searchResults.length % 4).fill(0).map(() => (
               <div className="searchResult" />
