@@ -27,7 +27,9 @@ export const Header = () => {
 
   return (
     <div className={`${hasFiles ? 'fullHeader' : 'emptyHeader'} topHeader`}>
-      {searchOpen && <ImageSearch open={searchOpen} setOpen={setSearchOpen} />}
+      {(hasFiles || searchOpen) && (
+        <ImageSearch open={searchOpen} setOpen={setSearchOpen} />
+      )}
       {inputElement}
       <div className="spacedContent">
         <div className="content" style={{ columnGap: 10 }}>
