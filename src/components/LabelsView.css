@@ -42,6 +42,7 @@
   }
 }
 
+
 @media (max-width: 768px){
   .labelContainer.horizontal {
     max-width: 1029px;
@@ -54,21 +55,19 @@
     width: calc(49.9% - 20px);
     max-height: 1029px;
   }
+
+  .colorChangerContainer.horizontal {
+    max-width: 90%;
+  }
+  
+  .colorChangerContainer.vertical {
+    max-width: 40%;
+  }
+
 }
 
 @media (max-width: 414px) {
-  .labelContainer.horizontal {
-    max-width: 1029px;
-    width: 98%;
-    max-height: 657px;
-  }
   
-  .labelContainer.vertical {
-    max-width: 657px;
-    width: calc(49.9% - 20px);
-    max-height: 1029px;
-  }
-
   .labelContainer.vertical.dropzone {
     max-width: 657px;
     width: calc(100% - 20px);
