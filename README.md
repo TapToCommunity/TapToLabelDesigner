@@ -1,30 +1,19 @@
-# React + TypeScript + Vite
+# TapTo Designer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a companion app to the TapTo system
+You can read more about TapTo [here](https://github.com/wizzomafizzo/tapto) 
 
-Currently, two official plugins are available:
+# How to use it
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This app is deploted at [https://tapto-designer.netlify.app/](https://tapto-designer.netlify.app/) and you can just use it, providing your own images or using the embedded search functionality.
+It has no server, no login, no way to save progress.
+Is meant for producing labels and download the result right away.
+Everything runs locally, your images aren't unploaded to any server.
 
-## Expanding the ESLint configuration
+You can load files by drag and drop or by browsing your file system
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+<img width="993" alt="image" src="https://github.com/asturur/nfc-retro-label-printer/assets/1194048/73c39227-b0bf-4c88-ac58-a4209e46c31e">
 
-- Configure the top-level `parserOptions` property like this:
+Once you load some files you are presented with a default grid of cards with the default template:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-};
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+<img width="1382" alt="image" src="https://github.com/asturur/nfc-retro-label-printer/assets/1194048/06ac2545-db43-47fb-a230-e725d595c1a5">
