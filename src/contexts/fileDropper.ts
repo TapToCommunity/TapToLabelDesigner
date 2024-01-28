@@ -1,10 +1,5 @@
-import type {
-  MutableRefObject,
-} from 'react';
-import {
-  createContext,
-  useContext,
-} from 'react';
+import type { MutableRefObject } from 'react';
+import { createContext, useContext } from 'react';
 import type { Canvas } from 'fabric';
 
 export type contextType = {
@@ -21,4 +16,4 @@ export const FileDropContext = createContext<contextType>({
   setFiles: () => {},
 });
 
-export const useFileDropperContext = () => useContext(FileDropContext)
+export const useFileDropperContext = () => useContext(FileDropContext);

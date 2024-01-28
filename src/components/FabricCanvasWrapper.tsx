@@ -22,6 +22,7 @@ export const FabricCanvasWrapper = ({ setFabricCanvas }: WrapperProp) => {
       const cardBorder = new Rect(cardLikeOptions);
       cardBorder.canvas = fabricCanvas as Canvas;
       fabricCanvas.clipPath = cardBorder;
+      fabricCanvas.backgroundColor = 'white';
       fabricCanvas.backgroundImage = cardBorder;
       fabricCanvas.centerObject(cardBorder);
       startTransition(() => {

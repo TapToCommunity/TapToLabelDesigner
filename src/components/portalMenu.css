@@ -22,7 +22,6 @@
   width: 29%;
 }
 
-
 .colorChangerContainer > button {
   outline: none;
 }
@@ -30,6 +29,6 @@
 .spacer {
   height: 42px;
   width: 1px;
-  background-color: #FFF;
+  background-color: #fff;
   margin: 2px;
 }

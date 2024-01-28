@@ -7,7 +7,6 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button } from './ResponsiveIconButton';
 import Typography from '@mui/material/Typography';
-import { boxShadow } from '../constants';
 import { useFileAdder } from '../hooks/useFileAdder';
 
 const PdfButton = lazy(() => import('./PdfButton'));
@@ -39,11 +38,6 @@ export const Header = () => {
             size="large"
             color="primary"
             onClick={openInputFile}
-            sx={{
-              boxShadow,
-              fontSize: '0.9375rem',
-              textTransform: 'none',
-            }}
           >
             <AddCircleOutlineIcon />
             <Typography>&nbsp;Add files</Typography>
@@ -53,11 +47,6 @@ export const Header = () => {
             size="large"
             color="primary"
             onClick={() => startTransition(() => setSearchOpen(true))}
-            sx={{
-              boxShadow,
-              fontSize: '0.9375rem',
-              textTransform: 'none',
-            }}
           >
             <SearchIcon />
             <Typography>&nbsp;Search image</Typography>

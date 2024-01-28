@@ -8,7 +8,6 @@ import {
   type PrintTemplate,
   defaultPrinterTemplate,
   defaultPrinterTemplateKey,
-  ZipDownloader,
 } from '../printTemplates';
 const noop = () => {};
 
@@ -18,13 +17,13 @@ export type contextType = {
   customColors: string[];
   template: templateType;
   templateKey: string;
-  printerTemplate: PrintTemplate | ZipDownloader;
+  printerTemplate: PrintTemplate;
   printerTemplateKey: string;
   setOriginalColors: (colors: string[]) => void;
   setCustomColors: (colors: string[]) => void;
   setTemplate: (template: templateType) => void;
   setTemplateKey: (templateKey: string) => void;
-  setPrinterTemplate: (template: PrintTemplate | ZipDownloader) => void;
+  setPrinterTemplate: (template: PrintTemplate) => void;
   setPrinterTemplateKey: (templateKey: string) => void;
   setIsIdle: (value: boolean) => void;
 };

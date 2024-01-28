@@ -6,11 +6,11 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow-y: scroll;
-  background-color: #292C34;
+  background-color: #292c34;
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
   scrollbar-width: 'thin';
-  scrollbar-color: rgba(244,244,244,0.4) transparent;
+  scrollbar-color: rgba(244, 244, 244, 0.4) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -20,7 +20,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(244,244,244,0.4);
+  background-color: rgba(244, 244, 244, 0.4);
   border-radius: 16px;
   width: 6px;
   height: 6px;

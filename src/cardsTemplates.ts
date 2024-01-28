@@ -9,7 +9,7 @@ import emptyHorizontal from './assets/empty_horizontal.svg';
 
 import { type SerializedGroupProps } from 'fabric';
 
-type templateLayer = {
+export type templateLayer = {
   url: string;
   /* how large the overlay is */
   layerWidth: number;
@@ -19,7 +19,7 @@ type templateLayer = {
   parsed?: Promise<SerializedGroupProps | HTMLImageElement>;
 };
 
-type templateOverlay = templateLayer & {
+export type templateOverlay = templateLayer & {
   /* percentage width where the overlaye transparent area begins */
   x: number;
   /* percentage height where the overlaye transparent area begins */
@@ -28,7 +28,7 @@ type templateOverlay = templateLayer & {
   width: number;
   /* percentage height that is transparent */
   height: number;
-}
+};
 
 export type layoutOrientation = 'horizontal' | 'vertical';
 
@@ -63,7 +63,7 @@ export const templates: Record<string, templateType> = {
       y: 0.02,
       height: 0.96,
       isSvg: true,
-    }
+    },
   },
   blankVF: {
     layout: 'vertical',
@@ -78,7 +78,7 @@ export const templates: Record<string, templateType> = {
       y: 0.04,
       height: 0.92,
       isSvg: true,
-    }
+    },
   },
   tapto2: {
     layout: 'horizontal',
@@ -86,7 +86,7 @@ export const templates: Record<string, templateType> = {
       layerWidth: 975,
       layerHeight: 600,
       url: tapToHorizontal,
-      width: 1 - (320 + 47 ) / 975,
+      width: 1 - (320 + 47) / 975,
       height: 1 - (47 * 2) / 600,
       x: 320 / 975,
       y: 47 / 600,
@@ -125,8 +125,8 @@ export const templates: Record<string, templateType> = {
   hucard: {
     layout: 'vertical',
     overlay: {
-      layerWidth: 600,
-      layerHeight: 975,
+      layerWidth: 619,
+      layerHeight: 994,
       url: tapToHu,
       height: 1 - (84 + 272) / 975,
       width: 1 - (37 * 2) / 600,
@@ -136,13 +136,13 @@ export const templates: Record<string, templateType> = {
     },
     shadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
     background: {
-      layerWidth: 600,
-      layerHeight: 975,
+      layerWidth: 619,
+      layerHeight: 994,
       url: tapToHuBg,
-      isSvg: false,
+      isSvg: true,
     },
-    label: 'HuCard'
-  }
+    label: 'HuCard',
+  },
 } as const;
 
 export const defaultTemplateKey = 'tapto2';

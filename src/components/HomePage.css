@@ -16,7 +16,11 @@
 .homepage .topBanner .bannerContent {
   display: flex;
   flex-grow: 1;
-  background: linear-gradient(180deg, rgba(41, 44, 52, 0.9) 0%, rgba(41, 44, 52, 0.603) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(41, 44, 52, 0.9) 0%,
+    rgba(41, 44, 52, 0.603) 100%
+  );
   justify-content: center;
   backdrop-filter: blur(3px);
   padding-left: 16px;
@@ -24,7 +28,7 @@
 }
 
 .bannerContent .central {
-  color: #FFF;
+  color: #fff;
   display: flex;
   flex-wrap: wrap;
   column-gap: 60px;
@@ -74,7 +78,8 @@
   list-style-position: inside;
 }
 
-.textLayout p, .textLayout ul {
+.textLayout p,
+.textLayout ul {
   text-align: left;
   margin-bottom: 1rem;
 }
@@ -94,6 +99,5 @@
   padding: 10px;
 }
 
-@media (max-width: 768px){
-
+@media (max-width: 768px) {
 }

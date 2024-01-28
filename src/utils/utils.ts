@@ -1,2 +1,2 @@
-export const colorsDiffer = (colorsA: string[], colorsB: string[]) => 
+export const colorsDiffer = (colorsA: string[], colorsB: string[]) =>
   colorsA.some((color, index) => colorsB[index] !== color);

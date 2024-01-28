@@ -13,7 +13,7 @@ export const debounce = <T extends (...args: any[]) => ReturnType<T>>(
 
     timeoutId = setTimeout(() => {
       fn(...args);
-    }, timeout);
+    }, timeout) as unknown as number;
 
     return timeoutId;
   };
@@ -21,7 +21,7 @@ export const debounce = <T extends (...args: any[]) => ReturnType<T>>(
 
 export const throttle = <T extends (...args: any[]) => ReturnType<T>>(
   fn: T,
-  timeout: number
+  timeout: number,
 ): ((...args: Parameters<T>) => void) => {
   let timeoutId: number | null = null;
   let lastArgs: any[] | null = null;
@@ -38,7 +38,7 @@ export const throttle = <T extends (...args: any[]) => ReturnType<T>>(
           lastArgs = null;
           throttledFn(...argsToPass);
         }
-      }, timeout);
+      }, timeout) as unknown as number;
     } else {
       lastArgs = args;
     }

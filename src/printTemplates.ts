@@ -7,14 +7,9 @@ export type PrintTemplate = {
   topMargin: number;
   layout: 'portrait' | 'landscape';
   paperSize: 'a4' | 'letter' | [number, number];
-}
+};
 
-export type ZipDownloader = {
-  label: string;
-  paperSize: 'zip';
-}
-
-export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
+export const printTemplates: Record<string, PrintTemplate> = {
   horizontal: {
     gridSize: [90, 59],
     label: 'A4, Horizontal 3x3',
@@ -23,8 +18,8 @@ export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
     leftMargin: 15,
     topMargin: 15,
     layout: 'landscape',
-    paperSize: 'a4'
-  }, 
+    paperSize: [297, 210],
+  },
   vertical: {
     gridSize: [90, 56],
     label: 'A4, Vertical 2x5',
@@ -33,7 +28,7 @@ export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
     leftMargin: 15,
     topMargin: 9,
     layout: 'portrait',
-    paperSize: 'a4'
+    paperSize: [210, 297],
   },
   horizontalLetter: {
     gridSize: [88, 59],
@@ -43,8 +38,8 @@ export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
     leftMargin: 9,
     topMargin: 20,
     layout: 'landscape',
-    paperSize: 'letter'
-  }, 
+    paperSize: 'letter',
+  },
   verticalLetter: {
     gridSize: [90, 56],
     label: 'Letter, Vertical 2x4',
@@ -53,7 +48,7 @@ export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
     leftMargin: 19,
     topMargin: 19,
     layout: 'portrait',
-    paperSize: 'letter'
+    paperSize: 'letter',
   },
   printTest: {
     gridSize: [90, 56],
@@ -63,12 +58,8 @@ export const printTemplates: Record<string, PrintTemplate | ZipDownloader> = {
     leftMargin: 10,
     topMargin: 10,
     layout: 'landscape',
-    paperSize: [1520, 1520]
+    paperSize: [1520, 1520],
   },
-  zip: {
-    label: 'Images in a Zip file',
-    paperSize: 'zip',
-  }
 };
 
 export const defaultPrinterTemplateKey = 'horizontal';
