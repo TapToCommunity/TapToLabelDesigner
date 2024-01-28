@@ -32,8 +32,10 @@ type box = {
 };
 
 // since i'm totally dumb i can't make gradient to work
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const toPdfColor = (color: string | TFiller, pdfDoc: any): any => {
+  if (!pdfDoc) {
+    return;
+  }
   if (
     (color as Gradient<'linear'>).colorStops &&
     (color as Gradient<'linear'>).type === 'linear'
