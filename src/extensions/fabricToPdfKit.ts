@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FabricImage, type FabricObject, Group, ImageProps, Path, StaticCanvas, util, Color, Rect } from 'fabric';
+import { FabricImage, type FabricObject, Group, ImageProps, Path, StaticCanvas, util, Color, Rect, TFiller, Gradient } from 'fabric';
 
 export const createDownloadStream = async (pdfDoc: any): Promise<Blob> => {
   // @ts-expect-error yeah no definitions
@@ -59,13 +59,34 @@ const addRectToPdf = (rect: Rect, pdfDoc: any, box: box) => {
   pdfDoc.restore();
 };
 
-const addPathToPdf = (path: Path, pdfDoc: any, box: box) => {
-  const fill = new Color(path.fill as string);
+const toPdfColor = (color: string | Gradient<'linear'>, pdfDoc: any): any => {
+  if ((color as Gradient<'linear'>).colorStops && (color as Gradient<'linear'>).type === 'linear') {
+    const fabricGrad = color as Gradient<'linear'>;
+    const { coords, offsetX, offsetY, gradientTransform } = fabricGrad;
+    const { x1, y1, x2, y2 } = coords;
+    const grad = pdfDoc.linearGradient(x1, y1, x2, y2);
+    if (gradientTransform) {
+      grad.setTransform(...gradientTransform)
+    }
+    fabricGrad.colorStops.forEach(({ color, offset }) => {
+      // pdfDoc.transform(1, 0, 0, 1, offsetX, offsetY); 
+      const col = new Color(color as unknown as string);
+      grad.stop(offset, col.getSource().slice(0, 3));
+    });
+   return grad;
+  } else {
+    const fill = new Color(color as unknown as string);
+    return fill.getSource().slice(0, 3)
+  }
+}
+
+const addPathToPdf = (path: Path, pdfDoc: any, box: box, needsRotation: boolean) => {
+  
   const stroke = new Color(path.stroke as string);
   pdfDoc.save();
   const objectMatrix = path.calcTransformMatrix();
 
-  pdfDoc.transform(1,0,0,1, -box.width / 2 / 0.24, -box.height / 2/ 0.24);
+  pdfDoc.transform(1,0,0,1, (needsRotation ? -box.height : -box.width ) / 2 / 0.24, (needsRotation ? -box.width : -box.height ) / 2/ 0.24);
 
   const pathString = util.transformPath(
     path.path, objectMatrix, path.pathOffset
@@ -82,8 +103,9 @@ const addPathToPdf = (path: Path, pdfDoc: any, box: box) => {
     pdfDoc.stroke(stroke.getSource().slice(0, 3));
   }
   if (path.fill && path.fill !== 'transparent') {
+    const pdfColor = toPdfColor(path.fill as TFiller, pdfDoc);
     pdfDoc.path(pathString);
-    pdfDoc.fill(fill.getSource().slice(0, 3));
+    pdfDoc.fill(pdfColor);
   }
   pdfDoc.restore();
 };
@@ -107,12 +129,12 @@ const addImageToPdfKit = async (fabricImage: FabricImage<ImageProps>, pdfDoc: an
   pdfDoc.restore();
 }
 
-const addGroupToPdf = (group: Group, pdfDoc: any, box: box) => {
+const addGroupToPdf = (group: Group, pdfDoc: any, box: box, needsRotation: boolean) => {
   pdfDoc.save();
   transformPdf(group, pdfDoc);
   group.forEachObject((object) => {
     if (object instanceof Path) {
-      addPathToPdf(object, pdfDoc, box);
+      addPathToPdf(object, pdfDoc, box, needsRotation);
     }
     if (object instanceof Rect) {
       addRectToPdf(object, pdfDoc, box);
@@ -121,7 +143,7 @@ const addGroupToPdf = (group: Group, pdfDoc: any, box: box) => {
   pdfDoc.restore();
 }
 
-export const addCanvasToPdfPage = async (canvas: StaticCanvas, pdfDoc: any, box: box) => {
+export const addCanvasToPdfPage = async (canvas: StaticCanvas, pdfDoc: any, box: box, needsRotation: boolean) => {
   // translate to position.
   // skip background color, but draw the clip region
 
@@ -132,12 +154,21 @@ export const addCanvasToPdfPage = async (canvas: StaticCanvas, pdfDoc: any, box:
   pdfDoc.save();
   // 0.24 is a scale factor between px and points to keep the 300dpi
   pdfDoc.transform(0.24, 0, 0, 0.24, box.x, box.y);
+  if (needsRotation) {
+    pdfDoc.transform(1, 0, 0, 1, box.width / 2 / 0.24, box.height / 2 / 0.24);
+    pdfDoc.rotate(90);
+    pdfDoc.transform(1, 0, 0, 1, -box.height / 2 / 0.24, -box.width / 2 / 0.24);
+  }
+  
+  if (canvas.backgroundImage instanceof Group) {
+    addGroupToPdf(canvas.backgroundImage, pdfDoc, box, needsRotation);
+  }
 
   const mainImage = canvas.getObjects('image')[0] as FabricImage;
   await addImageToPdfKit(mainImage, pdfDoc);
 
   if (canvas.overlayImage instanceof Group) {
-    addGroupToPdf(canvas.overlayImage, pdfDoc, box);
+    addGroupToPdf(canvas.overlayImage, pdfDoc, box, needsRotation);
   }
 
   pdfDoc.restore();

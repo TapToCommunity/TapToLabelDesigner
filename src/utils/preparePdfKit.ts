@@ -49,11 +49,7 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
         y: fromMMtoPoint(row * gridSize[1] + topMargin),
         width: fromMMtoPoint(85),
         height: fromMMtoPoint(54),
-      });
-
-      if (imageNeedsRotation) {
-        console.log('...');
-      }
+      }, imageNeedsRotation);
     }
   }
   pdfDoc.end();
