@@ -1,57 +1,80 @@
-// import type { RefObject } from 'react';
-// import type { templateType } from '../cardsTemplates';
-// import type { PrintTemplate } from '../printTemplates';
-// import type { Canvas } from 'fabric';
-// import { addCanvasToPdfPage } from '../extensions/fabricJsToJspdf';
+import type { RefObject } from 'react';
+import type { templateType } from '../cardsTemplates';
+import type { PrintTemplate } from '../printTemplates';
+import type { Canvas } from 'fabric';
+import { util } from 'fabric';
 
-// const toPointsFromMM = (x: number): number => x / 25.4 * 72;
+export const preparePdf = async (printerTemplate: PrintTemplate, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
+  const {
+    gridSize,
+    leftMargin,
+    topMargin,
+    layout,
+    paperSize,
+    columns,
+    rows,
+  } = printerTemplate;
 
-// export const preparePdf = async (printerTemplate: PrintTemplate, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
-//   const {
-//     gridSize,
-//     leftMargin,
-//     topMargin,
-//     layout,
-//     paperSize,
-//     columns,
-//     rows,
-//   } = printerTemplate;
+  const labelsPerPage = rows * columns;
 
-//   const labelsPerPage = rows * columns;
+  const imageNeedsRotation = template.layout === 'vertical';
 
-//   const imageNeedsRotation = template.layout === 'vertical';
+  import('jspdf').then(({ jsPDF }) => {
+    const doc = new jsPDF({
+      orientation: layout,
+      unit: 'mm',
+      format: paperSize,
+      putOnlyUsedFonts: true,
+      floatPrecision: 16, // or "smart", default is 16
+    });
+    const canvases = canvasArrayRef.current;
+    if (canvases) {
+      let pageNumber = 0;
+      canvases.map((canvas, index) => {
+        const { top, left, width, height } =
+          canvas.clipPath!.getBoundingRect();
+        const newPageNumber = Math.floor(index / labelsPerPage);
+        if (newPageNumber > pageNumber) {
+          doc.addPage(paperSize, layout);
+          pageNumber = newPageNumber;
+        }
+        const column = index % columns;
+        const row = Math.floor(index / columns) % rows;
+        // TODO: the top and left values should take in account of viewport translations
+        const htmlCanvas = canvas.toCanvasElement(2 / canvas.getZoom(), {
+          top: top * canvas.getZoom(),
+          left: left * canvas.getZoom(),
+          width: width * canvas.getZoom(),
+          height: height * canvas.getZoom(),
+        });
 
-//   import('../../deps/pdfkit').then((mod) => {
-//     console.log(mod);
-//     const startingDoc = new jsPDF({
-//       orientation: layout,
-//       unit: 'pt',
-//       format: paperSize,
-//       putOnlyUsedFonts: true,
-//       floatPrecision: 16, // or "smart", default is 16
-//     });
-//     startingDoc.advancedAPI((doc) => {
-//       const canvases = canvasArrayRef.current;
-//       if (canvases) {
-//         let pageNumber = 0;
-//         canvases.map((canvas, index) => {
-//           const newPageNumber = Math.floor(index / labelsPerPage);
-//           if (newPageNumber > pageNumber) {
-//             doc.addPage(paperSize, layout);
-//             pageNumber = newPageNumber;
-//           }
-//           const column = index % columns;
-//           const row = Math.floor(index / columns) % rows;
+        let rotatedHtmlCanvas = htmlCanvas;
+        if (imageNeedsRotation) {
+          rotatedHtmlCanvas = document.createElement('canvas');
+          rotatedHtmlCanvas.width = htmlCanvas.height;
+          rotatedHtmlCanvas.height = htmlCanvas.width;
+          const ctx = rotatedHtmlCanvas.getContext('2d');
+          if (ctx) {
+            ctx.translate(htmlCanvas.height / 2, htmlCanvas.width / 2);
+            ctx.rotate(util.degreesToRadians(90));
+            ctx.drawImage(
+              htmlCanvas,
+              -htmlCanvas.width / 2,
+              -htmlCanvas.height / 2,
+            );
+          }
+        }
 
-//           addCanvasToPdfPage(canvas, doc, {
-//             x: toPointsFromMM(column * gridSize[0] + leftMargin),
-//             y: toPointsFromMM(row * gridSize[1] + topMargin),
-//             width: toPointsFromMM(85),
-//             height: toPointsFromMM(54),
-//           });
-//         });
-//       }
-//     });
-//     startingDoc.save(`tapto-a4-${new Date().getTime()}.pdf`);
-//   });
-// }
+        doc.addImage(
+          rotatedHtmlCanvas,
+          'PNG',
+          column * gridSize[0] + leftMargin,
+          row * gridSize[1] + topMargin,
+          85.5,
+          54,
+        );
+      });
+    }
+    doc.save(`tapto-a4-${new Date().getTime()}.pdf`);
+  });
+}
