@@ -1,5 +1,20 @@
-import MUIButton from '@mui/material/Button';
+import MUIButton, { ButtonProps } from '@mui/material/Button';
+import { boxShadow } from '../constants';
+import { forwardRef } from 'react';
 
-export const Button = ({ classes = {}, ...otherProps }) => (
-  <MUIButton {...otherProps} classes={{ ...classes, root: 'hiddenText' }} />
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const Button = forwardRef<any, ButtonProps>(
+  ({ classes = {}, sx = {}, ...otherProps }, ref) => (
+    <MUIButton
+      {...otherProps}
+      sx={{
+        boxShadow,
+        fontSize: '0.9375rem',
+        textTransform: 'none',
+        ...sx,
+      }}
+      ref={ref}
+      classes={{ ...classes, root: 'hiddenText' }}
+    />
+  ),
 );
