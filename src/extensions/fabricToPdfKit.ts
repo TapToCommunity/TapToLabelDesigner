@@ -59,14 +59,15 @@ const addRectToPdf = (rect: Rect, pdfDoc: any, box: box) => {
   pdfDoc.restore();
 };
 
-const toPdfColor = (color: string | Gradient<'linear'>, pdfDoc: any): any => {
+const toPdfColor = (color: string | TFiller, pdfDoc: any): any => {
   if ((color as Gradient<'linear'>).colorStops && (color as Gradient<'linear'>).type === 'linear') {
     const fabricGrad = color as Gradient<'linear'>;
-    const { coords, offsetX, offsetY, gradientTransform } = fabricGrad;
+    const { coords, gradientTransform, offsetX, offsetY } = fabricGrad;
     const { x1, y1, x2, y2 } = coords;
     const grad = pdfDoc.linearGradient(x1, y1, x2, y2);
     if (gradientTransform) {
-      grad.setTransform(...gradientTransform)
+      const newmat = util.multiplyTransformMatrices([1, 0, 0, 1, offsetX, offsetY], gradientTransform);
+      grad.setTransform(...newmat);
     }
     fabricGrad.colorStops.forEach(({ color, offset }) => {
       // pdfDoc.transform(1, 0, 0, 1, offsetX, offsetY); 
@@ -103,7 +104,7 @@ const addPathToPdf = (path: Path, pdfDoc: any, box: box, needsRotation: boolean)
     pdfDoc.stroke(stroke.getSource().slice(0, 3));
   }
   if (path.fill && path.fill !== 'transparent') {
-    const pdfColor = toPdfColor(path.fill as TFiller, pdfDoc);
+    const pdfColor = toPdfColor(path.fill, pdfDoc);
     pdfDoc.path(pathString);
     pdfDoc.fill(pdfColor);
   }
