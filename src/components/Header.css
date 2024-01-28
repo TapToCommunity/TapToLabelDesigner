@@ -37,8 +37,7 @@
   color: #fff;
 }
 
-
-@media (max-width: 1200px){
+@media (max-width: 1200px) {
   .fullHeader .hiddenText p {
     display: none;
   }

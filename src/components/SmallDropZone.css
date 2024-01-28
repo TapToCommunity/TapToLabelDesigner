@@ -7,7 +7,7 @@
 }
 
 .dropzone .theIcon {
-  color: #FFF;
+  color: #fff;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -15,5 +15,5 @@
 }
 
 .dropzone a {
-  color: #FFF;
+  color: #fff;
 }

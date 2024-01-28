@@ -2,7 +2,10 @@ import { useEffect, useCallback, useState, MutableRefObject } from 'react';
 import { colorsDiffer } from '../utils/utils';
 import { updateColors } from '../utils/updateColors';
 import { useFileDropperContext } from '../contexts/fileDropper';
-import { scaleImageToOverlayArea, setTemplateOnCanvases } from '../utils/setTemplate';
+import {
+  scaleImageToOverlayArea,
+  setTemplateOnCanvases,
+} from '../utils/setTemplate';
 import { util, FabricImage, type StaticCanvas } from 'fabric';
 import { useAppDataContext } from '../contexts/appData';
 
@@ -13,7 +16,12 @@ type useLabelEditorParams = {
   file: File | HTMLImageElement;
 };
 
-export const useLabelEditor = ({ canvasArrayRef, index, padderRef, file }: useLabelEditorParams) => {
+export const useLabelEditor = ({
+  canvasArrayRef,
+  index,
+  padderRef,
+  file,
+}: useLabelEditorParams) => {
   const { setFiles, files } = useFileDropperContext();
   const { template, customColors, originalColors, isIdle } =
     useAppDataContext();
@@ -40,11 +48,10 @@ export const useLabelEditor = ({ canvasArrayRef, index, padderRef, file }: useLa
       scaleImageToOverlayArea(template, fabricCanvas.overlayImage!, mainImage);
       fabricCanvas.requestRenderAll();
     }
-  }, [fullyReady, isIdle, fabricCanvas, template])
+  }, [fullyReady, isIdle, fabricCanvas, template]);
 
   useEffect(() => {
     if (fabricCanvas) {
-
       const imagePromise =
         file instanceof Blob
           ? util.loadImage(URL.createObjectURL(file))
@@ -75,8 +82,11 @@ export const useLabelEditor = ({ canvasArrayRef, index, padderRef, file }: useLa
     if (fabricCanvas && divRef && isImageReady) {
       if (canvasArrayRef.current) {
         fabricCanvas.setDimensions(
-          { width: '100%' as unknown as number, height: 'auto' as unknown as number},
-          { cssOnly: true }
+          {
+            width: '100%' as unknown as number,
+            height: 'auto' as unknown as number,
+          },
+          { cssOnly: true },
         );
         canvasArrayRef.current[index] = fabricCanvas;
       }
@@ -92,7 +102,6 @@ export const useLabelEditor = ({ canvasArrayRef, index, padderRef, file }: useLa
     // the data reconciler does that
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canvasArrayRef, fabricCanvas, isImageReady]);
-
 
   useEffect(() => {
     // every time customColors change reset the local
@@ -120,5 +129,5 @@ export const useLabelEditor = ({ canvasArrayRef, index, padderRef, file }: useLa
     deleteLabel,
     setFabricCanvas,
     rotateMainImage,
-  }
-}
+  };
+};

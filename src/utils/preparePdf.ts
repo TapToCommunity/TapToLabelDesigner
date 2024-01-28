@@ -42,7 +42,7 @@
 //           }
 //           const column = index % columns;
 //           const row = Math.floor(index / columns) % rows;
-        
+
 //           addCanvasToPdfPage(canvas, doc, {
 //             x: toPointsFromMM(column * gridSize[0] + leftMargin),
 //             y: toPointsFromMM(row * gridSize[1] + topMargin),

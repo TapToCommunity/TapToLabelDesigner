@@ -1,10 +1,6 @@
-import { type MutableRefObject, useEffect } from "react";
-import {
-  cardLikeOptions,
-  cardRatio,
-} from '../constants';
-import {   type layoutOrientation,
-} from '../cardsTemplates';
+import { type MutableRefObject, useEffect } from 'react';
+import { cardLikeOptions, cardRatio } from '../constants';
+import { type layoutOrientation } from '../cardsTemplates';
 import { util } from 'fabric';
 import { throttle } from '../utils';
 import type { StaticCanvas } from 'fabric';
@@ -57,7 +53,12 @@ type useRealTimeResizeParams = {
   layout: 'vertical' | 'horizontal';
 };
 
-export const useRealTimeResize = ({ padderRef, fabricCanvas, ready, layout }: useRealTimeResizeParams) => {
+export const useRealTimeResize = ({
+  padderRef,
+  fabricCanvas,
+  ready,
+  layout,
+}: useRealTimeResizeParams) => {
   useEffect(() => {
     const divRef = padderRef.current;
     // only start observing after mounting is complete.
@@ -70,4 +71,4 @@ export const useRealTimeResize = ({ padderRef, fabricCanvas, ready, layout }: us
       };
     }
   }, [fabricCanvas, ready, padderRef, layout]);
-}
+};

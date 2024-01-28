@@ -21,7 +21,7 @@ export const debounce = <T extends (...args: any[]) => ReturnType<T>>(
 
 export const throttle = <T extends (...args: any[]) => ReturnType<T>>(
   fn: T,
-  timeout: number
+  timeout: number,
 ): ((...args: Parameters<T>) => void) => {
   let timeoutId: number | null = null;
   let lastArgs: any[] | null = null;

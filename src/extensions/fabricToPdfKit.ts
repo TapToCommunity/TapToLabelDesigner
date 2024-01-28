@@ -1,5 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FabricImage, type FabricObject, Group, ImageProps, Path, StaticCanvas, util, Color, Rect, TFiller, Gradient, Point } from 'fabric';
+import {
+  FabricImage,
+  type FabricObject,
+  Group,
+  ImageProps,
+  Path,
+  StaticCanvas,
+  util,
+  Color,
+  Rect,
+  TFiller,
+  Gradient,
+} from 'fabric';
 
 export const createDownloadStream = async (pdfDoc: any): Promise<Blob> => {
   // @ts-expect-error yeah no definitions
@@ -10,18 +22,22 @@ export const createDownloadStream = async (pdfDoc: any): Promise<Blob> => {
       resolve(stream.toBlob('application/pdf'));
     });
   });
-}
+};
 
 type box = {
   x: number;
   y: number;
   width: number;
   height: number;
-}
+};
 
 // since i'm totally dumb i can't make gradient to work
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const toPdfColor = (color: string | TFiller, pdfDoc: any): any => {
-  if ((color as Gradient<'linear'>).colorStops && (color as Gradient<'linear'>).type === 'linear') {
+  if (
+    (color as Gradient<'linear'>).colorStops &&
+    (color as Gradient<'linear'>).type === 'linear'
+  ) {
     const fabricGrad = color as Gradient<'linear'>;
     // const { coords, gradientTransform, offsetX, offsetY, colorStops } = fabricGrad;
     // const { x1, y1, x2, y2 } = coords;
@@ -31,7 +47,7 @@ const toPdfColor = (color: string | TFiller, pdfDoc: any): any => {
     //   grad.transform(newmat);
     // }
     // colorStops.forEach(({ color, offset }) => {
-    //   // pdfDoc.transform(1, 0, 0, 1, offsetX, offsetY); 
+    //   // pdfDoc.transform(1, 0, 0, 1, offsetX, offsetY);
     //   const col = new Color(color as unknown as string);
     //   grad.stop(offset, col.getSource().slice(0, 3));
     // });
@@ -40,15 +56,27 @@ const toPdfColor = (color: string | TFiller, pdfDoc: any): any => {
     return fill.getSource().slice(0, 3);
   } else {
     const fill = new Color(color as unknown as string);
-    return fill.getSource().slice(0, 3)
+    return fill.getSource().slice(0, 3);
   }
-}
+};
 
-const addRectToPdf = (rect: Rect, pdfDoc: any, box: box, needsRotation: boolean) => {
+const addRectToPdf = (
+  rect: Rect,
+  pdfDoc: any,
+  box: box,
+  needsRotation: boolean,
+) => {
   pdfDoc.save();
 
   transformPdf(rect, pdfDoc);
-  pdfDoc.transform(1,0,0,1, (needsRotation ? -box.height : -box.width ) / 2 / 0.24, (needsRotation ? -box.width : -box.height ) / 2/ 0.24);
+  pdfDoc.transform(
+    1,
+    0,
+    0,
+    1,
+    (needsRotation ? -box.height : -box.width) / 2 / 0.24,
+    (needsRotation ? -box.width : -box.height) / 2 / 0.24,
+  );
 
   const paintStroke = () => {
     if (rect.stroke && rect.stroke !== 'transparent') {
@@ -56,10 +84,14 @@ const addRectToPdf = (rect: Rect, pdfDoc: any, box: box, needsRotation: boolean)
       pdfDoc.lineWidth(rect.strokeWidth);
       pdfDoc.rect(-rect.width / 2, -rect.height / 2, rect.width, rect.height);
       // pdfDoc.strokeOpacity(this.opacity);
-      if (rect.strokeDashArray && rect.strokeDashArray[0] !== 0 && rect.strokeDashArray[1] !== 0) {
-        pdfDoc.dash(
-          rect.strokeDashArray[0]  / rect.scaleX,
-          { space: rect.strokeDashArray[1] * rect.strokeWidth });
+      if (
+        rect.strokeDashArray &&
+        rect.strokeDashArray[0] !== 0 &&
+        rect.strokeDashArray[1] !== 0
+      ) {
+        pdfDoc.dash(rect.strokeDashArray[0] / rect.scaleX, {
+          space: rect.strokeDashArray[1] * rect.strokeWidth,
+        });
       }
       pdfDoc.stroke(stroke);
     }
@@ -84,25 +116,41 @@ const addRectToPdf = (rect: Rect, pdfDoc: any, box: box, needsRotation: boolean)
   pdfDoc.restore();
 };
 
-const addPathToPdf = (path: Path, pdfDoc: any, box: box, needsRotation: boolean) => {
-  
+const addPathToPdf = (
+  path: Path,
+  pdfDoc: any,
+  box: box,
+  needsRotation: boolean,
+) => {
   const stroke = new Color(path.stroke as string);
   pdfDoc.save();
   const objectMatrix = path.calcTransformMatrix();
 
-  pdfDoc.transform(1,0,0,1, (needsRotation ? -box.height : -box.width ) / 2 / 0.24, (needsRotation ? -box.width : -box.height ) / 2/ 0.24);
+  pdfDoc.transform(
+    1,
+    0,
+    0,
+    1,
+    (needsRotation ? -box.height : -box.width) / 2 / 0.24,
+    (needsRotation ? -box.width : -box.height) / 2 / 0.24,
+  );
 
-  const pathString = util.transformPath(
-    path.path, objectMatrix, path.pathOffset
-  ).map(c => c.join(' ')).join(' ');
+  const pathString = util
+    .transformPath(path.path, objectMatrix, path.pathOffset)
+    .map((c) => c.join(' '))
+    .join(' ');
 
   if (path.stroke && path.stroke !== 'transparent') {
     pdfDoc.lineWidth(path.strokeWidth);
     pdfDoc.path(pathString);
-    if (path.strokeDashArray && path.strokeDashArray[0] !== 0 && path.strokeDashArray[1] !== 0) {
-      pdfDoc.dash(
-        path.strokeDashArray[0] * path.strokeWidth,
-        { space: path.strokeDashArray[1] * path.strokeWidth });
+    if (
+      path.strokeDashArray &&
+      path.strokeDashArray[0] !== 0 &&
+      path.strokeDashArray[1] !== 0
+    ) {
+      pdfDoc.dash(path.strokeDashArray[0] * path.strokeWidth, {
+        space: path.strokeDashArray[1] * path.strokeWidth,
+      });
     }
     pdfDoc.stroke(stroke.getSource().slice(0, 3));
   }
@@ -119,21 +167,30 @@ const transformPdf = (fabricObject: FabricObject, pdfDoc: any) => {
   pdfDoc.transform(...matrix);
 };
 
-const addImageToPdfKit = async (fabricImage: FabricImage<ImageProps>, pdfDoc: any) => {
-
+const addImageToPdfKit = async (
+  fabricImage: FabricImage<ImageProps>,
+  pdfDoc: any,
+) => {
   // @ts-expect-error this isn't typed
-  const arrayBuffer = await (fabricImage.originalFile as File).arrayBuffer()
+  const arrayBuffer = await (fabricImage.originalFile as File).arrayBuffer();
   arrayBuffer.toString = () => `image-${Date.now()}}`;
-  
 
   pdfDoc.save();
   transformPdf(fabricImage, pdfDoc);
-  const originalSize = fabricImage.getOriginalSize()
-  pdfDoc.image(arrayBuffer, -fabricImage.width / 2, -fabricImage.height / 2, { width: originalSize.width, height: originalSize.height });
+  const originalSize = fabricImage.getOriginalSize();
+  pdfDoc.image(arrayBuffer, -fabricImage.width / 2, -fabricImage.height / 2, {
+    width: originalSize.width,
+    height: originalSize.height,
+  });
   pdfDoc.restore();
-}
+};
 
-const addGroupToPdf = (group: Group, pdfDoc: any, box: box, needsRotation: boolean) => {
+const addGroupToPdf = (
+  group: Group,
+  pdfDoc: any,
+  box: box,
+  needsRotation: boolean,
+) => {
   pdfDoc.save();
   transformPdf(group, pdfDoc);
   group.forEachObject((object) => {
@@ -143,11 +200,16 @@ const addGroupToPdf = (group: Group, pdfDoc: any, box: box, needsRotation: boole
     if (object instanceof Rect) {
       addRectToPdf(object, pdfDoc, box, needsRotation);
     }
-  })
+  });
   pdfDoc.restore();
-}
+};
 
-export const addCanvasToPdfPage = async (canvas: StaticCanvas, pdfDoc: any, box: box, needsRotation: boolean) => {
+export const addCanvasToPdfPage = async (
+  canvas: StaticCanvas,
+  pdfDoc: any,
+  box: box,
+  needsRotation: boolean,
+) => {
   // translate to position.
   // skip background color, but draw the clip region
 
@@ -185,4 +247,4 @@ export const addCanvasToPdfPage = async (canvas: StaticCanvas, pdfDoc: any, box:
   }
 
   pdfDoc.restore();
-}
+};

@@ -28,7 +28,7 @@ export type templateOverlay = templateLayer & {
   width: number;
   /* percentage height that is transparent */
   height: number;
-}
+};
 
 export type layoutOrientation = 'horizontal' | 'vertical';
 
@@ -63,7 +63,7 @@ export const templates: Record<string, templateType> = {
       y: 0.02,
       height: 0.96,
       isSvg: true,
-    }
+    },
   },
   blankVF: {
     layout: 'vertical',
@@ -78,7 +78,7 @@ export const templates: Record<string, templateType> = {
       y: 0.04,
       height: 0.92,
       isSvg: true,
-    }
+    },
   },
   tapto2: {
     layout: 'horizontal',
@@ -86,7 +86,7 @@ export const templates: Record<string, templateType> = {
       layerWidth: 975,
       layerHeight: 600,
       url: tapToHorizontal,
-      width: 1 - (320 + 47 ) / 975,
+      width: 1 - (320 + 47) / 975,
       height: 1 - (47 * 2) / 600,
       x: 320 / 975,
       y: 47 / 600,
@@ -141,8 +141,8 @@ export const templates: Record<string, templateType> = {
       url: tapToHuBg,
       isSvg: true,
     },
-    label: 'HuCard'
-  }
+    label: 'HuCard',
+  },
 } as const;
 
 export const defaultTemplateKey = 'tapto2';
