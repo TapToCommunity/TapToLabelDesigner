@@ -42,8 +42,7 @@ type box = {
 //   pdfDoc.fill(grad);
 // }
 
-// since i'm totally dumb i can't make gradient to work
-const toPdfColor = (color: string | TFiller, pdfDoc: any, object: FabricObject, objectMatrix?: TMat2D): any => {
+const toPdfColor = (color: string | TFiller, pdfDoc: any, object: FabricObject): any => {
   if (!pdfDoc) {
     return;
   }
@@ -54,16 +53,15 @@ const toPdfColor = (color: string | TFiller, pdfDoc: any, object: FabricObject, 
     const fabricGrad = color as Gradient<'linear'>;
     const { coords, gradientTransform, offsetX, offsetY, colorStops } = fabricGrad;
     const { x1, y1, x2, y2 } = coords;
+    const sortedStops = [...colorStops].sort((a, b) => a.offset - b.offset);
     const grad = pdfDoc.linearGradient(x1, y1, x2, y2);
     const matOffset = [1, 0, 0, 1, offsetX - object.width / 2, offsetY - object.height / 2] as TMat2D;
-    grad.transform = util.multiplyTransformMatrixArray([objectMatrix ?? iMatrix, matOffset, gradientTransform ?? iMatrix]);
-    colorStops.forEach(({ color, offset }) => {
+    grad.transform = util.multiplyTransformMatrixArray([matOffset, gradientTransform ?? iMatrix]);
+    sortedStops.forEach(({ color, offset }) => {
       const col = new Color(color as unknown as string);
       grad.stop(offset, col.getSource().slice(0, 3));
     });
     return grad;
-    // const fill = new Color(fabricGrad.colorStops[0].color);
-    // return fill.getSource().slice(0, 3);
   } else {
     const fill = new Color(color as unknown as string);
     return fill.getSource().slice(0, 3);
@@ -126,23 +124,26 @@ const addPathToPdf = (
 ) => {
   const pathOffsetMatrix: TMat2D = [1, 0, 0, 1, -path.pathOffset.x, -path.pathOffset.y];
   pdfDoc.save();
-  pdfDoc.transform(...util.multiplyTransformMatrixArray([
-    [
-      1,
-      0,
-      0,
-      1,
-      (needsRotation ? -box.height : -box.width) / 2 / 0.24,
-      (needsRotation ? -box.width : -box.height) / 2 / 0.24,
-    ],
-    path.calcTransformMatrix(),
-    pathOffsetMatrix,
-  ]
-  ));
+  transformPdf(path, pdfDoc);
+  // pdfDoc.transform(...util.multiplyTransformMatrixArray([
+  //   // [
+  //   //   1,
+  //   //   0,
+  //   //   0,
+  //   //   1,
+  //   //   (needsRotation ? -box.height : -box.width) / 2 / 0.24,
+  //   //   (needsRotation ? -box.width : -box.height) / 2 / 0.24,
+  //   // ],
+  //   // path.calcOwnMatrix(),
+  // ]
+  // ));
 
-  const pathString = path.path
-    .map((c) => c.join(' '))
-    .join(' ');
+  const pathString = util
+   .transformPath(path.path, iMatrix, path.pathOffset).map((c) => c.join(' '))
+   .join(' ');
+
+  // const pathString = path.path.map((c) => c.join(' ')).join(' ');
+    
 
   if (path.stroke && path.stroke !== 'transparent') {
     const stroke = new Color(path.stroke as string);
@@ -160,7 +161,7 @@ const addPathToPdf = (
     pdfDoc.stroke(stroke.getSource().slice(0, 3));
   }
   if (path.fill && path.fill !== 'transparent') {
-    const pdfColor = toPdfColor(path.fill, pdfDoc, path, pathOffsetMatrix);
+    const pdfColor = toPdfColor(path.fill, pdfDoc, path);
     pdfDoc.path(pathString);
     pdfDoc.fill(pdfColor);
   }
