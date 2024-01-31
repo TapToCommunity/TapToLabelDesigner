@@ -71,8 +71,6 @@ const toPdfColor = (color: string | TFiller, pdfDoc: any, object: FabricObject):
 const addRectToPdf = (
   rect: Rect,
   pdfDoc: any,
-  // box: box,
-  // needsRotation: boolean,
 ) => {
   pdfDoc.save();
 
@@ -119,24 +117,9 @@ const addRectToPdf = (
 const addPathToPdf = (
   path: Path,
   pdfDoc: any,
-  box: box,
-  needsRotation: boolean,
 ) => {
-  const pathOffsetMatrix: TMat2D = [1, 0, 0, 1, -path.pathOffset.x, -path.pathOffset.y];
   pdfDoc.save();
   transformPdf(path, pdfDoc);
-  // pdfDoc.transform(...util.multiplyTransformMatrixArray([
-  //   // [
-  //   //   1,
-  //   //   0,
-  //   //   0,
-  //   //   1,
-  //   //   (needsRotation ? -box.height : -box.width) / 2 / 0.24,
-  //   //   (needsRotation ? -box.width : -box.height) / 2 / 0.24,
-  //   // ],
-  //   // path.calcOwnMatrix(),
-  // ]
-  // ));
 
   const pathString = util
    .transformPath(path.path, iMatrix, path.pathOffset).map((c) => c.join(' '))
@@ -194,17 +177,15 @@ const addImageToPdfKit = async (
 const addGroupToPdf = (
   group: Group,
   pdfDoc: any,
-  box: box,
-  needsRotation: boolean,
 ) => {
   pdfDoc.save();
   transformPdf(group, pdfDoc);
   group.forEachObject((object) => {
     if (object instanceof Path) {
-      addPathToPdf(object, pdfDoc, box, needsRotation);
+      addPathToPdf(object, pdfDoc);
     }
     if (object instanceof Rect) {
-      addRectToPdf(object, pdfDoc, /* box, needsRotation */);
+      addRectToPdf(object, pdfDoc);
     }
   });
   pdfDoc.restore();
@@ -233,7 +214,7 @@ export const addCanvasToPdfPage = async (
   }
 
   if (canvas.backgroundImage instanceof Group) {
-    addGroupToPdf(canvas.backgroundImage, pdfDoc, box, needsRotation);
+    addGroupToPdf(canvas.backgroundImage, pdfDoc);
   } else {
     // add it as an image.
   }
@@ -242,7 +223,7 @@ export const addCanvasToPdfPage = async (
   await addImageToPdfKit(mainImage, pdfDoc);
 
   if (canvas.overlayImage instanceof Group) {
-    addGroupToPdf(canvas.overlayImage, pdfDoc, box, needsRotation);
+    addGroupToPdf(canvas.overlayImage, pdfDoc);
   } else {
     // add it as an image.
   }
