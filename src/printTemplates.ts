@@ -50,6 +50,16 @@ export const printTemplates: Record<string, PrintTemplate> = {
     layout: 'portrait',
     paperSize: 'letter',
   },
+  inch8by10: {
+    gridSize: [90, 56],
+    label: ' 8 by 10 inches',
+    rows: 4,
+    columns: 2,
+    leftMargin: 11,
+    topMargin: 15,
+    layout: 'portrait',
+    paperSize: [203, 254],
+  },
   printTest: {
     gridSize: [90, 56],
     label: '152cm adhesive vinyl',
