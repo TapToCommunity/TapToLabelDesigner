@@ -51,6 +51,7 @@ const ChoiceButton = ({ onClick }: { onClick: (arg0: string) => void }) => {
   const handleClose = (label?: labelInfo) => {
     if (label) {
       setLabel(label);
+      onClick(label.label);
     }
     setAnchorEl(null);
   };
