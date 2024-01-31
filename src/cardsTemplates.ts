@@ -97,7 +97,7 @@ export const templates: Record<string, templateType> = {
       layerWidth: 975,
       layerHeight: 600,
       url: tapToBg,
-      isSvg: false,
+      isSvg: true,
     },
     label: 'Tap-to H',
   },
