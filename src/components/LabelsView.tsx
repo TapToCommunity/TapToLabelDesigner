@@ -22,7 +22,7 @@ export const LabelsView = () => {
           canvasArrayRef={canvasArrayRef}
         />
       ))}
-      {files.length % 2 && (
+      {!!(files.length % 2) && (
         <div className={`labelContainer ${template.layout}`} />
       )}
       <SmallDropZone className={`labelContainer ${template.layout} dropzone`} />
