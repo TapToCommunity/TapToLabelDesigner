@@ -5,6 +5,7 @@ import tapToBgV from './assets/tapto_pattern_bg_vertical.svg';
 import tapToHu from './assets/tapto_hucard.svg';
 import tapToHuBg from './assets/tapto_hucard_bg.svg';
 import tapToHuC64 from './assets/tapto_hucard_c64.svg';
+import tapToGB from './assets/tapto_gameboy_f.svg';
 import emptyVertical from './assets/empty_vertical.svg';
 import emptyHorizontal from './assets/empty_horizontal.svg';
 
@@ -164,6 +165,27 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'HuCard (C64)',
+  },
+  taptoGB: {
+    layout: 'horizontal',
+    overlay: {
+      layerWidth: 994,
+      layerHeight: 619,
+      url: tapToGB,
+      width: 1 - (310 + 37) / 994,
+      height: 1 - (37 * 2) / 619,
+      x: 310 / 994,
+      y: 37 / 619,
+      isSvg: true,
+    },
+    shadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
+    background: {
+      layerWidth: 994,
+      layerHeight: 619,
+      url: tapToBg,
+      isSvg: true,
+    },
+    label: 'Tap-to Gameboy',
   },
 } as const;
 
