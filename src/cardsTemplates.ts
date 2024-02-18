@@ -4,6 +4,7 @@ import tapToBg from './assets/tapto_pattern_bg.svg';
 import tapToBgV from './assets/tapto_pattern_bg_vertical.svg';
 import tapToHu from './assets/tapto_hucard.svg';
 import tapToHuBg from './assets/tapto_hucard_bg.svg';
+import tapToHuC64 from './assets/tapto_hucard_c64.svg';
 import emptyVertical from './assets/empty_vertical.svg';
 import emptyHorizontal from './assets/empty_horizontal.svg';
 
@@ -142,6 +143,27 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'HuCard',
+  },
+  hucardc64: {
+    layout: 'vertical',
+    overlay: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: tapToHuC64,
+      height: 1 - (84 + 268) / 994,
+      width: 1 - (37 * 2) / 619,
+      y: 268 / 994,
+      x: 37 / 619,
+      isSvg: true,
+    },
+    shadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
+    background: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: tapToHuBg,
+      isSvg: true,
+    },
+    label: 'HuCard (C64)',
   },
 } as const;
 
