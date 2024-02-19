@@ -13,7 +13,7 @@ export default async (req: Request /* , context: Context */): Promise<Response> 
   if (req.referrer.includes('//localhost')) {
     resHeaders['Access-Control-Allow-Origin'] = req.referrer;
   }
-  console.log(resHeaders)
+  console.log(resHeaders, req.referrer)
   return new Response(body, { status, statusText, headers: resHeaders });
 }
 
