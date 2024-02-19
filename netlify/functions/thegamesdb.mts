@@ -9,13 +9,12 @@ export default async (req: Request /* , context: Context */): Promise<Response> 
   const path = url.split('/thegamesdb/')[1];
   const newUrl = `${GAMESDB_ENDPOINT}${path}&apikey=${GAMSEDB_PUBLIC_APIKEY}`;
   const { body, status, statusText, headers: originalResHeaders } = await fetch(newUrl);
-  const resHeaders = { ...originalResHeaders };
   const origin = req.headers.get('Origin') ?? '';
   if (origin.includes('//localhost')) {
-    resHeaders.set('Access-Control-Allow-Origin', origin);
+    originalResHeaders.set('Access-Control-Allow-Origin', origin);
   }
-  console.log(resHeaders);
-  return new Response(body, { status, statusText, headers: resHeaders });
+  console.log(originalResHeaders);
+  return new Response(body, { status, statusText, headers: originalResHeaders });
 }
 
 export const config: Config = {
