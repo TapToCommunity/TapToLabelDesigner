@@ -8,7 +8,7 @@ export default async (req: Request /*, context: Context */) => {
   const { url } = req;
   const path = url.split('/thegamesdb/')[1];
   const newUrl = `${GAMESDB_ENDPOINT}${path}&apikey=${GAMSEDB_PUBLIC_APIKEY}`;
-  return fetch(newUrl);
+  return await fetch(newUrl);
 }
 
 export const config: Config = {
