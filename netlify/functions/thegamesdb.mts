@@ -11,7 +11,7 @@ export default async (req: Request /* , context: Context */): Promise<Response> 
   const { body, status, statusText } = await fetch(newUrl);
   const resHeaders = {};
   if (req.referrer.includes('//localhost')) {
-    resHeaders['Access-Control-Allow-Origin'] = headers['origin'];
+    resHeaders['Access-Control-Allow-Origin'] = req.referrer;
   }
   return new Response(body, { status, statusText, headers: resHeaders });
 }
