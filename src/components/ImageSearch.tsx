@@ -36,9 +36,11 @@ interface GameEntries {
 }
 
 async function fetchGameList(query: string): Promise<GameEntries[]> {
-  const url = new URL(GAMESDB_ENDPOINT);
+  const url = new URL(
+    GAMESDB_ENDPOINT,
+    `${window.location.protocol}//${window.location.hostname}`,
+  );
   url.searchParams.append('name', query);
-  url.searchParams.append('fields', 'platform,players,overview,coop');
   url.searchParams.append('fields', 'platform,players,overview,coop');
   // url.searchParams.append('include', 'platform,boxart');
   console.log(url);
