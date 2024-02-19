@@ -13,11 +13,47 @@ import './imageSearch.css';
 
 const SEARCH_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/search/';
 const IMAGE_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/image/';
-
+const GAMESDB_ENDPOINT = 'https://api.thegamesdb.net/v1.1/Games/ByGameName';
+const GAMSEDB_PUBLIC_APIKEY =
+  '868ff7ffc22bb9b7679d2502c134d1c47613a93cb757b34397448ca5faf4ab5a';
 interface ImageSearchResult {
   gameName: string;
   imageUrl: string;
   thumbnailUrl: string;
+}
+
+interface GamePlatform {
+  id: number;
+  icon: number;
+}
+
+interface GameEntries {
+  id: number;
+  gameTitle: string;
+  platform: GamePlatform;
+  players: number;
+  overview: string;
+  coop: string;
+}
+
+async function fetchGameList(query: string): Promise<GameEntries[]> {
+  const url = new URL(GAMESDB_ENDPOINT);
+  url.searchParams.append('apikey', GAMSEDB_PUBLIC_APIKEY);
+  url.searchParams.append('name', query);
+  url.searchParams.append('fields', 'platform,players,overview,coop');
+  url.searchParams.append('fields', 'platform,players,overview,coop');
+  // url.searchParams.append('include', 'platform,boxart');
+  console.log(url);
+  const fetchGamesDb = fetch(url, {
+    mode: 'cors',
+  })
+    .then((res) => res.json() as Promise<GameEntries[]>)
+    .then((data) => console.log(data))
+    .catch((err) => {
+      console.error(err);
+      return [];
+    });
+  return [];
 }
 
 async function searchImage(query: string): Promise<ImageSearchResult[]> {
@@ -48,6 +84,7 @@ export default function ImageSearch({
   const { files, setFiles } = useFileDropperContext();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [gameEntries, setGameEntries] = useState<GameEntries[]>([]);
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
   const [, startTransition] = useTransition();
@@ -71,7 +108,7 @@ export default function ImageSearch({
     e.preventDefault();
     setSearching(true);
     setSearchResults([]);
-    searchImage(searchQuery).then((res) => {
+    fetchGameList(searchQuery).then((res) => {
       setSearching(false);
       setSearchResults(res);
     });
