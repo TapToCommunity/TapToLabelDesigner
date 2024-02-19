@@ -204,12 +204,10 @@ export default function ImageSearch({
           </Typography>
           <div className="searchResultsContainer verticalStack">
             {gameEntries.map((gameEntry) => (
-              <Typography variant="h6">
-                {gameEntry.gameTitle}
-              </Typography>
+              <Typography variant="h6">{gameEntry.gameTitle}</Typography>
             ))}
-          </div>
-            {/* {searchResults.map((result) => (
+            {moreLink}
+            {searchResults.map((result) => (
               <Button className="searchResult" key={result.imageUrl}>
                 <img
                   src={result.thumbnailUrl}
@@ -217,7 +215,7 @@ export default function ImageSearch({
                   style={{ cursor: 'pointer' }}
                 />
               </Button>
-            ))} */}
+            ))}
             {new Array(searchResults.length % 4).fill(0).map(() => (
               <div className="searchResult" />
             ))}
