@@ -52,7 +52,8 @@ type GameListData = {
 async function fetchGameList(query: string): Promise<GameListData> {
   const url = new URL(
     GAMESDB_ENDPOINT,
-    `${window.location.protocol}//${window.location.hostname}`,
+    'https://deploy-preview-18--tapto-designer.netlify.app',
+    // `${window.location.protocol}//${window.location.hostname}`,
   );
   url.searchParams.append('name', query);
   url.searchParams.append('fields', 'platform,players,overview,coop');
