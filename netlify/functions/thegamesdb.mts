@@ -10,11 +10,11 @@ export default async (req: Request /* , context: Context */): Promise<Response> 
   const newUrl = `${GAMESDB_ENDPOINT}${path}&apikey=${GAMSEDB_PUBLIC_APIKEY}`;
   const { body, status, statusText, headers: originalResHeaders } = await fetch(newUrl);
   const resHeaders = { ...originalResHeaders };
-  console.log({ origin: req.headers.get('Origin') });
-  if (req.referrer.includes('//localhost')) {
-    resHeaders.set('Access-Control-Allow-Origin', req.referrer);
+  const origin = req.headers.get('Origin') ?? '';
+  if (origin.includes('//localhost')) {
+    resHeaders.set('Access-Control-Allow-Origin', origin);
   }
-  console.log(resHeaders, req.referrer)
+  console.log(resHeaders);
   return new Response(body, { status, statusText, headers: resHeaders });
 }
 
