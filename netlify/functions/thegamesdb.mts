@@ -8,13 +8,13 @@ export default async (req: Request /* , context: Context */): Promise<Response> 
   const { url } = req;
   const path = url.split('/thegamesdb/')[1];
   const newUrl = `${GAMESDB_ENDPOINT}${path}&apikey=${GAMSEDB_PUBLIC_APIKEY}`;
-  const { body, status, statusText, headers: originalResHeaders } = await fetch(newUrl);
+  const { body, status, statusText } = await fetch(newUrl);
   const origin = req.headers.get('Origin') ?? '';
+  const respHeaders = {};
   if (origin.includes('//localhost')) {
-    originalResHeaders.set('Access-Control-Allow-Origin', origin);
+    respHeaders['Access-Control-Allow-Origin'] = origin;
   }
-  console.log(originalResHeaders);
-  return new Response(body, { status, statusText, headers: originalResHeaders });
+  return new Response(body, { status, statusText, headers: respHeaders });
 }
 
 export const config: Config = {
