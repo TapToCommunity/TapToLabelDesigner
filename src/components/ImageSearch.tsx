@@ -26,7 +26,16 @@ interface GamePlatform {
   icon: number;
 }
 
-interface GameEntries {
+interface ApiGameEntry {
+  id: number;
+  game_title: string;
+  platform: GamePlatform;
+  players: number;
+  overview: string;
+  coop: string;
+}
+
+interface GameEntry {
   id: number;
   gameTitle: string;
   platform: GamePlatform;
@@ -35,7 +44,12 @@ interface GameEntries {
   coop: string;
 }
 
-async function fetchGameList(query: string): Promise<GameEntries[]> {
+type GameListData = {
+  games: GameEntry[];
+  moreLink?: string;
+};
+
+async function fetchGameList(query: string): Promise<GameListData> {
   const url = new URL(
     GAMESDB_ENDPOINT,
     `${window.location.protocol}//${window.location.hostname}`,
@@ -43,18 +57,49 @@ async function fetchGameList(query: string): Promise<GameEntries[]> {
   url.searchParams.append('name', query);
   url.searchParams.append('fields', 'platform,players,overview,coop');
   // url.searchParams.append('include', 'platform,boxart');
-  console.log(url);
-  const fetchGamesDb = fetch(url, {
-    mode: 'cors',
-  })
-    .then((res) => res.json() as Promise<GameEntries[]>)
-    .then((data) => console.log(data))
-    .catch((err) => {
-      console.error(err);
-      return [];
-    });
-  console.log(await fetchGamesDb);
-  return [];
+  return (
+    fetch(url, {
+      mode: 'cors',
+    })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res) => res.json() as Promise<any>)
+      .then(({ data, pages, code }) => {
+        if (code === 200) {
+          return {
+            games: (data.games as ApiGameEntry[]).map<GameEntry>(
+              ({
+                game_title: gameTitle,
+                platform,
+                players,
+                coop,
+                overview,
+                id,
+              }: ApiGameEntry) => ({
+                gameTitle,
+                platform,
+                id,
+                coop,
+                players,
+                overview,
+              }),
+            ),
+            moreLink: pages.next
+              ? pages.next.replace('https://api.thegamesdb.net/', '')
+              : undefined,
+          };
+        } else {
+          return {
+            games: [] as GameEntry[],
+          };
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        return {
+          games: [] as GameEntry[],
+        };
+      })
+  );
 }
 
 // async function searchImage(query: string): Promise<ImageSearchResult[]> {
@@ -85,7 +130,8 @@ export default function ImageSearch({
   const { files, setFiles } = useFileDropperContext();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  // const [gameEntries, setGameEntries] = useState<GameEntries[]>([]);
+  const [gameEntries, setGameEntries] = useState<GameEntry[]>([]);
+  const [moreLink, setMoreLink] = useState<string>('');
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
   const [, startTransition] = useTransition();
@@ -109,11 +155,12 @@ export default function ImageSearch({
     e.preventDefault();
     setSearching(true);
     setSearchResults([]);
-    fetchGameList(searchQuery);
-    // .then((res) => {
-    //   setSearching(false);
-    //   setSearchResults(res);
-    // });
+    fetchGameList(searchQuery).then(({ games, moreLink }) => {
+      setGameEntries([...gameEntries, ...games]);
+      if (moreLink) {
+        setMoreLink(moreLink);
+      }
+    });
   };
 
   return (
@@ -155,8 +202,14 @@ export default function ImageSearch({
           <Typography variant="h3">
             {searchResults.length > 0 ? searchResults[0].gameName : ''}
           </Typography>
-          <div className="searchResultsContainer horizontalStack">
-            {searchResults.map((result) => (
+          <div className="searchResultsContainer verticalStack">
+            {gameEntries.map((gameEntry) => (
+              <Typography variant="h6">
+                {gameEntry.gameTitle}
+              </Typography>
+            ))}
+          </div>
+            {/* {searchResults.map((result) => (
               <Button className="searchResult" key={result.imageUrl}>
                 <img
                   src={result.thumbnailUrl}
@@ -164,7 +217,7 @@ export default function ImageSearch({
                   style={{ cursor: 'pointer' }}
                 />
               </Button>
-            ))}
+            ))} */}
             {new Array(searchResults.length % 4).fill(0).map(() => (
               <div className="searchResult" />
             ))}
