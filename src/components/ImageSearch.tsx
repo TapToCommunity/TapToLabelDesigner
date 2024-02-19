@@ -13,9 +13,8 @@ import './imageSearch.css';
 
 const SEARCH_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/search/';
 const IMAGE_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/image/';
-const GAMESDB_ENDPOINT = 'https://api.thegamesdb.net/v1.1/Games/ByGameName';
-const GAMSEDB_PUBLIC_APIKEY =
-  '868ff7ffc22bb9b7679d2502c134d1c47613a93cb757b34397448ca5faf4ab5a';
+const GAMESDB_ENDPOINT = '/thegamesdb/v1.1/Games/ByGameName';
+
 interface ImageSearchResult {
   gameName: string;
   imageUrl: string;
@@ -38,7 +37,6 @@ interface GameEntries {
 
 async function fetchGameList(query: string): Promise<GameEntries[]> {
   const url = new URL(GAMESDB_ENDPOINT);
-  url.searchParams.append('apikey', GAMSEDB_PUBLIC_APIKEY);
   url.searchParams.append('name', query);
   url.searchParams.append('fields', 'platform,players,overview,coop');
   url.searchParams.append('fields', 'platform,players,overview,coop');
