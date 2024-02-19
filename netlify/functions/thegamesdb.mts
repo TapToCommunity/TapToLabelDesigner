@@ -14,5 +14,5 @@ export default async (req: Request, context: Context) => {
 }
 
 export const config: Config = {
-  path: "/thegamesdb/:subpath"
+  path: "/thegamesdb/*"
 };
