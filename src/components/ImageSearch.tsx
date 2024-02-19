@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 
 import './imageSearch.css';
 
-const SEARCH_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/search/';
+// const SEARCH_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/search/';
 const IMAGE_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/image/';
 const GAMESDB_ENDPOINT = '/thegamesdb/v1.1/Games/ByGameName';
 
@@ -51,19 +51,20 @@ async function fetchGameList(query: string): Promise<GameEntries[]> {
       console.error(err);
       return [];
     });
+  console.log(await fetchGamesDb);
   return [];
 }
 
-async function searchImage(query: string): Promise<ImageSearchResult[]> {
-  return fetch(SEARCH_ENDPOINT + encodeURIComponent(query))
-    .then((res) => {
-      return res.json() as Promise<ImageSearchResult[]>;
-    })
-    .catch((err) => {
-      console.error(err);
-      return [];
-    });
-}
+// async function searchImage(query: string): Promise<ImageSearchResult[]> {
+//   return fetch(SEARCH_ENDPOINT + encodeURIComponent(query))
+//     .then((res) => {
+//       return res.json() as Promise<ImageSearchResult[]>;
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       return [];
+//     });
+// }
 
 async function getImage(cdnUrl: string, previousUrl: string): Promise<File> {
   const proxyUrl = IMAGE_ENDPOINT + cdnUrl.replace('https://', '');
@@ -82,7 +83,7 @@ export default function ImageSearch({
   const { files, setFiles } = useFileDropperContext();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [gameEntries, setGameEntries] = useState<GameEntries[]>([]);
+  // const [gameEntries, setGameEntries] = useState<GameEntries[]>([]);
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
   const [, startTransition] = useTransition();
@@ -106,10 +107,11 @@ export default function ImageSearch({
     e.preventDefault();
     setSearching(true);
     setSearchResults([]);
-    fetchGameList(searchQuery).then((res) => {
-      setSearching(false);
-      setSearchResults(res);
-    });
+    fetchGameList(searchQuery);
+    // .then((res) => {
+    //   setSearching(false);
+    //   setSearchResults(res);
+    // });
   };
 
   return (
