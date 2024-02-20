@@ -60,7 +60,10 @@ type GameImagesData = {
 
 let platformsData: Record<string, PlatformData> = {};
 
-async function fetchGameList(query: string): Promise<GameListData> {
+async function fetchGameList(
+  query: string,
+  page: string,
+): Promise<GameListData> {
   const url = new URL(
     GAMESDB_SEARCH_ENDPOINT,
     'https://deploy-preview-18--tapto-designer.netlify.app',
@@ -69,6 +72,7 @@ async function fetchGameList(query: string): Promise<GameListData> {
   url.searchParams.append('name', query);
   url.searchParams.append('fields', 'platform,players');
   url.searchParams.append('include', 'boxart');
+  url.searchParams.append('page', page);
   return (
     fetch(url, {
       mode: 'cors',
@@ -176,6 +180,7 @@ export default function ImageSearch({
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [gameEntries, setGameEntries] = useState<GameEntry[]>([]);
+  const [page, setPage] = useState<number>(0);
   const [moreLink, setMoreLink] = useState<string>('');
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
@@ -205,13 +210,21 @@ export default function ImageSearch({
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const executeSearch = (e: any) => {
+  const executeSearchWithReset = (e: any) => {
     e.preventDefault();
     setSearching(true);
+    setGameEntries([]);
     setSearchResults([]);
-    fetchGameList(searchQuery).then(({ games, moreLink }) => {
+    setPage(0);
+    executeSearch();
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const executeSearch = () => {
+    fetchGameList(searchQuery, page.toString()).then(({ games, moreLink }) => {
       setGameEntries([...gameEntries, ...games]);
       if (moreLink) {
+        setPage(page + 1);
         setMoreLink(moreLink);
       }
       setSearching(false);
@@ -240,7 +253,9 @@ export default function ImageSearch({
               value={searchQuery}
               onChange={(evt) => setSearchQuery(evt.target.value)}
               style={{ fontWeight: 400, fontSize: 14 }}
-              onKeyDown={(e: any) => e.key === 'Enter' && executeSearch(e)}
+              onKeyDown={(e: any) =>
+                e.key === 'Enter' && executeSearchWithReset(e)
+              }
             />
             <Button
               variant="contained"
@@ -251,7 +266,7 @@ export default function ImageSearch({
                 textTransform: 'none',
                 height: '44px',
               }}
-              onClick={executeSearch}
+              onClick={executeSearchWithReset}
             >
               {searching ? (
                 <CircularProgress color="secondary" size={24} />
@@ -286,7 +301,9 @@ export default function ImageSearch({
               {new Array(gameEntries.length % 4).fill(0).map(() => (
                 <div className="searchResult" />
               ))}
-              {moreLink && <Button>Load more...</Button>}
+              {moreLink && (
+                <Button onClick={executeSearch}>Load more...</Button>
+              )}
             </div>
           )}
           {searchResults.length > 0 && (
