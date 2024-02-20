@@ -16,7 +16,6 @@ import './imageSearch.css';
 const GAMESDB_SEARCH_ENDPOINT = '/thegamesdb/v1.1/Games/ByGameName';
 const GAMESDB_IMAGE_ENDPOINT = '/thegamesdb/v1/Games/Images';
 interface ImageSearchResult {
-  gameName: string;
   imageUrl: string;
   thumbnailUrl: string;
 }
@@ -56,7 +55,7 @@ type GameListData = {
 };
 
 type GameImagesData = {
-  images: string[];
+  images: ImageSearchResult[];
 };
 
 let platformsData: Record<string, PlatformData> = {};
@@ -139,20 +138,21 @@ async function fetchGameImages(gameId: number): Promise<GameImagesData> {
           const { base_url, images } = data;
           const pictures = images[gameId];
           return {
-            images: pictures.map(
-              (picture: any) => `${base_url.medium}${picture.filename}`,
-            ),
+            images: pictures.map((picture: any) => ({
+              imageUrl: `${base_url.original}${picture.filename}`,
+              thumbnailUrl: `${base_url.small}${picture.filename}`,
+            })),
           };
         } else {
           return {
-            images: [] as string[],
+            images: [] as ImageSearchResult[],
           };
         }
       })
       .catch((err) => {
         console.error(err);
         return {
-          images: [] as string[],
+          images: [] as ImageSearchResult[],
         };
       })
   );
@@ -219,7 +219,9 @@ export default function ImageSearch({
   };
 
   const switchToGameView = (gameId: number) => {
-    fetchGameImages(gameId).then((data: any) => console.log(data));
+    fetchGameImages(gameId).then((data: any) => {
+      setSearchResults(data.images);
+    });
   };
 
   return (
@@ -258,9 +260,7 @@ export default function ImageSearch({
               )}
             </Button>
           </div>
-          <Typography variant="h3">
-            {searchResults.length > 0 ? searchResults[0].gameName : ''}
-          </Typography>
+          <Typography variant="h3"></Typography>
           {searchResults.length === 0 && (
             <div className="searchResultsContainer horizontalStack">
               {gameEntries.map((gameEntry) => (
@@ -289,17 +289,22 @@ export default function ImageSearch({
               {moreLink && <Button>Load more...</Button>}
             </div>
           )}
-          <div className="searchResultsContainer horizontalStack">
-            {searchResults.map((result) => (
-              <Button className="searchResult" key={result.imageUrl}>
-                <img
-                  src={result.thumbnailUrl}
-                  onClick={(e) => addImage(e, result.imageUrl)}
-                  style={{ cursor: 'pointer' }}
-                />
-              </Button>
-            ))}
-          </div>
+          {searchResults.length > 0 && (
+            <div className="searchResultsContainer horizontalStack">
+              {searchResults.map((result) => (
+                <Button className="searchResult" key={result.imageUrl}>
+                  <img
+                    src={result.thumbnailUrl}
+                    onClick={(e) => addImage(e, result.imageUrl)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </Button>
+              ))}
+              {new Array(searchResults.length % 4).fill(0).map(() => (
+                <div className="searchResult" />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </Modal>
