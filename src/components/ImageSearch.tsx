@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState, type MouseEvent, useTransition } from 'react';
+import { useState, type MouseEvent, useTransition, useEffect } from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { CircularProgress } from '@mui/material';
 import { boxShadow } from '../constants';
@@ -21,33 +21,41 @@ interface ImageSearchResult {
   thumbnailUrl: string;
 }
 
-interface GamePlatform {
+type PlatformData = {
+  alias: string;
+  console: string | null;
+  icon: string;
   id: number;
-  icon: number;
-}
+  name: string;
+  overview: string;
+};
 
 interface ApiGameEntry {
   id: number;
   game_title: string;
-  platform: GamePlatform;
+  platform: number;
   players: number;
-  overview: string;
+  overview?: string;
   coop: string;
+  boxart?: string;
 }
 
 interface GameEntry {
   id: number;
   gameTitle: string;
-  platform: GamePlatform;
+  platform: PlatformData;
   players: number;
-  overview: string;
+  overview?: string;
   coop: string;
+  boxart: string;
 }
 
 type GameListData = {
   games: GameEntry[];
   moreLink?: string;
 };
+
+let platformsData: Record<string, PlatformData> = {};
 
 async function fetchGameList(query: string): Promise<GameListData> {
   const url = new URL(
@@ -56,16 +64,17 @@ async function fetchGameList(query: string): Promise<GameListData> {
     // `${window.location.protocol}//${window.location.hostname}`,
   );
   url.searchParams.append('name', query);
-  url.searchParams.append('fields', 'platform,players,overview,coop');
-  // url.searchParams.append('include', 'platform,boxart');
+  url.searchParams.append('fields', 'platform,players');
+  url.searchParams.append('include', 'boxart');
   return (
     fetch(url, {
       mode: 'cors',
     })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((res) => res.json() as Promise<any>)
-      .then(({ data, pages, code }) => {
+      .then(({ data, pages, code, include }) => {
         if (code === 200) {
+          const { base_url, data: boxArts } = include.boxart;
           return {
             games: (data.games as ApiGameEntry[]).map<GameEntry>(
               ({
@@ -77,11 +86,12 @@ async function fetchGameList(query: string): Promise<GameListData> {
                 id,
               }: ApiGameEntry) => ({
                 gameTitle,
-                platform,
+                platform: platformsData[platform],
                 id,
                 coop,
                 players,
                 overview,
+                boxart: `${base_url.medium}${boxArts[id][0].filename}`,
               }),
             ),
             moreLink: pages.next
@@ -137,6 +147,16 @@ export default function ImageSearch({
   const [searching, setSearching] = useState<boolean>(false);
   const [, startTransition] = useTransition();
 
+  // load the games platform
+  useEffect(() => {
+    import('../gamesDbPlatforms').then(
+      ({ platforms }: { platforms: Record<string, PlatformData> }) => {
+        platformsData = platforms;
+        console.log(platforms);
+      },
+    );
+  }, []);
+
   const addImage = async (e: MouseEvent<HTMLImageElement>, url: string) => {
     const currentIndex = files.length;
     const target = e.target as HTMLImageElement;
@@ -157,6 +177,7 @@ export default function ImageSearch({
     setSearching(true);
     setSearchResults([]);
     fetchGameList(searchQuery).then(({ games, moreLink }) => {
+      console.log(games);
       setGameEntries([...gameEntries, ...games]);
       if (moreLink) {
         setMoreLink(moreLink);
@@ -203,11 +224,21 @@ export default function ImageSearch({
           <Typography variant="h3">
             {searchResults.length > 0 ? searchResults[0].gameName : ''}
           </Typography>
-          <div className="searchResultsContainer verticalStack">
+          <div className="searchResultsContainer horizontalStack">
             {gameEntries.map((gameEntry) => (
-              <Typography variant="h6">{gameEntry.gameTitle}</Typography>
+              <Button className="searchResult" key={gameEntry.id}>
+                <img
+                  src={gameEntry.boxart}
+                  onClick={(e) => addImage(e, gameEntry.boxart)}
+                  style={{ cursor: 'pointer' }}
+                />
+                <Typography variant="h6">{gameEntry.gameTitle}</Typography>
+                <Typography variant="h6">{gameEntry.platform.name}</Typography>
+              </Button>
             ))}
             {moreLink}
+          </div>
+          <div className="searchResultsContainer horizontalStack">
             {searchResults.map((result) => (
               <Button className="searchResult" key={result.imageUrl}>
                 <img

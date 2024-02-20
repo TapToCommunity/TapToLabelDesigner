@@ -1,6 +1,5 @@
+export const count = 150;
 export const platforms = {
-  "count": 150,
-  "platforms": {
     "1": {
       "id": 1,
       "name": "PC",
@@ -1201,5 +1200,4 @@ export const platforms = {
       "icon": "",
       "console": null
     }
-  }
-};
+  };
