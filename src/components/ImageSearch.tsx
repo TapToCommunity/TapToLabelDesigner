@@ -12,9 +12,9 @@ import IconButton from '@mui/material/IconButton';
 import './imageSearch.css';
 
 // const SEARCH_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/search/';
-const IMAGE_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/image/';
-const GAMESDB_ENDPOINT = '/thegamesdb/v1.1/Games/ByGameName';
-
+// const IMAGE_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/image/';
+const GAMESDB_SEARCH_ENDPOINT = '/thegamesdb/v1.1/Games/ByGameName';
+const GAMESDB_IMAGE_ENDPOINT = '/thegamesdb/v1/Games/Images';
 interface ImageSearchResult {
   gameName: string;
   imageUrl: string;
@@ -55,11 +55,15 @@ type GameListData = {
   moreLink?: string;
 };
 
+type GameImagesData = {
+  images: string[];
+};
+
 let platformsData: Record<string, PlatformData> = {};
 
 async function fetchGameList(query: string): Promise<GameListData> {
   const url = new URL(
-    GAMESDB_ENDPOINT,
+    GAMESDB_SEARCH_ENDPOINT,
     'https://deploy-preview-18--tapto-designer.netlify.app',
     // `${window.location.protocol}//${window.location.hostname}`,
   );
@@ -73,7 +77,7 @@ async function fetchGameList(query: string): Promise<GameListData> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((res) => res.json() as Promise<any>)
       .then(({ data, pages, code, include }) => {
-        if (code === 200) {
+        if (code === 200 && data.count > 0) {
           const { base_url, data: boxArts } = include.boxart;
           return {
             games: (data.games as ApiGameEntry[]).map<GameEntry>(
@@ -113,19 +117,49 @@ async function fetchGameList(query: string): Promise<GameListData> {
   );
 }
 
-// async function searchImage(query: string): Promise<ImageSearchResult[]> {
-//   return fetch(SEARCH_ENDPOINT + encodeURIComponent(query))
-//     .then((res) => {
-//       return res.json() as Promise<ImageSearchResult[]>;
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       return [];
-//     });
-// }
+async function fetchGameImages(gameId: number): Promise<GameImagesData> {
+  const url = new URL(
+    GAMESDB_IMAGE_ENDPOINT,
+    'https://deploy-preview-18--tapto-designer.netlify.app',
+    // `${window.location.protocol}//${window.location.hostname}`,
+  );
+  url.searchParams.append('games_id', `${gameId}`);
+  url.searchParams.append(
+    'filter[type]',
+    'fanart,banner,boxart,screenshot,clearlogo,titlescreen',
+  );
+  return (
+    fetch(url, {
+      mode: 'cors',
+    })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((res) => res.json() as Promise<any>)
+      .then(({ data, code }) => {
+        if (code === 200) {
+          const { base_url, images } = data;
+          const pictures = images[gameId];
+          return {
+            images: pictures.map(
+              (picture: any) => `${base_url.medium}${picture.filename}`,
+            ),
+          };
+        } else {
+          return {
+            images: [] as string[],
+          };
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        return {
+          images: [] as string[],
+        };
+      })
+  );
+}
 
 async function getImage(cdnUrl: string, previousUrl: string): Promise<File> {
-  const proxyUrl = IMAGE_ENDPOINT + cdnUrl.replace('https://', '');
+  const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(cdnUrl);
   return fetch(proxyUrl)
     .then((r) => r.blob())
     .then((blob) => new File([blob], previousUrl, { type: blob.type }));
@@ -152,7 +186,6 @@ export default function ImageSearch({
     import('../gamesDbPlatforms').then(
       ({ platforms }: { platforms: Record<string, PlatformData> }) => {
         platformsData = platforms;
-        console.log(platforms);
       },
     );
   }, []);
@@ -177,12 +210,16 @@ export default function ImageSearch({
     setSearching(true);
     setSearchResults([]);
     fetchGameList(searchQuery).then(({ games, moreLink }) => {
-      console.log(games);
       setGameEntries([...gameEntries, ...games]);
       if (moreLink) {
         setMoreLink(moreLink);
       }
+      setSearching(false);
     });
+  };
+
+  const switchToGameView = (gameId: number) => {
+    fetchGameImages(gameId).then((data: any) => console.log(data));
   };
 
   return (
@@ -224,20 +261,34 @@ export default function ImageSearch({
           <Typography variant="h3">
             {searchResults.length > 0 ? searchResults[0].gameName : ''}
           </Typography>
-          <div className="searchResultsContainer horizontalStack">
-            {gameEntries.map((gameEntry) => (
-              <Button className="searchResult" key={gameEntry.id}>
-                <img
-                  src={gameEntry.boxart}
-                  onClick={(e) => addImage(e, gameEntry.boxart)}
-                  style={{ cursor: 'pointer' }}
-                />
-                <Typography variant="h6">{gameEntry.gameTitle}</Typography>
-                <Typography variant="h6">{gameEntry.platform.name}</Typography>
-              </Button>
-            ))}
-            {moreLink}
-          </div>
+          {searchResults.length === 0 && (
+            <div className="searchResultsContainer horizontalStack">
+              {gameEntries.map((gameEntry) => (
+                <div className="searchResult" key={gameEntry.id}>
+                  <Button>
+                    <img
+                      src={gameEntry.boxart}
+                      onClick={(e) => addImage(e, gameEntry.boxart)}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </Button>
+                  <Button
+                    className="verticalStack"
+                    onClick={() => switchToGameView(gameEntry.id)}
+                  >
+                    <Typography variant="h6">{gameEntry.gameTitle}</Typography>
+                    <Typography variant="h6">
+                      {gameEntry.platform.name}
+                    </Typography>
+                  </Button>
+                </div>
+              ))}
+              {new Array(gameEntries.length % 4).fill(0).map(() => (
+                <div className="searchResult" />
+              ))}
+              {moreLink && <Button>Load more...</Button>}
+            </div>
+          )}
           <div className="searchResultsContainer horizontalStack">
             {searchResults.map((result) => (
               <Button className="searchResult" key={result.imageUrl}>
@@ -247,9 +298,6 @@ export default function ImageSearch({
                   style={{ cursor: 'pointer' }}
                 />
               </Button>
-            ))}
-            {new Array(searchResults.length % 4).fill(0).map(() => (
-              <div className="searchResult" />
             ))}
           </div>
         </div>
