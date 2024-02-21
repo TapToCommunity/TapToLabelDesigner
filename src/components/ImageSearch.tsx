@@ -2,7 +2,13 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState, type MouseEvent, useTransition, useEffect } from 'react';
+import {
+  useState,
+  type MouseEvent,
+  useTransition,
+  useEffect,
+  useCallback,
+} from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { CircularProgress } from '@mui/material';
 import { boxShadow } from '../constants';
@@ -212,24 +218,32 @@ export default function ImageSearch({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const executeSearchWithReset = (e: any) => {
     e.preventDefault();
-    setSearching(true);
-    setGameEntries([]);
     setSearchResults([]);
     setPage(0);
-    executeSearch();
+    setSearching(true);
+    executeSearch(false);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const executeSearch = () => {
-    fetchGameList(searchQuery, page.toString()).then(({ games, moreLink }) => {
-      setGameEntries([...gameEntries, ...games]);
-      if (moreLink) {
-        setPage(page + 1);
-        setMoreLink(moreLink);
-      }
-      setSearching(false);
-    });
-  };
+  const executeSearch = useCallback(
+    (queueResults: boolean) => {
+      fetchGameList(searchQuery, page.toString()).then(
+        ({ games, moreLink }) => {
+          if (queueResults) {
+            setGameEntries([...gameEntries, ...games]);
+          } else {
+            setGameEntries(games);
+          }
+          if (moreLink) {
+            setPage(page + 1);
+            setMoreLink(moreLink);
+          }
+          setSearching(false);
+        },
+      );
+    },
+    [gameEntries, page, searchQuery],
+  );
 
   const switchToGameView = (gameId: number) => {
     fetchGameImages(gameId).then((data: any) => {
@@ -276,7 +290,7 @@ export default function ImageSearch({
             </Button>
           </div>
           {moreLink && (
-            <Button onClick={() => executeSearch()}>Load more...</Button>
+            <Button onClick={() => executeSearch(true)}>Load more...</Button>
           )}
           <Typography variant="h3"></Typography>
           {searchResults.length === 0 && (
