@@ -275,6 +275,9 @@ export default function ImageSearch({
               )}
             </Button>
           </div>
+          {moreLink && (
+            <Button onClick={() => executeSearch()}>Load more...</Button>
+          )}
           <Typography variant="h3"></Typography>
           {searchResults.length === 0 && (
             <div className="searchResultsContainer horizontalStack">
@@ -301,9 +304,6 @@ export default function ImageSearch({
               {new Array(gameEntries.length % 4).fill(0).map(() => (
                 <div className="searchResult" />
               ))}
-              {moreLink && (
-                <Button onClick={executeSearch}>Load more...</Button>
-              )}
             </div>
           )}
           {searchResults.length > 0 && (
