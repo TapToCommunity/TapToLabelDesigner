@@ -7,173 +7,23 @@ import {
   type MouseEvent,
   useTransition,
   useEffect,
-  useCallback,
+  useRef,
 } from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { CircularProgress } from '@mui/material';
 import { boxShadow } from '../constants';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import { useInView } from 'react-intersection-observer';
 
 import './imageSearch.css';
-
-// const SEARCH_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/search/';
-// const IMAGE_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/image/';
-const GAMESDB_SEARCH_ENDPOINT = '/thegamesdb/v1.1/Games/ByGameName';
-const GAMESDB_IMAGE_ENDPOINT = '/thegamesdb/v1/Games/Images';
-interface ImageSearchResult {
-  imageUrl: string;
-  thumbnailUrl: string;
-}
-
-type PlatformData = {
-  alias: string;
-  console: string | null;
-  icon: string;
-  id: number;
-  name: string;
-  overview: string;
-};
-
-interface ApiGameEntry {
-  id: number;
-  game_title: string;
-  platform: number;
-  players: number;
-  overview?: string;
-  coop: string;
-  boxart?: string;
-}
-
-interface GameEntry {
-  id: number;
-  gameTitle: string;
-  platform: PlatformData;
-  players: number;
-  overview?: string;
-  coop: string;
-  boxart: string;
-}
-
-type GameListData = {
-  games: GameEntry[];
-  moreLink?: string;
-};
-
-type GameImagesData = {
-  images: ImageSearchResult[];
-};
-
-let platformsData: Record<string, PlatformData> = {};
-
-async function fetchGameList(
-  query: string,
-  page: string,
-): Promise<GameListData> {
-  const url = new URL(
-    GAMESDB_SEARCH_ENDPOINT,
-    'https://deploy-preview-18--tapto-designer.netlify.app',
-    // `${window.location.protocol}//${window.location.hostname}`,
-  );
-  url.searchParams.append('name', query);
-  url.searchParams.append('fields', 'platform,players');
-  url.searchParams.append('include', 'boxart');
-  url.searchParams.append('page', page);
-  return (
-    fetch(url, {
-      mode: 'cors',
-    })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res) => res.json() as Promise<any>)
-      .then(({ data, pages, code, include }) => {
-        if (code === 200 && data.count > 0) {
-          const { base_url, data: boxArts } = include.boxart;
-          return {
-            games: (data.games as ApiGameEntry[]).map<GameEntry>(
-              ({
-                game_title: gameTitle,
-                platform,
-                players,
-                coop,
-                overview,
-                id,
-              }: ApiGameEntry) => ({
-                gameTitle,
-                platform: platformsData[platform],
-                id,
-                coop,
-                players,
-                overview,
-                boxart: `${base_url.medium}${boxArts[id][0].filename}`,
-              }),
-            ),
-            moreLink: pages.next
-              ? pages.next.replace('https://api.thegamesdb.net/', '')
-              : undefined,
-          };
-        } else {
-          return {
-            games: [] as GameEntry[],
-          };
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        return {
-          games: [] as GameEntry[],
-        };
-      })
-  );
-}
-
-async function fetchGameImages(gameId: number): Promise<GameImagesData> {
-  const url = new URL(
-    GAMESDB_IMAGE_ENDPOINT,
-    'https://deploy-preview-18--tapto-designer.netlify.app',
-    // `${window.location.protocol}//${window.location.hostname}`,
-  );
-  url.searchParams.append('games_id', `${gameId}`);
-  url.searchParams.append(
-    'filter[type]',
-    'fanart,banner,boxart,screenshot,clearlogo,titlescreen',
-  );
-  return (
-    fetch(url, {
-      mode: 'cors',
-    })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res) => res.json() as Promise<any>)
-      .then(({ data, code }) => {
-        if (code === 200) {
-          const { base_url, images } = data;
-          const pictures = images[gameId];
-          return {
-            images: pictures.map((picture: any) => ({
-              imageUrl: `${base_url.original}${picture.filename}`,
-              thumbnailUrl: `${base_url.small}${picture.filename}`,
-            })),
-          };
-        } else {
-          return {
-            images: [] as ImageSearchResult[],
-          };
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        return {
-          images: [] as ImageSearchResult[],
-        };
-      })
-  );
-}
-
-async function getImage(cdnUrl: string, previousUrl: string): Promise<File> {
-  const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(cdnUrl);
-  return fetch(proxyUrl)
-    .then((r) => r.blob())
-    .then((blob) => new File([blob], previousUrl, { type: blob.type }));
-}
+import {
+  fetchGameImages,
+  fetchGameList,
+  getImage,
+  type GameEntry,
+  type ImageSearchResult,
+} from '../utils/thegamesdb';
 
 export default function ImageSearch({
   open,
@@ -186,20 +36,18 @@ export default function ImageSearch({
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [gameEntries, setGameEntries] = useState<GameEntry[]>([]);
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const [moreLink, setMoreLink] = useState<string>('');
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
   const [, startTransition] = useTransition();
+  const timerRef = useRef(0);
+  const SEARCH_THROTTLING = 1000;
 
-  // load the games platform
-  useEffect(() => {
-    import('../gamesDbPlatforms').then(
-      ({ platforms }: { platforms: Record<string, PlatformData> }) => {
-        platformsData = platforms;
-      },
-    );
-  }, []);
+  const { ref, inView } = useInView({
+    /* Optional options */
+    threshold: 0.9,
+  });
 
   const addImage = async (e: MouseEvent<HTMLImageElement>, url: string) => {
     const currentIndex = files.length;
@@ -219,31 +67,41 @@ export default function ImageSearch({
   const executeSearchWithReset = (e: any) => {
     e.preventDefault();
     setSearchResults([]);
-    setPage(0);
+    setPage(1);
     setSearching(true);
-    executeSearch(false);
+    executeSearch(searchQuery, page, false);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const executeSearch = useCallback(
-    (queueResults: boolean) => {
-      fetchGameList(searchQuery, page.toString()).then(
-        ({ games, moreLink }) => {
-          if (queueResults) {
-            setGameEntries([...gameEntries, ...games]);
-          } else {
-            setGameEntries(games);
-          }
-          if (moreLink) {
-            setPage(page + 1);
-            setMoreLink(moreLink);
-          }
-          setSearching(false);
-        },
-      );
-    },
-    [gameEntries, page, searchQuery],
-  );
+  const executeSearch = (
+    searchQuery: string,
+    page: number,
+    queueResults: boolean = true,
+  ) => {
+    const now = performance.now();
+    if (timerRef.current > now - SEARCH_THROTTLING) {
+      return;
+    }
+    timerRef.current = now;
+    fetchGameList(searchQuery, page.toString()).then(({ games, moreLink }) => {
+      if (queueResults) {
+        setGameEntries([...gameEntries, ...games]);
+      } else {
+        setGameEntries(games);
+      }
+      if (moreLink) {
+        setPage(page + 1);
+      }
+      setMoreLink(moreLink);
+      setSearching(false);
+    });
+  };
+
+  useEffect(() => {
+    if (inView) {
+      executeSearch(searchQuery, page, true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
 
   const switchToGameView = (gameId: number) => {
     fetchGameImages(gameId).then((data: any) => {
@@ -289,10 +147,6 @@ export default function ImageSearch({
               )}
             </Button>
           </div>
-          {moreLink && (
-            <Button onClick={() => executeSearch(true)}>Load more...</Button>
-          )}
-          <Typography variant="h3"></Typography>
           {searchResults.length === 0 && (
             <div className="searchResultsContainer horizontalStack">
               {gameEntries.map((gameEntry) => (
@@ -318,6 +172,11 @@ export default function ImageSearch({
               {new Array(gameEntries.length % 4).fill(0).map(() => (
                 <div className="searchResult" />
               ))}
+              {moreLink && searchResults.length === 0 && (
+                <div className="loader" ref={ref}>
+                  <CircularProgress color="secondary" size={24} />
+                </div>
+              )}
             </div>
           )}
           {searchResults.length > 0 && (

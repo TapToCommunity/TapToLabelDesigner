@@ -2773,6 +2773,11 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
+react-intersection-observer@^9.8.0:
+  version "9.8.0"
+  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-9.8.0.tgz#71c2156b90765ea9bae7537614e387972c963772"
+  integrity sha512-wXHvMQUsTagh3X0Z6jDtGkIXc3VVCd2tjDRYR9kII3GKrZr0XF0xtpfdamo2n8BSF+zzfeeBVOTjxZWpBp9X0g==
+
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
