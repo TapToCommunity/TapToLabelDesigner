@@ -44,7 +44,6 @@ export const platformPromise = import('../gamesDbPlatforms').then((data) => {
   platformsData = Object.fromEntries(Object.entries(data.platforms).sort(([, valueA], [, valueB]) => {
     return valueA.name > valueB.name ? 1 : -1;
   }));
-  console.log(platformsData)
   return {
     count: data.count,
     platforms: platformsData,
@@ -53,6 +52,7 @@ export const platformPromise = import('../gamesDbPlatforms').then((data) => {
 
 export async function fetchGameList(
   query: string,
+  platform: Platform,
   page: string,
 ): Promise<GameListData> {
   const url = new URL(
@@ -64,6 +64,9 @@ export async function fetchGameList(
   url.searchParams.append('fields', 'platform,players');
   url.searchParams.append('include', 'boxart');
   url.searchParams.append('page', page);
+  if (platform.id !== 0) {
+    url.searchParams.append('filter[platform]', `${platform.id}`);
+  }
   return (
     fetch(url, {
       mode: 'cors',

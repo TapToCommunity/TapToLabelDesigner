@@ -8,7 +8,6 @@ import {
   useTransition,
   useEffect,
   useRef,
-  lazy,
 } from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { CircularProgress } from '@mui/material';
@@ -22,14 +21,12 @@ import {
   fetchGameImages,
   fetchGameList,
   getImage,
-  platformPromise,
   platformsData,
   type GameEntry,
   type ImageSearchResult,
 } from '../utils/thegamesdb';
 import { Platform } from '../gamesDbPlatforms';
-
-const PlatformDropdown = lazy(() => import('./PlatformDropdown'));
+import { PlatformDropdown } from './PlatformDropdown';
 
 export default function ImageSearch({
   open,
@@ -46,7 +43,14 @@ export default function ImageSearch({
   const [moreLink, setMoreLink] = useState<string>('');
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
-  const [platform, setPlatform] = useState<Platform>();
+  const [platform, setPlatform] = useState<Platform>({
+    id: 0,
+    name: 'all',
+    alias: 'all',
+    overview: '',
+    icon: '',
+    console: '',
+  });
   const [, startTransition] = useTransition();
   const timerRef = useRef(0);
   const SEARCH_THROTTLING = 1000;
@@ -55,12 +59,6 @@ export default function ImageSearch({
     /* Optional options */
     threshold: 0.9,
   });
-
-  useEffect(() => {
-    platformPromise.then(({ platforms }) => {
-      setPlatform(platforms[0]);
-    });
-  }, []);
 
   const addImage = async (e: MouseEvent<HTMLImageElement>, url: string) => {
     const currentIndex = files.length;
@@ -82,12 +80,13 @@ export default function ImageSearch({
     setSearchResults([]);
     setPage(1);
     setSearching(true);
-    executeSearch(searchQuery, page, false);
+    executeSearch(searchQuery, page, platform, false);
   };
 
   const executeSearch = (
     searchQuery: string,
     page: number,
+    platform: Platform,
     queueResults: boolean = true,
   ) => {
     const now = performance.now();
@@ -95,23 +94,25 @@ export default function ImageSearch({
       return;
     }
     timerRef.current = now;
-    fetchGameList(searchQuery, page.toString()).then(({ games, moreLink }) => {
-      if (queueResults) {
-        setGameEntries([...gameEntries, ...games]);
-      } else {
-        setGameEntries(games);
-      }
-      if (moreLink) {
-        setPage(page + 1);
-      }
-      setMoreLink(moreLink);
-      setSearching(false);
-    });
+    fetchGameList(searchQuery, platform, page.toString()).then(
+      ({ games, moreLink }) => {
+        if (queueResults) {
+          setGameEntries([...gameEntries, ...games]);
+        } else {
+          setGameEntries(games);
+        }
+        if (moreLink) {
+          setPage(page + 1);
+        }
+        setMoreLink(moreLink);
+        setSearching(false);
+      },
+    );
   };
 
   useEffect(() => {
     if (inView) {
-      executeSearch(searchQuery, page, true);
+      executeSearch(searchQuery, page, platform, true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
@@ -142,13 +143,11 @@ export default function ImageSearch({
                 e.key === 'Enter' && executeSearchWithReset(e)
               }
             />
-            {platform && (
-              <PlatformDropdown
-                platforms={platformsData}
-                setPlatform={setPlatform}
-                platform={platform}
-              />
-            )}
+            <PlatformDropdown
+              platforms={platformsData}
+              setPlatform={setPlatform}
+              platform={platform}
+            />
             <Button
               variant="contained"
               size="small"

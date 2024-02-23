@@ -12,7 +12,7 @@ type PlatformDropdownProps = {
   platform: Platform;
 };
 
-const PlatformDropdown = ({
+export const PlatformDropdown = ({
   platforms,
   setPlatform,
   platform,
