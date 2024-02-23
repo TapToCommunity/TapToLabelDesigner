@@ -40,7 +40,6 @@ export type GameImagesData = {
 export let platformsData: Record<string, Platform> = {};
 
 export const platformPromise = import('../gamesDbPlatforms').then((data) => {
-  console.log(data.platforms);
   platformsData = Object.fromEntries(Object.entries(data.platforms).sort(([, valueA], [, valueB]) => {
     return valueA.name > valueB.name ? 1 : -1;
   }));
