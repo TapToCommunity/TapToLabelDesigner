@@ -8,6 +8,7 @@ import {
   useTransition,
   useEffect,
   useRef,
+  lazy,
 } from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { CircularProgress } from '@mui/material';
@@ -21,9 +22,14 @@ import {
   fetchGameImages,
   fetchGameList,
   getImage,
+  platformPromise,
+  platformsData,
   type GameEntry,
   type ImageSearchResult,
 } from '../utils/thegamesdb';
+import { Platform } from '../gamesDbPlatforms';
+
+const PlatformDropdown = lazy(() => import('./PlatformDropdown'));
 
 export default function ImageSearch({
   open,
@@ -40,6 +46,7 @@ export default function ImageSearch({
   const [moreLink, setMoreLink] = useState<string>('');
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
+  const [platform, setPlatform] = useState<Platform>();
   const [, startTransition] = useTransition();
   const timerRef = useRef(0);
   const SEARCH_THROTTLING = 1000;
@@ -48,6 +55,12 @@ export default function ImageSearch({
     /* Optional options */
     threshold: 0.9,
   });
+
+  useEffect(() => {
+    platformPromise.then(({ platforms }) => {
+      setPlatform(platforms[0]);
+    });
+  }, []);
 
   const addImage = async (e: MouseEvent<HTMLImageElement>, url: string) => {
     const currentIndex = files.length;
@@ -129,6 +142,13 @@ export default function ImageSearch({
                 e.key === 'Enter' && executeSearchWithReset(e)
               }
             />
+            {platform && (
+              <PlatformDropdown
+                platforms={platformsData}
+                setPlatform={setPlatform}
+                platform={platform}
+              />
+            )}
             <Button
               variant="contained"
               size="small"

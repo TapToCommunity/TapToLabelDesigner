@@ -1,3 +1,5 @@
+import { Platform } from '../gamesDbPlatforms';
+
 const GAMESDB_SEARCH_ENDPOINT = '/thegamesdb/v1.1/Games/ByGameName';
 const GAMESDB_IMAGE_ENDPOINT = '/thegamesdb/v1/Games/Images';
 
@@ -5,15 +7,6 @@ export interface ImageSearchResult {
   imageUrl: string;
   thumbnailUrl: string;
 }
-
-export type PlatformData = {
-  alias: string;
-  console: string | null;
-  icon: string;
-  id: number;
-  name: string;
-  overview: string;
-};
 
 interface ApiGameEntry {
   id: number;
@@ -28,7 +21,7 @@ interface ApiGameEntry {
 export interface GameEntry {
   id: number;
   gameTitle: string;
-  platform: PlatformData;
+  platform: Platform;
   players: number;
   overview?: string;
   coop: string;
@@ -44,21 +37,24 @@ export type GameImagesData = {
   images: ImageSearchResult[];
 };
 
-let platformsData: Record<string, PlatformData> = {};
+export let platformsData: Record<string, Platform> = {};
 
-let platformPromise: Promise<void> | null = null;
+export const platformPromise = import('../gamesDbPlatforms').then((data) => {
+  console.log(data.platforms);
+  platformsData = Object.fromEntries(Object.entries(data.platforms).sort(([, valueA], [, valueB]) => {
+    return valueA.name > valueB.name ? 1 : -1;
+  }));
+  console.log(platformsData)
+  return {
+    count: data.count,
+    platforms: platformsData,
+  };
+});
 
 export async function fetchGameList(
   query: string,
   page: string,
 ): Promise<GameListData> {
-  if (!platformPromise) {
-    platformPromise = import('../gamesDbPlatforms').then(
-        ({ platforms }: { platforms: Record<string, PlatformData> }) => {
-          platformsData = platforms;
-        },
-      );
-  }
   const url = new URL(
     GAMESDB_SEARCH_ENDPOINT,
     'https://deploy-preview-18--tapto-designer.netlify.app',

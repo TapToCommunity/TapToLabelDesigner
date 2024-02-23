@@ -1,5 +1,22 @@
-export const count = 150;
-export const platforms = {
+export type Platform = {
+  id: number;
+  name: string;
+  alias: string;
+  overview: string;
+  icon: string;
+  console: string | null;
+}
+
+export const count = 150 as const;
+export const platforms: Record<Platform["id"], Platform> = {
+    "0": {
+      "id": 0,
+      "name": "all",
+      "alias": "all",
+      "icon": "",
+      "console": "",
+      overview: "",
+    },
     "1": {
       "id": 1,
       "name": "PC",
@@ -1200,4 +1217,4 @@ export const platforms = {
       "icon": "",
       "console": null
     }
-  };
+  } as const;
