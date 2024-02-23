@@ -21,7 +21,6 @@ import {
   fetchGameImages,
   fetchGameList,
   getImage,
-  platformsData,
   type GameEntry,
   type ImageSearchResult,
 } from '../utils/thegamesdb';
@@ -143,11 +142,7 @@ export default function ImageSearch({
                 e.key === 'Enter' && executeSearchWithReset(e)
               }
             />
-            <PlatformDropdown
-              platforms={platformsData}
-              setPlatform={setPlatform}
-              platform={platform}
-            />
+            <PlatformDropdown setPlatform={setPlatform} platform={platform} />
             <Button
               variant="contained"
               size="small"

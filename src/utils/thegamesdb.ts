@@ -37,15 +37,18 @@ export type GameImagesData = {
   images: ImageSearchResult[];
 };
 
-export let platformsData: Record<string, Platform> = {};
+export let platformsData: Platform[] = [];
 
 export const platformPromise = import('../gamesDbPlatforms').then((data) => {
-  platformsData = Object.fromEntries(Object.entries(data.platforms).sort(([, valueA], [, valueB]) => {
+  const allPlatform = data.platforms['0'];
+  const sortedValues = Object.values(data.platforms).slice(1).sort((valueA, valueB) => {
     return valueA.name > valueB.name ? 1 : -1;
-  }));
+  });
+  sortedValues.unshift(allPlatform);
+  platformsData = sortedValues;
   return {
     count: data.count,
-    platforms: platformsData,
+    platforms: sortedValues,
   };
 });
 

@@ -1,28 +1,31 @@
 import type { JSX } from 'react';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Platform } from '../gamesDbPlatforms';
+import { platformPromise, platformsData } from '../utils/thegamesdb';
 
 type PlatformDropdownProps = {
-  platforms: Record<string, Platform>;
   setPlatform: (p: Platform) => void;
   platform: Platform;
 };
 
 export const PlatformDropdown = ({
-  platforms,
   setPlatform,
   platform,
 }: PlatformDropdownProps): JSX.Element => {
+  const [, setReady] = useState(true);
+  useEffect(() => {
+    platformPromise.then(() => setReady(true));
+  }, []);
   const togglePlatform = useCallback(
     async (evt: SelectChangeEvent<string>) => {
       const value = evt.target.value;
-      setPlatform(platforms[value]);
+      setPlatform(platformsData.find((p) => p.id.toString() === value)!);
     },
-    [platforms, setPlatform],
+    [setPlatform],
   );
   return (
     <FormControl size="small" sx={{ m: 1, minWidth: 120 }}>
@@ -36,14 +39,14 @@ export const PlatformDropdown = ({
         onChange={togglePlatform}
         sx={{ fontWeight: 400 }}
       >
-        {Object.entries(platforms).map(([key, value]) => (
+        {platformsData.map((aPlatform) => (
           <MenuItem
-            key={key}
-            value={key}
-            selected={key === platform.id.toString()}
+            key={aPlatform.id}
+            value={aPlatform.id.toString()}
+            selected={aPlatform.id === platform.id}
             sx={{ fontWeight: 400 }}
           >
-            {value.name}
+            {aPlatform.name}
           </MenuItem>
         ))}
       </Select>
