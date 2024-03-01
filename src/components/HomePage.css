@@ -43,6 +43,9 @@
   align-items: center;
   min-height: 285px;
   background-color: #202744;
+  background: #202744;
+  background: linear-gradient(to bottom, #202744 0%, #323D6A 100%);
+
 }
 
 .homepage h3 {
@@ -50,6 +53,10 @@
   line-height: 50px;
   margin-bottom: 10px;
   text-align: left;
+  background: #5361D9;
+  background: linear-gradient(to right, #5361D9 0%, #CC58D9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;  
 }
 
 .homepage .textLayout {
@@ -69,9 +76,38 @@
   color: #fff;
 }
 
-.textLayout a {
+/* .textLayout a {
   color: inherit;
   text-decoration-color: inherit;
+}
+*/
+
+.textLayout a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.textLayout a {
+  background:
+    linear-gradient(
+      to right,
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 1)
+    ),
+    linear-gradient(
+      to right,
+      rgba(255, 0, 0, 1),
+      rgba(255, 0, 180, 1),
+      rgba(0, 100, 200, 1)
+  );
+  background-size: 100% 1px, 0 1px;
+  background-position: 100% 100%, 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 400ms;
+}
+
+.textLayout a:hover {
+  background-size: 0 1px, 100% 1px;
 }
 
 .textLayout li {
@@ -96,6 +132,14 @@
   align-items: center;
   background-color: rgba(244, 244, 244, 1);
   min-height: 600px;
+  padding: 10px;
+}
+
+.homepage .credits {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  background-color: rgb(41, 40, 40);
   padding: 10px;
 }
 
