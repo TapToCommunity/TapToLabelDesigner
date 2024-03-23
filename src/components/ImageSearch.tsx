@@ -127,9 +127,6 @@ export default function ImageSearch({
       <div className="searchModal">
         <div className="verticalStack">
           <div className="horizontalStack searchHeader">
-            <IconButton onClick={() => setOpen(false)}>
-              <CloseIcon />
-            </IconButton>
             <TextField
               className="textField"
               size="small"
@@ -160,6 +157,13 @@ export default function ImageSearch({
                 <p>Search</p>
               )}
             </Button>
+            <IconButton
+              onClick={() =>
+                searchResults.length ? setSearchResults([]) : setOpen(false)
+              }
+            >
+              <CloseIcon />
+            </IconButton>
           </div>
           {searchResults.length === 0 && (
             <div className="searchResultsContainer horizontalStack">
