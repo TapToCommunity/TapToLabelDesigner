@@ -178,7 +178,7 @@ export default function ImageSearch({
                   >
                     <Typography variant="h6">{gameEntry.gameTitle}</Typography>
                     <Typography variant="h6">
-                      {gameEntry.platform.name}
+                      {gameEntry.platform?.name}
                     </Typography>
                   </Button>
                 </div>

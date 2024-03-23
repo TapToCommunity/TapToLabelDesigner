@@ -21,7 +21,7 @@ interface ApiGameEntry {
 export interface GameEntry {
   id: number;
   gameTitle: string;
-  platform: Platform;
+  platform?: Platform;
   players: number;
   overview?: string;
   coop: string;
@@ -90,7 +90,7 @@ export async function fetchGameList(
                 id,
               }: ApiGameEntry) => ({
                 gameTitle,
-                platform: platformsData[platform],
+                platform: platformsData.find(p => p.id === platform),
                 id,
                 coop,
                 players,
