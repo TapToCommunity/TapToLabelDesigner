@@ -1170,7 +1170,7 @@ base64-js@^1.1.2, base64-js@^1.3.0:
 
 blob-stream@^0.1.3:
   version "0.1.3"
-  resolved "https://registry.npmjs.org/blob-stream/-/blob-stream-0.1.3.tgz"
+  resolved "https://registry.yarnpkg.com/blob-stream/-/blob-stream-0.1.3.tgz#98d668af6996e0f32ef666d06e215ccc7d77686c"
   integrity sha512-xXwyhgVmPsFVFFvtM5P0syI17/oae+MIjLn5jGhuD86mmSJ61EWMWmbPrV/0+bdcH9jQ2CzIhmTQKNUJL7IPog==
   dependencies:
     blob "0.0.4"

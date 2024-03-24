@@ -13,6 +13,8 @@ import { useFileDropperContext } from '../contexts/fileDropper';
 import { CircularProgress } from '@mui/material';
 import { boxShadow } from '../constants';
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import IconButton from '@mui/material/IconButton';
 import { useInView } from 'react-intersection-observer';
 
@@ -162,7 +164,7 @@ export default function ImageSearch({
                 searchResults.length ? setSearchResults([]) : setOpen(false)
               }
             >
-              <CloseIcon />
+              {searchResults.length ? <ArrowBackIcon /> : <CloseIcon />}
             </IconButton>
           </div>
           {searchResults.length === 0 && (
@@ -208,8 +210,8 @@ export default function ImageSearch({
                   />
                 </Button>
               ))}
-              {new Array(searchResults.length % 4).fill(0).map(() => (
-                <div className="searchResult" />
+              {new Array(searchResults.length % 4).fill(0).map((_, index) => (
+                <div className="searchResult" key={index} />
               ))}
             </div>
           )}
