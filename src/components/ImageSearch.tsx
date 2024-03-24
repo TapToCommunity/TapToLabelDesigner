@@ -10,7 +10,8 @@ import {
   useRef,
 } from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
-import { CircularProgress } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import Tooltip from '@mui/material/Tooltip';
 import { boxShadow } from '../constants';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -159,13 +160,21 @@ export default function ImageSearch({
                 <p>Search</p>
               )}
             </Button>
-            <IconButton
-              onClick={() =>
-                searchResults.length ? setSearchResults([]) : setOpen(false)
+            <Tooltip
+              title={
+                searchResults.length > 0
+                  ? `Go back to results for ${searchQuery}`
+                  : `Close`
               }
             >
-              {searchResults.length ? <ArrowBackIcon /> : <CloseIcon />}
-            </IconButton>
+              <IconButton
+                onClick={() =>
+                  searchResults.length ? setSearchResults([]) : setOpen(false)
+                }
+              >
+                {searchResults.length ? <ArrowBackIcon /> : <CloseIcon />}
+              </IconButton>
+            </Tooltip>
           </div>
           {searchResults.length === 0 && (
             <div className="searchResultsContainer horizontalStack">
