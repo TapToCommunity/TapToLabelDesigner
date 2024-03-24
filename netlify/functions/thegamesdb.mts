@@ -1,13 +1,12 @@
 import type { Config } from "@netlify/functions"
 
-const GAMESDB_ENDPOINT = 'https://api.thegamesdb.net/';
-const GAMSEDB_PUBLIC_APIKEY =
-  '868ff7ffc22bb9b7679d2502c134d1c47613a93cb757b34397448ca5faf4ab5a';
+const ENDPOINT = process.env.ENDPOINT;
+const APIKEY = process.env.APIKEY;
 
 export default async (req: Request /* , context: Context */): Promise<Response> => {
   const { url } = req;
   const path = url.split('/thegamesdb/')[1];
-  const newUrl = `${GAMESDB_ENDPOINT}${path}&apikey=${GAMSEDB_PUBLIC_APIKEY}`;
+  const newUrl = `${ENDPOINT}${path}&apikey=${APIKEY}`;
   const { body, status, statusText } = await fetch(newUrl);
   const origin = req.headers.get('Origin') ?? '';
   const respHeaders = {};
