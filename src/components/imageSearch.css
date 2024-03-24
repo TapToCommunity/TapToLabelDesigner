@@ -8,6 +8,19 @@
   width: 30%;
 }
 
+.gameContainer {
+  flex-wrap: nowrap;
+  row-gap: 24px;
+  justify-content: center;
+  overflow-y: scroll;
+}
+
+.gameEntry {
+  display: flex;
+  width: 70%;
+  max-width: 100%;
+}
+
 .searchResultsContainer {
   flex-wrap: wrap;
   row-gap: 24px;
@@ -17,7 +30,18 @@
 }
 
 .searchResult {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
   width: 22%;
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 36px;
 }
 
 .searchResult img {
@@ -33,7 +57,7 @@
   width: calc(100vw - 36px);
   background-color: rgba(15, 15, 15, 0.5);
   backdrop-filter: blur(50px);
-  height: calc(100vh - 80px);
+  height: calc(100vh - 120px);
   color: white;
   overflow-y: hidden;
   border-radius: 10px;

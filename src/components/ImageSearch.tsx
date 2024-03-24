@@ -2,41 +2,33 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState, type MouseEvent, useTransition } from 'react';
+import {
+  useState,
+  type MouseEvent,
+  useTransition,
+  useEffect,
+  useRef,
+} from 'react';
 import { useFileDropperContext } from '../contexts/fileDropper';
-import { CircularProgress } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import Tooltip from '@mui/material/Tooltip';
 import { boxShadow } from '../constants';
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import IconButton from '@mui/material/IconButton';
+import { useInView } from 'react-intersection-observer';
 
 import './imageSearch.css';
-
-const SEARCH_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/search/';
-const IMAGE_ENDPOINT = 'https://tapto.wizzo.dev/steamgriddb/api/image/';
-
-interface ImageSearchResult {
-  gameName: string;
-  imageUrl: string;
-  thumbnailUrl: string;
-}
-
-async function searchImage(query: string): Promise<ImageSearchResult[]> {
-  return fetch(SEARCH_ENDPOINT + encodeURIComponent(query))
-    .then((res) => {
-      return res.json() as Promise<ImageSearchResult[]>;
-    })
-    .catch((err) => {
-      console.error(err);
-      return [];
-    });
-}
-
-async function getImage(cdnUrl: string, previousUrl: string): Promise<File> {
-  const proxyUrl = IMAGE_ENDPOINT + cdnUrl.replace('https://', '');
-  return fetch(proxyUrl)
-    .then((r) => r.blob())
-    .then((blob) => new File([blob], previousUrl, { type: blob.type }));
-}
+import {
+  fetchGameImages,
+  fetchGameList,
+  getImage,
+  type GameEntry,
+  type ImageSearchResult,
+} from '../utils/thegamesdb';
+import { Platform } from '../gamesDbPlatforms';
+import { PlatformDropdown } from './PlatformDropdown';
 
 export default function ImageSearch({
   open,
@@ -48,9 +40,27 @@ export default function ImageSearch({
   const { files, setFiles } = useFileDropperContext();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [gameEntries, setGameEntries] = useState<GameEntry[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [moreLink, setMoreLink] = useState<string>('');
   const [searchResults, setSearchResults] = useState<ImageSearchResult[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
+  const [platform, setPlatform] = useState<Platform>({
+    id: 0,
+    name: 'all',
+    alias: 'all',
+    overview: '',
+    icon: '',
+    console: '',
+  });
   const [, startTransition] = useTransition();
+  const timerRef = useRef(0);
+  const SEARCH_THROTTLING = 1000;
+
+  const { ref, inView } = useInView({
+    /* Optional options */
+    threshold: 0.9,
+  });
 
   const addImage = async (e: MouseEvent<HTMLImageElement>, url: string) => {
     const currentIndex = files.length;
@@ -67,13 +77,51 @@ export default function ImageSearch({
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const executeSearch = (e: any) => {
+  const executeSearchWithReset = (e: any) => {
     e.preventDefault();
-    setSearching(true);
     setSearchResults([]);
-    searchImage(searchQuery).then((res) => {
-      setSearching(false);
-      setSearchResults(res);
+    setPage(1);
+    setSearching(true);
+    executeSearch(searchQuery, page, platform, false);
+  };
+
+  const executeSearch = (
+    searchQuery: string,
+    page: number,
+    platform: Platform,
+    queueResults: boolean = true,
+  ) => {
+    const now = performance.now();
+    if (timerRef.current > now - SEARCH_THROTTLING) {
+      return;
+    }
+    timerRef.current = now;
+    fetchGameList(searchQuery, platform, page.toString()).then(
+      ({ games, moreLink }) => {
+        if (queueResults) {
+          setGameEntries([...gameEntries, ...games]);
+        } else {
+          setGameEntries(games);
+        }
+        if (moreLink) {
+          setPage(page + 1);
+        }
+        setMoreLink(moreLink);
+        setSearching(false);
+      },
+    );
+  };
+
+  useEffect(() => {
+    if (inView) {
+      executeSearch(searchQuery, page, platform, true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
+
+  const switchToGameView = (gameId: number) => {
+    fetchGameImages(gameId).then((data: any) => {
+      setSearchResults(data.images);
     });
   };
 
@@ -82,9 +130,6 @@ export default function ImageSearch({
       <div className="searchModal">
         <div className="verticalStack">
           <div className="horizontalStack searchHeader">
-            <IconButton onClick={() => setOpen(false)}>
-              <CloseIcon />
-            </IconButton>
             <TextField
               className="textField"
               size="small"
@@ -93,8 +138,11 @@ export default function ImageSearch({
               value={searchQuery}
               onChange={(evt) => setSearchQuery(evt.target.value)}
               style={{ fontWeight: 400, fontSize: 14 }}
-              onKeyDown={(e: any) => e.key === 'Enter' && executeSearch(e)}
+              onKeyDown={(e: any) =>
+                e.key === 'Enter' && executeSearchWithReset(e)
+              }
             />
+            <PlatformDropdown setPlatform={setPlatform} platform={platform} />
             <Button
               variant="contained"
               size="small"
@@ -104,7 +152,7 @@ export default function ImageSearch({
                 textTransform: 'none',
                 height: '44px',
               }}
-              onClick={executeSearch}
+              onClick={executeSearchWithReset}
             >
               {searching ? (
                 <CircularProgress color="secondary" size={24} />
@@ -112,24 +160,70 @@ export default function ImageSearch({
                 <p>Search</p>
               )}
             </Button>
+            <Tooltip
+              title={
+                searchResults.length > 0
+                  ? `Go back to results for ${searchQuery}`
+                  : `Close`
+              }
+            >
+              <IconButton
+                onClick={() =>
+                  searchResults.length ? setSearchResults([]) : setOpen(false)
+                }
+              >
+                {searchResults.length ? <ArrowBackIcon /> : <CloseIcon />}
+              </IconButton>
+            </Tooltip>
           </div>
-          <Typography variant="h3">
-            {searchResults.length > 0 ? searchResults[0].gameName : ''}
-          </Typography>
-          <div className="searchResultsContainer horizontalStack">
-            {searchResults.map((result) => (
-              <Button className="searchResult" key={result.imageUrl}>
-                <img
-                  src={result.thumbnailUrl}
-                  onClick={(e) => addImage(e, result.imageUrl)}
-                  style={{ cursor: 'pointer' }}
-                />
-              </Button>
-            ))}
-            {new Array(searchResults.length % 4).fill(0).map(() => (
-              <div className="searchResult" />
-            ))}
-          </div>
+          {searchResults.length === 0 && (
+            <div className="searchResultsContainer horizontalStack">
+              {gameEntries.map((gameEntry) => (
+                <div className="searchResult" key={gameEntry.id}>
+                  <Button>
+                    <img
+                      src={gameEntry.boxart}
+                      onClick={(e) => addImage(e, gameEntry.boxart)}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </Button>
+                  <Button
+                    className="verticalStack"
+                    onClick={() => switchToGameView(gameEntry.id)}
+                  >
+                    <Typography variant="h6">{gameEntry.gameTitle}</Typography>
+                    <Typography variant="h6">
+                      {gameEntry.platform?.name}
+                    </Typography>
+                  </Button>
+                </div>
+              ))}
+              {new Array(gameEntries.length % 4).fill(0).map(() => (
+                <div className="searchResult" />
+              ))}
+              {moreLink && searchResults.length === 0 && (
+                <div className="loader" ref={ref}>
+                  <CircularProgress color="secondary" size={24} />
+                </div>
+              )}
+            </div>
+          )}
+          {searchResults.length > 0 && (
+            <div className="searchResultsContainer horizontalStack">
+              {searchResults.map((result) => (
+                <Button className="searchResult" key={result.imageUrl}>
+                  <img
+                    src={result.thumbnailUrl}
+                    onClick={(e) => addImage(e, result.imageUrl)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </Button>
+              ))}
+              {new Array(searchResults.length % 4).fill(0).map((_, index) => (
+                <div className="searchResult" key={index} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </Modal>
