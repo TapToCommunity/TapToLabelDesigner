@@ -59,7 +59,8 @@ export async function fetchGameList(
 ): Promise<GameListData> {
   const url = new URL(
     GAMESDB_SEARCH_ENDPOINT,
-    'https://deploy-preview-18--tapto-designer.netlify.app',
+    // if working with the backend functions, put this on your deploy preview url
+    'https://tapto-designer.netlify.app',
     // `${window.location.protocol}//${window.location.hostname}`,
   );
   url.searchParams.append('name', query);
@@ -122,7 +123,8 @@ export async function fetchGameList(
 export async function fetchGameImages(gameId: number): Promise<GameImagesData> {
   const url = new URL(
     GAMESDB_IMAGE_ENDPOINT,
-    'https://deploy-preview-18--tapto-designer.netlify.app',
+    // if working with the backend functions, put this on your deploy preview url
+    'https://tapto-designer.netlify.app',
     // `${window.location.protocol}//${window.location.hostname}`,
   );
   url.searchParams.append('games_id', `${gameId}`);
