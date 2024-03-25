@@ -8,6 +8,7 @@ import tapToHuC64 from './assets/tapto_hucard_c64.svg';
 import tapToGB from './assets/tapto_gameboy_f.svg';
 import emptyVertical from './assets/empty_vertical.svg';
 import emptyHorizontal from './assets/empty_horizontal.svg';
+import tapToFloppy from './assets/tapto_floppy.svg';
 
 import { type SerializedGroupProps } from 'fabric';
 
@@ -186,6 +187,26 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Tap-to Gameboy',
+  },
+  taptoFloppy: {
+    layout: 'vertical',
+    overlay: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: '',
+      width: 1 - (76 + 77) / 619,
+      height: 1 - (276 + 10) / 994,
+      x: 77 / 619,
+      y: 276 / 994,
+      isSvg: false,
+    },
+    background: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: tapToFloppy,
+      isSvg: true,
+    },
+    label: 'Floppy 3.5',
   },
 } as const;
 

@@ -11,6 +11,7 @@ import {
   Gradient,
   type Canvas,
   type SerializedGroupProps,
+  Rect,
 } from 'fabric';
 import { cardLikeOptions } from '../constants';
 import { type templateType, type templateOverlay } from '../cardsTemplates';
@@ -121,6 +122,8 @@ const reposition = (
   fabricLayer.setCoords();
 };
 
+const emptyImageHack = new Image(100, 100);
+
 export const setTemplateOnCanvases = async (
   canvases: StaticCanvas[],
   template: templateType,
@@ -132,7 +135,7 @@ export const setTemplateOnCanvases = async (
         ? overlay.parsed
         : overlay.isSvg
           ? (overlay.parsed = parseSvg(overlay.url))
-          : (overlay.parsed = util.loadImage(overlay.url))),
+          : (overlay.parsed = overlay.url ? util.loadImage(overlay.url) : Promise.resolve(emptyImageHack))),
     background &&
       ((background.parsed
         ? background.parsed
@@ -208,11 +211,21 @@ export const setTemplateOnCanvases = async (
             layerSource as SerializedGroupProps,
           );
           fabricLayer.canvas = canvas as Canvas;
-        } else {
+        } else if (layer !== emptyImageHack) {
           fabricLayer = new FabricImage(layer, {
             canvas,
             scaleX: scale,
             scaleY: scale,
+          });
+        } else {
+          fabricLayer = new Rect({
+            width: templateLayer!.layerWidth,
+            height: templateLayer!.layerHeight,
+            opacity: 0,
+            visible: false,
+            fill: 'rgba(0,0,0,a)',
+            strokeWidth: 0,
+            stroke: 'rgba(0,0,0,a)',
           });
         }
         // set the overlay of the template in the center of the card
