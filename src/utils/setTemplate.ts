@@ -34,8 +34,8 @@ export const scaleImageToOverlayArea = (
       height: isRotated ? mainImage.width : mainImage.height,
     },
     {
-      width: overlay!.layerWidth * overlay!.width,
-      height: overlay!.layerHeight * overlay!.height,
+      width: scaledTemplateOverlaySize.x * overlay!.width,
+      height: scaledTemplateOverlaySize.y * overlay!.height,
     },
   );
   mainImage.set({
@@ -232,7 +232,6 @@ export const setTemplateOnCanvases = async (
         reposition(fabricLayer, template.layout);
         if (templateLayer === overlay) {
           scaleImageToOverlayArea(template, fabricLayer, mainImage);
-          // if is the faux image for patching the absence of overlay, do not add it.
           canvas.overlayImage = fabricLayer;
         }
         if (templateLayer === background) {
