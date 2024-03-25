@@ -11,6 +11,7 @@ import {
   Gradient,
   type Canvas,
   type SerializedGroupProps,
+  Rect,
 } from 'fabric';
 import { cardLikeOptions } from '../constants';
 import { type templateType, type templateOverlay } from '../cardsTemplates';
@@ -210,17 +211,28 @@ export const setTemplateOnCanvases = async (
             layerSource as SerializedGroupProps,
           );
           fabricLayer.canvas = canvas as Canvas;
-        } else {
+        } else if (layer !== emptyImageHack) {
           fabricLayer = new FabricImage(layer, {
             canvas,
             scaleX: scale,
             scaleY: scale,
+          });
+        } else {
+          fabricLayer = new Rect({
+            width: templateLayer!.layerWidth,
+            height: templateLayer!.layerHeight,
+            opacity: 0,
+            visible: false,
+            fill: 'rgba(0,0,0,a)',
+            strokeWidth: 0,
+            stroke: 'rgba(0,0,0,a)',
           });
         }
         // set the overlay of the template in the center of the card
         reposition(fabricLayer, template.layout);
         if (templateLayer === overlay) {
           scaleImageToOverlayArea(template, fabricLayer, mainImage);
+          // if is the faux image for patching the absence of overlay, do not add it.
           canvas.overlayImage = fabricLayer;
         }
         if (templateLayer === background) {
