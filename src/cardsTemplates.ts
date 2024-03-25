@@ -9,7 +9,6 @@ import tapToGB from './assets/tapto_gameboy_f.svg';
 import emptyVertical from './assets/empty_vertical.svg';
 import emptyHorizontal from './assets/empty_horizontal.svg';
 import tapToFloppy from './assets/tapto_floppy.svg';
-import tapToFloppyBg from './assets/tapto_floppy_bg.svg';
 
 import { type SerializedGroupProps } from 'fabric';
 
@@ -194,17 +193,17 @@ export const templates: Record<string, templateType> = {
     overlay: {
       layerWidth: 619,
       layerHeight: 994,
-      url: tapToFloppy,
-      width: 1 - (76 * 2) / 619,
-      height: 1 - (276) / 994,
-      x: 76 / 619,
+      url: '',
+      width: 1 - (76 + 77) / 619,
+      height: 1 - (276 + 10) / 994,
+      x: 77 / 619,
       y: 276 / 994,
-      isSvg: true,
+      isSvg: false,
     },
     background: {
       layerWidth: 619,
       layerHeight: 994,
-      url: tapToFloppyBg,
+      url: tapToFloppy,
       isSvg: true,
     },
     label: 'Floppy 3.5',

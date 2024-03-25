@@ -33,8 +33,8 @@ export const scaleImageToOverlayArea = (
       height: isRotated ? mainImage.width : mainImage.height,
     },
     {
-      width: scaledTemplateOverlaySize.x * overlay!.width,
-      height: scaledTemplateOverlaySize.y * overlay!.height,
+      width: overlay!.layerWidth * overlay!.width,
+      height: overlay!.layerHeight * overlay!.height,
     },
   );
   mainImage.set({
@@ -121,6 +121,8 @@ const reposition = (
   fabricLayer.setCoords();
 };
 
+const emptyImageHack = new Image(100, 100);
+
 export const setTemplateOnCanvases = async (
   canvases: StaticCanvas[],
   template: templateType,
@@ -132,7 +134,7 @@ export const setTemplateOnCanvases = async (
         ? overlay.parsed
         : overlay.isSvg
           ? (overlay.parsed = parseSvg(overlay.url))
-          : (overlay.parsed = util.loadImage(overlay.url))),
+          : (overlay.parsed = overlay.url ? util.loadImage(overlay.url) : Promise.resolve(emptyImageHack))),
     background &&
       ((background.parsed
         ? background.parsed
