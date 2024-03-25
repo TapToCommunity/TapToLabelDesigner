@@ -10,7 +10,7 @@ export default async (req: Request /* , context: Context */): Promise<Response> 
   const { body, status, statusText } = await fetch(newUrl);
   const origin = req.headers.get('Origin') ?? '';
   const respHeaders = {};
-  if (origin.includes('//localhost')) {
+  if (origin.includes('//localhost') || origin.includes('//deploy-preview')) {
     respHeaders['Access-Control-Allow-Origin'] = origin;
   }
   return new Response(body, { status, statusText, headers: respHeaders });
