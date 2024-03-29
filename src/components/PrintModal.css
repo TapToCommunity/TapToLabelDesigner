@@ -1,0 +1,18 @@
+.printModal {
+  display: flex;
+  position: absolute;
+  top: 80px;
+  bottom: 80px;
+  left: 80px;
+  right: 80px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: calc(100vw - 36px);
+  background-color: rgba(15, 15, 15, 0.5);
+  backdrop-filter: blur(50px);
+  height: calc(100vh - 120px);
+  color: white;
+  overflow-y: scroll;
+  border-radius: 10px;
+  padding: 18px;
+}
