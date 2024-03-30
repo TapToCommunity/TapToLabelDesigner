@@ -11,7 +11,7 @@ import {
 } from '../printTemplates';
 const noop = () => {};
 
-type PrintOptions = {
+export type PrintOptions = {
   imageType: 'raster' | 'vector';
   printerTemplate: PrintTemplate;
   cutMarks: 'crop' | 'cut' | 'none',

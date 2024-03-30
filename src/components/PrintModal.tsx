@@ -1,19 +1,41 @@
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-import PdfButton from './PdfButton';
-import PrinterTemplateDropdown from './PrinterTemplateDropdown';
 import './PrintModal.css';
 import { useFileDropperContext } from '../contexts/fileDropper';
-import { useAppDataContext } from '../contexts/appData';
+import { type PrintOptions, useAppDataContext } from '../contexts/appData';
 import Paper from '@mui/material/Paper';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
 import { printTemplates } from '../printTemplates';
+import { prepareZip } from '../utils/prepareZip';
+import type { Canvas } from 'fabric';
+import { preparePdf as preparePdfVector } from '../utils/preparePdfKit';
+import { preparePdf } from '../utils/preparePdf';
 
 type PrintModalProps = {
   open: boolean;
   onClose: () => void;
+};
+
+const createOutput = async (
+  canvasArrayRef: React.MutableRefObject<Canvas[]>,
+  printOptions: PrintOptions,
+) => {
+  if (printOptions.fileType === 'zip') {
+    await prepareZip(canvasArrayRef);
+  } else if (
+    printOptions.fileType === 'pdf' &&
+    printOptions.imageType === 'vector'
+  ) {
+    await preparePdfVector(
+      printOptions.printerTemplate,
+      template,
+      canvasArrayRef,
+    );
+  } else {
+    await preparePdf(printOptions.printerTemplate, template, canvasArrayRef);
+  }
 };
 
 export const PrintModal = ({ open, onClose }: PrintModalProps) => {
@@ -140,9 +162,12 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
               );
             })}
           </div>
-          <PdfButton canvasArrayRef={canvasArrayRef} />
-          <PrinterTemplateDropdown />
-          <Button variant="contained" size="large" color="primary">
+          <Button
+            variant="contained"
+            size="large"
+            color="primary"
+            onClick={() => createOutput(canvasArrayRef, printOptions)}
+          >
             <Typography>Download</Typography>
           </Button>
         </Paper>
