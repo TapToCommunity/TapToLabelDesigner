@@ -63,7 +63,7 @@ export const Header = () => {
         </div>
         <div className="content">{hasFiles && <TemplateDropdown />}</div>
       </div>
-      {hasFiles && (
+      {(hasFiles || true) && (
         <div className="spacedContent">
           <div className="content">
             <ColorChanger

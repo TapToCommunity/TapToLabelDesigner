@@ -11,6 +11,13 @@ import {
 } from '../printTemplates';
 const noop = () => {};
 
+type PrintOptions = {
+  imageType: 'raster' | 'vector';
+  printerTemplate: PrintTemplate;
+  cutMarks: 'crop' | 'cut' | 'none',
+  fileType: 'pdf' | 'zip';
+};
+
 export type contextType = {
   isIdle: boolean;
   originalColors: string[];
@@ -19,6 +26,8 @@ export type contextType = {
   templateKey: string;
   printerTemplate: PrintTemplate;
   printerTemplateKey: string;
+  printOptions: PrintOptions;
+  setPrintOptions: (options: Partial<PrintOptions>) => void;
   setOriginalColors: (colors: string[]) => void;
   setCustomColors: (colors: string[]) => void;
   setTemplate: (template: templateType) => void;
@@ -28,7 +37,7 @@ export type contextType = {
   setIsIdle: (value: boolean) => void;
 };
 
-export const defaultContextValue = {
+export const defaultContextValue: contextType = {
   isIdle: false,
   setIsIdle: noop,
   originalColors: [],
@@ -37,6 +46,13 @@ export const defaultContextValue = {
   templateKey: defaultTemplateKey,
   printerTemplate: defaultPrinterTemplate,
   printerTemplateKey: defaultPrinterTemplateKey,
+  printOptions: {
+    imageType: 'raster',
+    fileType: 'pdf',
+    cutMarks: 'none',
+    printerTemplate: defaultPrinterTemplate,
+  },
+  setPrintOptions: noop,
   setOriginalColors: noop,
   setCustomColors: noop,
   setTemplate: noop,
