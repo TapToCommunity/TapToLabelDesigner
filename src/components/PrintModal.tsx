@@ -9,7 +9,7 @@ import { useAppDataContext } from '../contexts/appData';
 import Paper from '@mui/material/Paper';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton } from '@mui/material';
-import { useCallback } from 'react';
+import { printTemplates } from '../printTemplates';
 
 type PrintModalProps = {
   open: boolean;
@@ -19,7 +19,7 @@ type PrintModalProps = {
 export const PrintModal = ({ open, onClose }: PrintModalProps) => {
   const { canvasArrayRef } = useFileDropperContext();
   const { printOptions, setPrintOptions } = useAppDataContext();
-  const { fileType, imageType, cutMarks } = printOptions;
+  const { fileType, imageType, cutMarks, printerTemplate } = printOptions;
   const cutMarksDisable = fileType === 'zip';
   return (
     <Modal open={open} onClose={onClose}>
@@ -87,7 +87,7 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             Add some cut helper on the print. 'crop' will provide tiny black
             lines near the labels to align a manual cutter. 'cut' will provide
             an outline for the labels for automatic cutters. This option is only
-            for PDF output.
+            for PDF output. For now only CROP and NONE work.
           </Typography>
           <div className="horizontalStack">
             <Typography
@@ -123,6 +123,22 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             >
               <Typography>None</Typography>
             </Button>
+          </div>
+          {/* Print size */}
+          <div className="horizontalStack">
+            <Typography flexGrow="1">Page:</Typography>
+            {Object.values(printTemplates).map((template) => {
+              return (
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={() => setPrintOptions({ printerTemplate: template })}
+                  color={template === printerTemplate ? 'primary' : 'secondary'}
+                >
+                  <Typography>{template.label}</Typography>
+                </Button>
+              );
+            })}
           </div>
           <PdfButton canvasArrayRef={canvasArrayRef} />
           <PrinterTemplateDropdown />
