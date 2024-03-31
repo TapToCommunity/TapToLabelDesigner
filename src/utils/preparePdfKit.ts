@@ -1,20 +1,21 @@
 import type { RefObject } from 'react';
 import type { templateType } from '../cardsTemplates';
-import type { PrintTemplate } from '../printTemplates';
 import type { Canvas } from 'fabric';
 import {
   addCanvasToPdfPage,
   createDownloadStream,
 } from '../extensions/fabricToPdfKit';
+import { type PrintOptions } from '../contexts/appData';
 
 const fromMMtoPoint = (x: number): number => (x / 25.4) * 72;
 
 
 export const preparePdf = async (
-  printerTemplate: PrintTemplate,
+  printOptions: PrintOptions,
   template: templateType,
   canvasArrayRef: RefObject<Canvas[]>,
 ) => {
+  const { printerTemplate, cutMarks } = printOptions;
   const { gridSize, leftMargin, topMargin, paperSize, columns, rows } =
     printerTemplate;
 
@@ -74,7 +75,7 @@ export const preparePdf = async (
       const newPageNumber = Math.floor(index / labelsPerPage);
       if (newPageNumber > pageNumber) {
         // do the cropmarks
-        makeTheCropMarks();
+        cutMarks === 'crop' && makeTheCropMarks();
         pageNumber = newPageNumber;
         pdfDoc.addPage({ margins: 0, size: ptPaperSize });
         pdfDoc.switchToPage(pageNumber);
@@ -87,10 +88,12 @@ export const preparePdf = async (
       const width = fromMMtoPoint(85);
       const height = fromMMtoPoint(54);
 
-      cutHelperX.add(xStart);
-      cutHelperX.add(xStart + width);
-      cutHelperY.add(yStart);
-      cutHelperY.add(yStart + height);
+      if (cutMarks === 'crop' ) {
+        cutHelperX.add(xStart);
+        cutHelperX.add(xStart + width);
+        cutHelperY.add(yStart);
+        cutHelperY.add(yStart + height);
+      }
 
       await addCanvasToPdfPage(
         canvas,
@@ -105,7 +108,7 @@ export const preparePdf = async (
       );
     }
   }
-  makeTheCropMarks();
+  cutMarks === 'crop' && makeTheCropMarks();
   pdfDoc.end();
   downloadPromise.then((blob) => {
     const link = document.createElement('a');

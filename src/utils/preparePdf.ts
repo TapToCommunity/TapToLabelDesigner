@@ -1,10 +1,11 @@
 import type { RefObject } from 'react';
 import type { templateType } from '../cardsTemplates';
-import type { PrintTemplate } from '../printTemplates';
 import type { Canvas } from 'fabric';
 import { util } from 'fabric';
+import type { PrintOptions } from '../contexts/appData';
 
-export const preparePdf = async (printerTemplate: PrintTemplate, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
+export const preparePdf = async (printOptions: PrintOptions, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
+  const { printerTemplate, cutMarks } = printOptions;
   const {
     gridSize,
     leftMargin,
@@ -62,7 +63,7 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
           canvas.clipPath!.getBoundingRect();
         const newPageNumber = Math.floor(index / labelsPerPage);
         if (newPageNumber > pageNumber) {
-          makeTheCropMarks();
+          cutMarks === 'crop' && makeTheCropMarks();
           doc.addPage(paperSize, layout);
           pageNumber = newPageNumber;
         }
@@ -96,10 +97,12 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
         const posX = column * gridSize[0] + leftMargin;
         const posY = row * gridSize[1] + topMargin;
 
-        cutHelperX.add(posX);
-        cutHelperX.add(posX + 85.5);
-        cutHelperY.add(posY);
-        cutHelperY.add(posY + 54);
+        if (cutMarks === 'crop' ) {
+          cutHelperX.add(posX);
+          cutHelperX.add(posX + 85.5);
+          cutHelperY.add(posY);
+          cutHelperY.add(posY + 54);
+        }
 
         doc.addImage(
           rotatedHtmlCanvas,
@@ -111,7 +114,7 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
         );
       });
     }
-    makeTheCropMarks();
+    cutMarks === 'crop' && makeTheCropMarks();
     doc.save(`tapto-a4-${new Date().getTime()}.pdf`);
   });
 }

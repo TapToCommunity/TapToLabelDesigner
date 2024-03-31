@@ -30,13 +30,9 @@ const createOutput = async (
     printOptions.fileType === 'pdf' &&
     printOptions.imageType === 'vector'
   ) {
-    await preparePdfVector(
-      printOptions.printerTemplate,
-      template,
-      canvasArrayRef,
-    );
+    await preparePdfVector(printOptions, template, canvasArrayRef);
   } else {
-    await preparePdf(printOptions.printerTemplate, template, canvasArrayRef);
+    await preparePdf(printOptions, template, canvasArrayRef);
   }
 };
 
