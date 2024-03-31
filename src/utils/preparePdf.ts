@@ -3,9 +3,11 @@ import type { templateType } from '../cardsTemplates';
 import type { Canvas } from 'fabric';
 import { util } from 'fabric';
 import type { PrintOptions } from '../contexts/appData';
+import { printTemplates } from '../printTemplates';
 
 export const preparePdf = async (printOptions: PrintOptions, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
-  const { printerTemplate, cutMarks } = printOptions;
+  const { printerTemplateKey, cutMarks } = printOptions;
+  const printerTemplate = printTemplates[printerTemplateKey];
   const {
     gridSize,
     leftMargin,

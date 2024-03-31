@@ -6,16 +6,17 @@ import {
   createDownloadStream,
 } from '../extensions/fabricToPdfKit';
 import { type PrintOptions } from '../contexts/appData';
+import { printTemplates } from '../printTemplates';
 
 const fromMMtoPoint = (x: number): number => (x / 25.4) * 72;
-
 
 export const preparePdf = async (
   printOptions: PrintOptions,
   template: templateType,
   canvasArrayRef: RefObject<Canvas[]>,
 ) => {
-  const { printerTemplate, cutMarks } = printOptions;
+  const { printerTemplateKey, cutMarks } = printOptions;
+  const printerTemplate = printTemplates[printerTemplateKey];
   const { gridSize, leftMargin, topMargin, paperSize, columns, rows } =
     printerTemplate;
 
