@@ -6,7 +6,7 @@ export type PrintTemplate = {
   leftMargin: number;
   topMargin: number;
   layout: 'portrait' | 'landscape';
-  paperSize: 'a4' | 'letter' | [number, number];
+  paperSize: [number, number]; // in mm
 };
 
 export const printTemplates: Record<string, PrintTemplate> = {
@@ -38,7 +38,7 @@ export const printTemplates: Record<string, PrintTemplate> = {
     leftMargin: 9,
     topMargin: 20,
     layout: 'landscape',
-    paperSize: 'letter',
+    paperSize: [279, 216],
   },
   verticalLetter: {
     gridSize: [90, 56],
@@ -48,7 +48,7 @@ export const printTemplates: Record<string, PrintTemplate> = {
     leftMargin: 19,
     topMargin: 19,
     layout: 'portrait',
-    paperSize: 'letter',
+    paperSize: [216, 279],
   },
   inch8by10: {
     gridSize: [90, 56],

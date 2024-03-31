@@ -14,7 +14,6 @@ import { prepareZip } from '../utils/prepareZip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { PrintTemplate } from '../printTemplates';
 
 type labelInfo = {
   icon: JSX.Element;
@@ -113,26 +112,18 @@ type PdfButtonProps = {
 };
 
 export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
-  const { printerTemplate, template } = useAppDataContext();
+  const { template, printOptions } = useAppDataContext();
   const prepareOutput = useCallback(
     async (currentLabel: string) => {
       if (currentLabel === labels[1].label) {
         await prepareZip(canvasArrayRef);
       } else if (currentLabel === labels[2].label) {
-        preparePdfVector(
-          printerTemplate as PrintTemplate,
-          template,
-          canvasArrayRef,
-        );
+        preparePdfVector(printOptions, template, canvasArrayRef);
       } else {
-        await preparePdf(
-          printerTemplate as PrintTemplate,
-          template,
-          canvasArrayRef,
-        );
+        await preparePdf(printOptions, template, canvasArrayRef);
       }
     },
-    [canvasArrayRef, printerTemplate, template],
+    [canvasArrayRef, printOptions, template],
   );
 
   return <ChoiceButton onClick={prepareOutput} />;

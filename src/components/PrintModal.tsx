@@ -30,20 +30,16 @@ const createOutput = async (
     printOptions.fileType === 'pdf' &&
     printOptions.imageType === 'vector'
   ) {
-    await preparePdfVector(
-      printOptions.printerTemplate,
-      template,
-      canvasArrayRef,
-    );
+    await preparePdfVector(printOptions, template, canvasArrayRef);
   } else {
-    await preparePdf(printOptions.printerTemplate, template, canvasArrayRef);
+    await preparePdf(printOptions, template, canvasArrayRef);
   }
 };
 
 export const PrintModal = ({ open, onClose }: PrintModalProps) => {
   const { canvasArrayRef } = useFileDropperContext();
   const { printOptions, setPrintOptions, template } = useAppDataContext();
-  const { fileType, imageType, cutMarks, printerTemplate } = printOptions;
+  const { fileType, imageType, cutMarks, printerTemplateKey } = printOptions;
   const isZip = fileType === 'zip';
 
   const basicButtonProps = {
@@ -56,8 +52,8 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
     <Modal open={open} onClose={onClose}>
       <div className="printModal">
         <Paper className="verticalStack modalContent">
-          <IconButton className="closeIcon">
-            <CloseIcon onClick={onClose} />
+          <IconButton onClick={onClose} className="closeIcon">
+            <CloseIcon />
           </IconButton>
           <Typography variant="h1">Print options</Typography>
           {/* PDF OR ZIP */}
@@ -151,12 +147,13 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             <Typography flexGrow="1" color={isZip ? 'dimgrey' : undefined}>
               Page:
             </Typography>
-            {Object.values(printTemplates).map((template) => {
+            {Object.entries(printTemplates).map(([key, template]) => {
               return (
                 <Button
+                  key={key}
                   {...basicButtonProps}
-                  onClick={() => setPrintOptions({ printerTemplate: template })}
-                  color={template === printerTemplate ? 'primary' : 'secondary'}
+                  onClick={() => setPrintOptions({ printerTemplateKey: key })}
+                  color={key === printerTemplateKey ? 'primary' : 'secondary'}
                 >
                   <Typography>{template.label}</Typography>
                 </Button>

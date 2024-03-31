@@ -13,7 +13,7 @@ const noop = () => {};
 
 export type PrintOptions = {
   imageType: 'raster' | 'vector';
-  printerTemplate: PrintTemplate;
+  printerTemplateKey: string;
   cutMarks: 'crop' | 'cut' | 'none',
   fileType: 'pdf' | 'zip';
 };
@@ -50,7 +50,7 @@ export const defaultContextValue: contextType = {
     imageType: 'raster',
     fileType: 'pdf',
     cutMarks: 'none',
-    printerTemplate: defaultPrinterTemplate,
+    printerTemplateKey: defaultPrinterTemplateKey,
   },
   setPrintOptions: noop,
   setOriginalColors: noop,

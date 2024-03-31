@@ -1,10 +1,13 @@
 import type { RefObject } from 'react';
 import type { templateType } from '../cardsTemplates';
-import type { PrintTemplate } from '../printTemplates';
 import type { Canvas } from 'fabric';
 import { util } from 'fabric';
+import type { PrintOptions } from '../contexts/appData';
+import { printTemplates } from '../printTemplates';
 
-export const preparePdf = async (printerTemplate: PrintTemplate, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
+export const preparePdf = async (printOptions: PrintOptions, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
+  const { printerTemplateKey, cutMarks } = printOptions;
+  const printerTemplate = printTemplates[printerTemplateKey];
   const {
     gridSize,
     leftMargin,
@@ -27,6 +30,33 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
       putOnlyUsedFonts: true,
       floatPrecision: 16, // or "smart", default is 16
     });
+
+    const cutHelperX = new Set<number>();
+    const cutHelperY = new Set<number>();
+
+    const makeTheCropMarks = () => {
+      const paperHeight = paperSize[1];
+      const paperWidth = paperSize[0];
+      doc.setLineWidth(0.1);
+      // for each xValue draw 2 vertical lines from 0 to topMargin and from end of page to -topMargin.
+      cutHelperX.forEach((xValue) => {
+        doc.moveTo(xValue, 0);
+        doc.lineTo(xValue, topMargin);
+        doc.moveTo(xValue, paperHeight - topMargin - 1);
+        doc.lineTo(xValue, paperHeight);
+      });
+      // for each xValue draw 2 vertical lines from 0 to topMargin and from end of page to -topMargin.
+      cutHelperY.forEach((yValue) => {
+        doc.moveTo(0, yValue);
+        doc.lineTo(leftMargin, yValue);
+        doc.moveTo(paperWidth - leftMargin, yValue);
+        doc.lineTo(paperWidth, yValue);
+      });
+      doc.stroke();
+      cutHelperX.clear();
+      cutHelperY.clear();
+    }
+
     const canvases = canvasArrayRef.current;
     if (canvases) {
       let pageNumber = 0;
@@ -35,6 +65,7 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
           canvas.clipPath!.getBoundingRect();
         const newPageNumber = Math.floor(index / labelsPerPage);
         if (newPageNumber > pageNumber) {
+          cutMarks === 'crop' && makeTheCropMarks();
           doc.addPage(paperSize, layout);
           pageNumber = newPageNumber;
         }
@@ -65,16 +96,27 @@ export const preparePdf = async (printerTemplate: PrintTemplate, template: templ
           }
         }
 
+        const posX = column * gridSize[0] + leftMargin;
+        const posY = row * gridSize[1] + topMargin;
+
+        if (cutMarks === 'crop' ) {
+          cutHelperX.add(posX);
+          cutHelperX.add(posX + 85.5);
+          cutHelperY.add(posY);
+          cutHelperY.add(posY + 54);
+        }
+
         doc.addImage(
           rotatedHtmlCanvas,
           'PNG',
-          column * gridSize[0] + leftMargin,
-          row * gridSize[1] + topMargin,
+          posX,
+          posY,
           85.5,
           54,
         );
       });
     }
+    cutMarks === 'crop' && makeTheCropMarks();
     doc.save(`tapto-a4-${new Date().getTime()}.pdf`);
   });
 }
