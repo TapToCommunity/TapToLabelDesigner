@@ -151,9 +151,10 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             <Typography flexGrow="1" color={isZip ? 'dimgrey' : undefined}>
               Page:
             </Typography>
-            {Object.values(printTemplates).map((template) => {
+            {Object.entries(printTemplates).map(([key, template]) => {
               return (
                 <Button
+                  key={key}
                   {...basicButtonProps}
                   onClick={() => setPrintOptions({ printerTemplate: template })}
                   color={template === printerTemplate ? 'primary' : 'secondary'}
