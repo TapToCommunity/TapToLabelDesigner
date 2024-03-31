@@ -8,7 +8,6 @@ import { useAppDataContext } from '../contexts/appData';
 export const LabelsView = () => {
   const { files, canvasArrayRef } = useFileDropperContext();
   const { template } = useAppDataContext();
-
   return (
     <div className="labelsView">
       {files.map((file, index) => (
@@ -22,9 +21,6 @@ export const LabelsView = () => {
           canvasArrayRef={canvasArrayRef}
         />
       ))}
-      {!!(files.length % 2) && (
-        <div className={`labelContainer ${template.layout}`} />
-      )}
       <SmallDropZone className={`labelContainer ${template.layout} dropzone`} />
       <DataToCanvasReconciler />
     </div>

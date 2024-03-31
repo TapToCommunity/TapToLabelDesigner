@@ -1,0 +1,39 @@
+.printModal {
+  display: flex;
+  position: absolute;
+  top: 80px;
+  bottom: 80px;
+  left: 80px;
+  right: 80px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: calc(100vw - 36px);
+  background-color: rgba(15, 15, 15, 1);
+  height: calc(100vh - 120px);
+  color: white;
+  overflow-y: scroll;
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.printModal h1 {
+  font-size: 32px;
+}
+
+.printModal .closeIcon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+}
+
+.printModal .modalContent {
+  position: relative;
+  padding: 16px;
+  row-gap: 16px;
+}
+
+.printModal .title {
+  justify-content: space-around;
+}

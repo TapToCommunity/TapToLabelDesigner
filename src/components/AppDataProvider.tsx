@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import type { FC, JSX, ReactNode } from 'react';
 import {
   type contextType,
@@ -34,6 +34,17 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
   const [printerTemplateKey, setPrinterTemplateKey] = useState<
     contextType['printerTemplateKey']
   >(defaultContextValue.printerTemplateKey);
+  const [printOptions, setPrintOptions] = useState<contextType['printOptions']>(
+    defaultContextValue.printOptions,
+  );
+
+  const mergePrintOptions = useCallback(
+    (partialOptions: Partial<contextType['printOptions']>) => {
+      setPrintOptions({ ...printOptions, ...partialOptions });
+    },
+    [printOptions, setPrintOptions],
+  );
+
   const contextValue = useMemo(
     () => ({
       originalColors,
@@ -42,6 +53,7 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       templateKey,
       printerTemplate,
       printerTemplateKey,
+      printOptions,
       isIdle,
       setOriginalColors,
       setCustomColors,
@@ -49,6 +61,7 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       setTemplateKey,
       setPrinterTemplate,
       setPrinterTemplateKey,
+      setPrintOptions: mergePrintOptions,
       setIsIdle,
     }),
     [
@@ -59,12 +72,14 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       printerTemplate,
       printerTemplateKey,
       isIdle,
+      printOptions,
       setOriginalColors,
       setCustomColors,
       setTemplate,
       setTemplateKey,
       setPrinterTemplate,
       setPrinterTemplateKey,
+      mergePrintOptions,
     ],
   );
 
