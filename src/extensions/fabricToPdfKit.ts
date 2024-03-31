@@ -200,7 +200,7 @@ export const addCanvasToPdfPage = async (
   // translate to position.
   // skip background color, but draw the clip region
 
-  pdfDoc.rect(box.x, box.y, box.width, box.height);
+  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, 8);
   pdfDoc.lineWidth(0.2);
   pdfDoc.stroke('black');
 
