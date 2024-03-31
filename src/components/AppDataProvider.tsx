@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import type { FC, JSX, ReactNode } from 'react';
 import {
   type contextType,
@@ -38,9 +38,18 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
     defaultContextValue.printOptions,
   );
 
+  useEffect(() => {
+    const serializedOptions = localStorage.getItem('printOptions');
+    if (serializedOptions) {
+      setPrintOptions(JSON.parse(serializedOptions));
+    }
+  }, []);
+
   const mergePrintOptions = useCallback(
     (partialOptions: Partial<contextType['printOptions']>) => {
-      setPrintOptions({ ...printOptions, ...partialOptions });
+      const newOptions = { ...printOptions, ...partialOptions };
+      localStorage.setItem('printOptions', JSON.stringify(newOptions));
+      setPrintOptions(newOptions);
     },
     [printOptions, setPrintOptions],
   );
