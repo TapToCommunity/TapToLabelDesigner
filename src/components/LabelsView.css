@@ -30,10 +30,22 @@
   max-height: 657px;
 }
 
+.labelContainer.dropzone.horizontal {
+  /* max width twice as a card */
+  flex-shrink: 1;
+  max-width: calc(66.4% - 20px);
+}
+
 .labelContainer.vertical {
   max-width: 657px;
   width: calc(33.2% - 20px);
   max-height: 1029px;
+}
+
+.labelContainer.dropzone.vertical {
+  /* max width twice as a card */
+  max-width: calc(66.4% - 20px);
+  flex-grow: 1;
 }
 
 @media (max-width: 920px) {
@@ -53,6 +65,12 @@
     max-width: 657px;
     width: calc(49.9% - 20px);
     max-height: 1029px;
+  }
+
+  .labelContainer.dropzone.vertical {
+    flex-grow: 1;
+    /* max width twice as a card */
+    max-width: calc(100% - 20px);
   }
 
   .colorChangerContainer.horizontal {
