@@ -6,12 +6,13 @@ import { useFileDropperContext } from '../contexts/fileDropper';
 import { type PrintOptions, useAppDataContext } from '../contexts/appData';
 import Paper from '@mui/material/Paper';
 import CloseIcon from '@mui/icons-material/Close';
-import { IconButton } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import { printTemplates } from '../printTemplates';
 import { prepareZip } from '../utils/prepareZip';
 import type { Canvas } from 'fabric';
 import { preparePdf as preparePdfVector } from '../utils/preparePdfKit';
 import { preparePdf } from '../utils/preparePdf';
+import type { templateType } from '../cardsTemplates';
 
 type PrintModalProps = {
   open: boolean;
@@ -21,6 +22,7 @@ type PrintModalProps = {
 const createOutput = async (
   canvasArrayRef: React.MutableRefObject<Canvas[]>,
   printOptions: PrintOptions,
+  template: templateType,
 ) => {
   if (printOptions.fileType === 'zip') {
     await prepareZip(canvasArrayRef);
@@ -40,9 +42,16 @@ const createOutput = async (
 
 export const PrintModal = ({ open, onClose }: PrintModalProps) => {
   const { canvasArrayRef } = useFileDropperContext();
-  const { printOptions, setPrintOptions } = useAppDataContext();
+  const { printOptions, setPrintOptions, template } = useAppDataContext();
   const { fileType, imageType, cutMarks, printerTemplate } = printOptions;
-  const cutMarksDisable = fileType === 'zip';
+  const isZip = fileType === 'zip';
+
+  const basicButtonProps = {
+    variant: 'contained',
+    disabled: isZip,
+    size: 'large',
+  } as const;
+
   return (
     <Modal open={open} onClose={onClose}>
       <div className="printModal">
@@ -76,7 +85,7 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             </Button>
           </div>
           {/* VECTOR OR RASTER */}
-          <Typography>
+          <Typography color={isZip ? 'dimgrey' : undefined}>
             The format of the labels can be of type 'vector' or 'raster'. Vector
             will preserve the quality of your images as is and provice a vector
             template around the image. Raster will make a new PNG that contains
@@ -86,61 +95,52 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             not support the faint shadow around the image.
           </Typography>
           <div className="horizontalStack">
-            <Typography flexGrow="1">Type of ouput:</Typography>
+            <Typography color={isZip ? 'dimgrey' : undefined} flexGrow="1">
+              Type of ouput:
+            </Typography>
             <Button
               onClick={() => setPrintOptions({ imageType: 'vector' })}
-              variant="contained"
-              size="large"
+              {...basicButtonProps}
               color={imageType === 'vector' ? 'primary' : 'secondary'}
             >
               <Typography>Vector</Typography>
             </Button>
             <Button
               onClick={() => setPrintOptions({ imageType: 'raster' })}
-              variant="contained"
-              size="large"
+              {...basicButtonProps}
               color={imageType === 'raster' ? 'primary' : 'secondary'}
             >
               <Typography>Raster</Typography>
             </Button>
           </div>
           {/* CUTTING MARKS */}
-          <Typography color={cutMarksDisable ? 'dimgrey' : undefined}>
+          <Typography color={isZip ? 'dimgrey' : undefined}>
             Add some cut helper on the print. 'crop' will provide tiny black
             lines near the labels to align a manual cutter. 'cut' will provide
             an outline for the labels for automatic cutters. This option is only
             for PDF output. For now only CROP and NONE work.
           </Typography>
           <div className="horizontalStack">
-            <Typography
-              color={cutMarksDisable ? 'dimgrey' : undefined}
-              flexGrow="1"
-            >
+            <Typography color={isZip ? 'dimgrey' : undefined} flexGrow="1">
               Cutting marks:
             </Typography>
             <Button
               onClick={() => setPrintOptions({ cutMarks: 'crop' })}
-              variant="contained"
-              disabled={cutMarksDisable}
-              size="large"
+              {...basicButtonProps}
               color={cutMarks === 'crop' ? 'primary' : 'secondary'}
             >
               <Typography>Crop marks</Typography>
             </Button>
             <Button
               onClick={() => setPrintOptions({ cutMarks: 'cut' })}
-              variant="contained"
-              disabled={cutMarksDisable}
-              size="large"
+              {...basicButtonProps}
               color={cutMarks === 'cut' ? 'primary' : 'secondary'}
             >
               <Typography>Cutting shape</Typography>
             </Button>
             <Button
               onClick={() => setPrintOptions({ cutMarks: 'none' })}
-              variant="contained"
-              disabled={cutMarksDisable}
-              size="large"
+              {...basicButtonProps}
               color={cutMarks === 'none' ? 'primary' : 'secondary'}
             >
               <Typography>None</Typography>
@@ -148,12 +148,13 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
           </div>
           {/* Print size */}
           <div className="horizontalStack">
-            <Typography flexGrow="1">Page:</Typography>
+            <Typography flexGrow="1" color={isZip ? 'dimgrey' : undefined}>
+              Page:
+            </Typography>
             {Object.values(printTemplates).map((template) => {
               return (
                 <Button
-                  variant="contained"
-                  size="large"
+                  {...basicButtonProps}
                   onClick={() => setPrintOptions({ printerTemplate: template })}
                   color={template === printerTemplate ? 'primary' : 'secondary'}
                 >
@@ -166,7 +167,7 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             variant="contained"
             size="large"
             color="primary"
-            onClick={() => createOutput(canvasArrayRef, printOptions)}
+            onClick={() => createOutput(canvasArrayRef, printOptions, template)}
           >
             <Typography>Download</Typography>
           </Button>
