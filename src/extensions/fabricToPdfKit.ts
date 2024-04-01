@@ -162,7 +162,6 @@ const addImageToPdfKit = async (
 ) => {
   // @ts-expect-error this isn't typed
   const arrayBuffer = await (fabricImage.originalFile as File).arrayBuffer();
-  arrayBuffer.toString = () => `image-${(fabricImage.originalFile as File).name}}`;
 
   pdfDoc.save();
   transformPdf(fabricImage, pdfDoc);
