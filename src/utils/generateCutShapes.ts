@@ -10,7 +10,7 @@ import type { RefObject } from 'react';
 import { printTemplates } from '../printTemplates';
 import { downloadBlob } from './utils';
 
-export const generateCutShapes = async (printOptions: PrintOptions, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
+export const generateCutShapes = async (printOptions: PrintOptions, _template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
   const { printerTemplateKey } = printOptions;
   const printerTemplate = printTemplates[printerTemplateKey];
   const { gridSize, leftMargin, topMargin, paperSize, columns, rows } = printerTemplate;
