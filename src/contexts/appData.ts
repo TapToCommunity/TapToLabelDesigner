@@ -9,7 +9,7 @@ import {
   defaultPrinterTemplate,
   defaultPrinterTemplateKey,
 } from '../printTemplates';
-const noop = () => {};
+import { noop } from '../utils/utils';
 
 export type PrintOptions = {
   imageType: 'raster' | 'vector';
