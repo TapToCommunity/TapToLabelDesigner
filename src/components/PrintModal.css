@@ -3,12 +3,9 @@
   position: absolute;
   top: 80px;
   bottom: 80px;
-  left: 80px;
-  right: 80px;
   left: 50%;
   transform: translate(-50%, 0);
   width: calc(100vw - 36px);
-  background-color: rgba(15, 15, 15, 1);
   height: calc(100vh - 120px);
   color: white;
   overflow-y: scroll;
@@ -16,8 +13,33 @@
   padding: 18px;
 }
 
+.printModal .modalContent {
+  background-color: rgba(15, 15, 15, 1);
+  position: relative;
+  padding: 16px;
+  row-gap: 16px;
+  height: fit-content;
+}
+
 .printModal h1 {
   font-size: 32px;
+}
+
+.withMobileWrapping {
+  flex-wrap: no-wrap;
+}
+
+.printModal .paperSizeContainer {
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  flex-wrap: wrap;
+  row-gap: 5px;
+  justify-content: flex-end;
+}
+
+.printModal .paperSizeContainer > button {
+  max-width: 150px;
 }
 
 .printModal .closeIcon {
@@ -28,12 +50,31 @@
   height: 32px;
 }
 
-.printModal .modalContent {
-  position: relative;
-  padding: 16px;
-  row-gap: 16px;
-}
-
 .printModal .title {
   justify-content: space-around;
+}
+
+/* iphones */
+@media (max-width: 430px) {
+  .printModal {
+    width: 100vw;
+    padding: 0px;
+  }
+
+  .printModal .modalContent {
+    width: calc(100vw - 32px);
+  }
+
+  .withMobileWrapping {
+    flex-wrap: wrap;
+  }
+  
+  .printModal .paperSizeContainer {
+    display: flex;
+    flex-direction: row;
+    column-gap: 5px;
+    flex-wrap: wrap;
+    row-gap: 5px;
+    justify-content: space-around;
+  }
 }

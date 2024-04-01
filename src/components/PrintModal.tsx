@@ -149,22 +149,26 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             </Button>
           </div>
           {/* Print size */}
-          <div className="horizontalStack">
+          <div className="horizontalStack withMobileWrapping">
             <Typography flexGrow="1" color={isZip ? 'dimgrey' : undefined}>
               Page:
             </Typography>
-            {Object.entries(printTemplates).map(([key, template]) => {
-              return (
-                <Button
-                  key={key}
-                  {...basicButtonProps}
-                  onClick={() => setPrintOptions({ printerTemplateKey: key })}
-                  color={key === printerTemplateKey ? 'primary' : 'secondary'}
-                >
-                  <Typography>{template.label}</Typography>
-                </Button>
-              );
-            })}
+            <div className="paperSizeContainer">
+              {Object.entries(printTemplates).map(([key, template]) => {
+                return (
+                  <Button
+                    key={key}
+                    {...basicButtonProps}
+                    onClick={() => setPrintOptions({ printerTemplateKey: key })}
+                    color={key === printerTemplateKey ? 'primary' : 'secondary'}
+                  >
+                    <Typography textOverflow="ellipsis">
+                      {template.label}
+                    </Typography>
+                  </Button>
+                );
+              })}
+            </div>
           </div>
           <Button
             variant="contained"
