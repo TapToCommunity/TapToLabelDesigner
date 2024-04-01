@@ -8,6 +8,7 @@ import type { PrintOptions } from '../contexts/appData';
 import type { templateType } from '../cardsTemplates';
 import type { RefObject } from 'react';
 import { printTemplates } from '../printTemplates';
+import { downloadBlob } from './utils';
 
 export const generateCutShapes = async (printOptions: PrintOptions, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
   const { printerTemplateKey } = printOptions;
@@ -17,11 +18,15 @@ export const generateCutShapes = async (printOptions: PrintOptions, template: te
   const labelsPerPage = rows * columns;
 
   const numberOfCuts = Math.min(canvasArrayRef.current!.length, labelsPerPage);
-  const canvas = new StaticCanvas();
+  const canvas = new StaticCanvas(undefined, {
+    renderOnAddRemove: false,
+  });
+
   canvas.setDimensions({
     width: paperSize[0],
     height: paperSize[1],
   });
+
   for (let index = 0; index < numberOfCuts; index++) {
     const column = index % columns;
     const row = Math.floor(index / columns) % rows;
@@ -30,9 +35,11 @@ export const generateCutShapes = async (printOptions: PrintOptions, template: te
     const yStart = row * gridSize[1] + topMargin;
     const width = 85;
     const height = 54;
-    const shape = new Rect({ width, height, fill: 'cyan', rx: 8, ry: 8 });
+    const shape = new Rect({ width, height, fill: 'cyan', rx: 4, ry: 4 });
+    canvas.add(shape);
     shape.setPositionByOrigin(new Point(xStart, yStart), 'left', 'top');
   }
   const svg = canvas.toSVG({ width: `${paperSize[0]}mm`, height: `${paperSize[1]}mm` }, (a) => a);
-  console.log(svg)
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  downloadBlob(blob, `${printerTemplate.label}.svg`);
 }

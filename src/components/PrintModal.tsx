@@ -25,16 +25,16 @@ const createOutput = async (
   printOptions: PrintOptions,
   template: templateType,
 ) => {
-  // if (printOptions.fileType === 'zip') {
-  //   await prepareZip(canvasArrayRef);
-  // } else if (
-  //   printOptions.fileType === 'pdf' &&
-  //   printOptions.imageType === 'vector'
-  // ) {
-  //   await preparePdfVector(printOptions, template, canvasArrayRef);
-  // } else {
-  //   await preparePdf(printOptions, template, canvasArrayRef);
-  // }
+  if (printOptions.fileType === 'zip') {
+    await prepareZip(canvasArrayRef);
+  } else if (
+    printOptions.fileType === 'pdf' &&
+    printOptions.imageType === 'vector'
+  ) {
+    await preparePdfVector(printOptions, template, canvasArrayRef);
+  } else {
+    await preparePdf(printOptions, template, canvasArrayRef);
+  }
   if (printOptions.cutMarks === 'cut') {
     await generateCutShapes(printOptions, template, canvasArrayRef);
   }

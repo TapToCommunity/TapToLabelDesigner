@@ -1,6 +1,7 @@
 import type { RefObject } from 'react';
 import type { Canvas } from 'fabric';
 import type { InputWithSizeMeta } from 'client-zip';
+import { downloadBlob } from './utils';
 
 export const prepareZip = async (canvasArrayRef: RefObject<Canvas[]>) => {
   const { downloadZip } = await import('client-zip');
@@ -34,10 +35,6 @@ export const prepareZip = async (canvasArrayRef: RefObject<Canvas[]>) => {
     );
     const blob = await downloadZip(inputs).blob();
     // trigger download
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'labels.zip';
-    link.click();
-    link.remove();
+    downloadBlob(blob, 'labels.zip');
   }
 };
