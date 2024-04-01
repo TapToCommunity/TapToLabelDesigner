@@ -13,6 +13,7 @@ import type { Canvas } from 'fabric';
 import { preparePdf as preparePdfVector } from '../utils/preparePdfKit';
 import { preparePdf } from '../utils/preparePdf';
 import type { templateType } from '../cardsTemplates';
+import { generateCutShapes } from '../utils/generateCutShapes';
 
 type PrintModalProps = {
   open: boolean;
@@ -33,6 +34,9 @@ const createOutput = async (
     await preparePdfVector(printOptions, template, canvasArrayRef);
   } else {
     await preparePdf(printOptions, template, canvasArrayRef);
+  }
+  if (printOptions.cutMarks === 'cut') {
+    await generateCutShapes(printOptions, template, canvasArrayRef);
   }
 };
 
@@ -114,7 +118,9 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             Add some cut helper on the print. 'crop' will provide tiny black
             lines near the labels to align a manual cutter. 'cut' will provide
             an outline for the labels for automatic cutters. This option is only
-            for PDF output. For now only CROP and NONE work.
+            for PDF output. WARNING: Cut shapes will trigger a double download
+            one for the PDF and one for the stencil. The stencil is reusable but
+            may change over time.
           </Typography>
           <div className="horizontalStack">
             <Typography color={isZip ? 'dimgrey' : undefined} flexGrow="1">
@@ -143,22 +149,26 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             </Button>
           </div>
           {/* Print size */}
-          <div className="horizontalStack">
+          <div className="horizontalStack withMobileWrapping">
             <Typography flexGrow="1" color={isZip ? 'dimgrey' : undefined}>
               Page:
             </Typography>
-            {Object.entries(printTemplates).map(([key, template]) => {
-              return (
-                <Button
-                  key={key}
-                  {...basicButtonProps}
-                  onClick={() => setPrintOptions({ printerTemplateKey: key })}
-                  color={key === printerTemplateKey ? 'primary' : 'secondary'}
-                >
-                  <Typography>{template.label}</Typography>
-                </Button>
-              );
-            })}
+            <div className="paperSizeContainer">
+              {Object.entries(printTemplates).map(([key, template]) => {
+                return (
+                  <Button
+                    key={key}
+                    {...basicButtonProps}
+                    onClick={() => setPrintOptions({ printerTemplateKey: key })}
+                    color={key === printerTemplateKey ? 'primary' : 'secondary'}
+                  >
+                    <Typography textOverflow="ellipsis">
+                      {template.label}
+                    </Typography>
+                  </Button>
+                );
+              })}
+            </div>
           </div>
           <Button
             variant="contained"
