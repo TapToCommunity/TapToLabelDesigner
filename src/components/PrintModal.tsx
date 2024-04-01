@@ -118,7 +118,9 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             Add some cut helper on the print. 'crop' will provide tiny black
             lines near the labels to align a manual cutter. 'cut' will provide
             an outline for the labels for automatic cutters. This option is only
-            for PDF output. For now only CROP and NONE work.
+            for PDF output. WARNING: Cut shapes will trigger a double download
+            one for the PDF and one for the stencil. The stencil is reusable but
+            may change over time.
           </Typography>
           <div className="horizontalStack">
             <Typography color={isZip ? 'dimgrey' : undefined} flexGrow="1">
