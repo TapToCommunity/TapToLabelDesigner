@@ -70,6 +70,26 @@ export const printTemplates: Record<string, PrintTemplate> = {
     layout: 'landscape',
     paperSize: [1520, 1520],
   },
+  a3v: {
+    gridSize: [90, 56],
+    label: 'A3 Horizontal',
+    paperSize: [420, 297],
+    columns: 4,
+    rows: 5,
+    leftMargin: 10,
+    layout: 'landscape',
+    topMargin: 10,
+  },
+  a3h: {
+    gridSize: [90, 56],
+    label: 'A3 Vertical',
+    paperSize: [297, 420],
+    rows: 7,
+    columns: 3,
+    leftMargin: 10,
+    layout: 'portrait',
+    topMargin: 10,
+  }
 };
 
 export const defaultPrinterTemplateKey = 'horizontal';
