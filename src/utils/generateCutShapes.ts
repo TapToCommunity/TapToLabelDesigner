@@ -8,7 +8,7 @@ import type { PrintOptions } from '../contexts/appData';
 import type { templateType } from '../cardsTemplates';
 import type { RefObject } from 'react';
 import { printTemplates } from '../printTemplates';
-import { downloadBlob } from './utils';
+import { downloadBlob, fromMMtoPxAt72DPI } from './utils';
 
 export const generateCutShapes = async (printOptions: PrintOptions, _template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
   const { printerTemplateKey } = printOptions;
@@ -22,24 +22,27 @@ export const generateCutShapes = async (printOptions: PrintOptions, _template: t
     renderOnAddRemove: false,
   });
 
+
   canvas.setDimensions({
-    width: paperSize[0],
-    height: paperSize[1],
+    width: fromMMtoPxAt72DPI(paperSize[0]),
+    height: fromMMtoPxAt72DPI(paperSize[1]),
   });
 
+  const borderRadius = fromMMtoPxAt72DPI(4)
+  const width = fromMMtoPxAt72DPI(85);
+  const height = fromMMtoPxAt72DPI(54);
   for (let index = 0; index < numberOfCuts; index++) {
     const column = index % columns;
     const row = Math.floor(index / columns) % rows;
 
-    const xStart = column * gridSize[0] + leftMargin;
-    const yStart = row * gridSize[1] + topMargin;
-    const width = 85;
-    const height = 54;
-    const shape = new Rect({ width, height, fill: 'cyan', rx: 4, ry: 4 });
+    const xStart = fromMMtoPxAt72DPI(column * gridSize[0] + leftMargin);
+    const yStart = fromMMtoPxAt72DPI(row * gridSize[1] + topMargin);
+    const shape = new Rect({ width, height, fill: 'cyan', rx: borderRadius, ry: borderRadius });
     canvas.add(shape);
     shape.setPositionByOrigin(new Point(xStart, yStart), 'left', 'top');
   }
-  const svg = canvas.toSVG({ width: `${paperSize[0]}mm`, height: `${paperSize[1]}mm` }, (a) => a);
+
+  const svg = canvas.toSVG({}, (a) => a);
   const blob = new Blob([svg], { type: 'image/svg+xml' });
   downloadBlob(blob, `${printerTemplate.label}.svg`);
 }
