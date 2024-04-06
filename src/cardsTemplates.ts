@@ -216,7 +216,7 @@ export const templates: Record<string, templateType> = {
       layerHeight: 994,
       url: floppy525,
       width: 1 - (20 + 44) / 619,
-      height: 314 / 994,
+      height: 316 / 994,
       x: 20 / 619,
       y: 16 / 994,
       isSvg: true,
