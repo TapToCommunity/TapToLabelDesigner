@@ -221,7 +221,7 @@ export const templates: Record<string, templateType> = {
       y: 16 / 994,
       isSvg: true,
     },
-    label: 'Floppy 3.5',
+    label: 'Floppy 5.25',
   },
 } as const;
 
