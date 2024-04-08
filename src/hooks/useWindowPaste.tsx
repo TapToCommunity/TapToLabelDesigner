@@ -4,25 +4,21 @@ import { useEffect } from 'react';
 export const useWindowPaste = (): null => {
   const { setFiles, files } = useFileDropperContext();
   useEffect(() => {
-    const eventHandler = async (evt: ClipboardEvent): Promise<void> => {
-      const types = evt.clipboardData?.types;
-      if (!types) {
+    const eventHandler = async (): Promise<void> => {
+      if (!navigator.clipboard) {
         return;
       }
-      // @ts-expect-error navigator not typed?
-      const items = await Navigator.clipboard.read();
-      console.log(items);
-      if (types.includes('Files')) {
-        console.log('includes types!');
-        const img = evt.clipboardData.getData('Files');
-        // setFiles([...files, img]);
-        console.log(img);
-      } else if (evt.clipboardData?.types.includes('text/html')) {
-        const url = evt.clipboardData.getData('text/html');
-        const blob = await (await fetch(url)).blob();
-        setFiles([...files, new File([blob], url.split('/')?.pop() || '')]);
-        console.log(url, blob);
-      }
+      const items = await navigator.clipboard.read();
+      items.forEach(async (item) => {
+        const { types } = item;
+        if (types.includes('image/png')) {
+          const data = await item.getType('image/png');
+          setFiles([...files, new File([data], `fromclip_${Date.now()}`)]);
+        } else if (types.includes('image/jpeg')) {
+          const data = await item.getType('image/jpeg');
+          setFiles([...files, new File([data], `fromclip_${Date.now()}`)]);
+        }
+      });
     };
     window.addEventListener('paste', eventHandler);
     return () => window.removeEventListener('paste', eventHandler);
