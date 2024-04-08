@@ -9,8 +9,11 @@ export const useWindowPaste = (): null => {
       if (!types) {
         return;
       }
-      console.log(types);
+      // @ts-expect-error navigator not typed?
+      const items = await Navigator.clipboard.read();
+      console.log(items);
       if (types.includes('Files')) {
+        console.log('includes types!');
         const img = evt.clipboardData.getData('Files');
         // setFiles([...files, img]);
         console.log(img);
