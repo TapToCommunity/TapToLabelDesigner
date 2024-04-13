@@ -8,6 +8,7 @@ import { useAppDataContext } from '../contexts/appData';
 import './portalMenu.css';
 import { templateType } from '../cardsTemplates';
 import TemplateDropdown from './TemplateDropdown';
+import { MouseEventHandler } from 'react';
 
 type PortalMenuType = {
   top: number | string;
@@ -19,6 +20,11 @@ type PortalMenuType = {
   rotateMainImage: () => void;
   localTemplate: templateType;
   setLocalTemplate: (t: templateType) => void;
+};
+
+const dontClickAway: MouseEventHandler<HTMLDivElement> = (e: MouseEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
 };
 
 export const PortalMenu = ({
@@ -43,6 +49,7 @@ export const PortalMenu = ({
           top,
           left,
         }}
+        onClick={dontClickAway}
       >
         <ColorChanger
           originalColors={customColors}
@@ -58,7 +65,10 @@ export const PortalMenu = ({
           <DeleteIcon />
         </IconButton>
         <div className="spacer" />
-        <TemplateDropdown />
+        <TemplateDropdown
+          localTemplate={localTemplate}
+          setLocalTemplate={setLocalTemplate}
+        />
       </div>
     </ClickAwayListener>,
     document.body,

@@ -8,6 +8,7 @@ import {
 } from '../utils/setTemplate';
 import { util, FabricImage, type StaticCanvas } from 'fabric';
 import { useAppDataContext } from '../contexts/appData';
+import { type templateType } from '../cardsTemplates';
 
 type useLabelEditorParams = {
   padderRef: MutableRefObject<HTMLDivElement | null>;
@@ -98,6 +99,7 @@ export const useLabelEditor = ({
   }, [card, fabricCanvas, isImageReady]);
 
   useEffect(() => {
+    console.log(card.template, localTemplate)
     if (fabricCanvas && fullyReady && card.template !== localTemplate) {
       card.template = localTemplate;
       setTemplateOnCanvases([card], localTemplate).then((colors) => {

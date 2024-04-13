@@ -58,7 +58,7 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
           left={isMenuOpen.left}
           localColors={localColors}
           setLocalColors={setLocalColors}
-          setLocaltemplate={setLocalTemplate}
+          setLocalTemplate={setLocalTemplate}
           localTemplate={localTemplate}
           setIsOpen={setMenuOpen}
         />

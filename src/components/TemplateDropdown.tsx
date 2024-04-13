@@ -21,6 +21,7 @@ const TemplateDropdown = ({
     async (evt: SelectChangeEvent<string>) => {
       const value = evt.target.value;
       const chosenTemplate = templates[value];
+      console.log('executing', chosenTemplate, setLocalTemplate);
       if (setLocalTemplate) {
         setLocalTemplate(chosenTemplate);
       } else {
@@ -32,6 +33,10 @@ const TemplateDropdown = ({
 
   const currentTemplate = localTemplate || template;
 
+  const currentKey = Object.entries(templates).find(
+    ([, value]) => value === currentTemplate,
+  )?.[0];
+
   return (
     <FormControl size="small" sx={{ m: 1, minWidth: 120 }}>
       <InputLabel id="template-select" sx={{ fontWeight: 400 }}>
@@ -40,6 +45,7 @@ const TemplateDropdown = ({
       <Select
         labelId="template-select"
         label="Card template"
+        value={currentKey}
         onChange={toggleTemplate}
         sx={{ fontWeight: 400 }}
       >
