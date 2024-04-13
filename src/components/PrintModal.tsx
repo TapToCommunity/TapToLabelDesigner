@@ -35,7 +35,7 @@ const createOutput = async (
   } else {
     await preparePdf(printOptions, template, canvasArrayRef);
   }
-  if (printOptions.cutMarks === 'cut') {
+  if (printOptions.cutMarks === 'cri-cut') {
     await generateCutShapes(printOptions, template, canvasArrayRef);
   }
 };
@@ -134,11 +134,11 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
               <Typography>Crop marks</Typography>
             </Button>
             <Button
-              onClick={() => setPrintOptions({ cutMarks: 'cut' })}
+              onClick={() => setPrintOptions({ cutMarks: 'cri-cut' })}
               {...basicButtonProps}
-              color={cutMarks === 'cut' ? 'primary' : 'secondary'}
+              color={cutMarks === 'cri-cut' ? 'primary' : 'secondary'}
             >
-              <Typography>Cutting shape</Typography>
+              <Typography>Cricut</Typography>
             </Button>
             <Button
               onClick={() => setPrintOptions({ cutMarks: 'none' })}

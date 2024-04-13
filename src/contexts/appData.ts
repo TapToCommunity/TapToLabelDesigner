@@ -14,7 +14,7 @@ import { noop } from '../utils/utils';
 export type PrintOptions = {
   imageType: 'raster' | 'vector';
   printerTemplateKey: string;
-  cutMarks: 'crop' | 'cut' | 'none',
+  cutMarks: 'crop' | 'cut' | 'cri-cut' | 'none',
   fileType: 'pdf' | 'zip';
 };
 
