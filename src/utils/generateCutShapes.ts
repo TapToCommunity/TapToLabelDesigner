@@ -41,7 +41,7 @@ export const generateCutShapes = async (printOptions: PrintOptions, _template: t
     canvas.add(shape);
     shape.setPositionByOrigin(new Point(xStart, yStart), 'left', 'top');
   }
-
+  canvas.backgroundColor = 'magenta';
   const cElement = canvas.toCanvasElement();
   cElement.toBlob((blob) => {
     downloadBlob(blob!, `${printerTemplate.label}.png`);
