@@ -4,22 +4,21 @@ import { useFileDropperContext } from '../contexts/fileDropper';
 import { setTemplateOnCanvases } from '../utils/setTemplate';
 
 export const DataToCanvasReconciler = () => {
-  const { canvasArrayRef } = useFileDropperContext();
+  const { cards } = useFileDropperContext();
   const { template, setOriginalColors, setCustomColors, setIsIdle } =
     useAppDataContext();
 
   // takes care of template change
   useEffect(() => {
-    const canvases = canvasArrayRef.current;
-    if (canvases) {
+    if (cards.length) {
       setIsIdle(false);
-      setTemplateOnCanvases(canvases, template).then((colors) => {
+      setTemplateOnCanvases(cards, template).then((colors) => {
         setOriginalColors(colors);
         setCustomColors(colors);
         setIsIdle(true);
       });
     }
-  }, [template, setCustomColors, canvasArrayRef, setOriginalColors, setIsIdle]);
+  }, [template, setCustomColors, cards, setOriginalColors, setIsIdle]);
 
   return null;
 };

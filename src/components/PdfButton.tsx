@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import type { JSX, RefObject } from 'react';
-import type { Canvas } from 'fabric';
+import type { JSX } from 'react';
 import { useAppDataContext } from '../contexts/appData';
 import { Button } from './ResponsiveIconButton';
 import Typography from '@mui/material/Typography';
@@ -14,6 +13,7 @@ import { prepareZip } from '../utils/prepareZip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import type { CardData } from '../contexts/fileDropper';
 
 type labelInfo = {
   icon: JSX.Element;
@@ -108,22 +108,22 @@ const ChoiceButton = ({ onClick }: { onClick: (arg0: string) => void }) => {
 };
 
 type PdfButtonProps = {
-  canvasArrayRef: RefObject<Canvas[]>;
+  cards: CardData[];
 };
 
-export const PdfButton = ({ canvasArrayRef }: PdfButtonProps): JSX.Element => {
+export const PdfButton = ({ cards }: PdfButtonProps): JSX.Element => {
   const { template, printOptions } = useAppDataContext();
   const prepareOutput = useCallback(
     async (currentLabel: string) => {
       if (currentLabel === labels[1].label) {
-        await prepareZip(canvasArrayRef);
+        await prepareZip(cards);
       } else if (currentLabel === labels[2].label) {
-        preparePdfVector(printOptions, template, canvasArrayRef);
+        preparePdfVector(printOptions, template, cards);
       } else {
-        await preparePdf(printOptions, template, canvasArrayRef);
+        await preparePdf(printOptions, template, cards);
       }
     },
-    [canvasArrayRef, printOptions, template],
+    [cards, printOptions, template],
   );
 
   return <ChoiceButton onClick={prepareOutput} />;

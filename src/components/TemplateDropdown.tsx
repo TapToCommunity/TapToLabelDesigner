@@ -4,20 +4,33 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { templates } from '../cardsTemplates';
+import { templateType, templates } from '../cardsTemplates';
 import { useAppDataContext } from '../contexts/appData';
 
-const TemplateDropdown = (): JSX.Element => {
-  const { templateKey, setTemplate, setTemplateKey } = useAppDataContext();
+type TemplateDropdownProps = {
+  setLocalTemplate?: (t: templateType) => void;
+  localTemplate?: templateType;
+};
+
+const TemplateDropdown = ({
+  setLocalTemplate,
+  localTemplate,
+}: TemplateDropdownProps): JSX.Element => {
+  const { setTemplate, template } = useAppDataContext();
   const toggleTemplate = useCallback(
     async (evt: SelectChangeEvent<string>) => {
       const value = evt.target.value;
-      const template = templates[value];
-      setTemplateKey(value);
-      setTemplate(template);
+      const chosenTemplate = templates[value];
+      if (setLocalTemplate) {
+        setLocalTemplate(chosenTemplate);
+      } else {
+        setTemplate(chosenTemplate);
+      }
     },
-    [setTemplate, setTemplateKey],
+    [setLocalTemplate, setTemplate],
   );
+
+  const currentTemplate = localTemplate || template;
 
   return (
     <FormControl size="small" sx={{ m: 1, minWidth: 120 }}>
@@ -26,7 +39,6 @@ const TemplateDropdown = (): JSX.Element => {
       </InputLabel>
       <Select
         labelId="template-select"
-        value={templateKey}
         label="Card template"
         onChange={toggleTemplate}
         sx={{ fontWeight: 400 }}
@@ -35,7 +47,7 @@ const TemplateDropdown = (): JSX.Element => {
           <MenuItem
             key={key}
             value={key}
-            selected={key === templateKey}
+            selected={value === currentTemplate}
             sx={{ fontWeight: 400 }}
           >
             {value.label}

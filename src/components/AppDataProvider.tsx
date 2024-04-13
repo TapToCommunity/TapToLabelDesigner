@@ -25,9 +25,6 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
   const [template, setTemplate] = useState<contextType['template']>(
     defaultContextValue.template,
   );
-  const [templateKey, setTemplateKey] = useState<contextType['templateKey']>(
-    defaultContextValue.templateKey,
-  );
   const [printerTemplate, setPrinterTemplate] = useState<
     contextType['printerTemplate']
   >(defaultContextValue.printerTemplate);
@@ -59,7 +56,6 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       originalColors,
       customColors,
       template,
-      templateKey,
       printerTemplate,
       printerTemplateKey,
       printOptions,
@@ -67,7 +63,6 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       setOriginalColors,
       setCustomColors,
       setTemplate,
-      setTemplateKey,
       setPrinterTemplate,
       setPrinterTemplateKey,
       setPrintOptions: mergePrintOptions,
@@ -77,7 +72,6 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       originalColors,
       customColors,
       template,
-      templateKey,
       printerTemplate,
       printerTemplateKey,
       isIdle,
@@ -85,7 +79,6 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       setOriginalColors,
       setCustomColors,
       setTemplate,
-      setTemplateKey,
       setPrinterTemplate,
       setPrinterTemplateKey,
       mergePrintOptions,

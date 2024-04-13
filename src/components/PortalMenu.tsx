@@ -6,6 +6,8 @@ import IconButton from '@mui/material/IconButton';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { useAppDataContext } from '../contexts/appData';
 import './portalMenu.css';
+import { templateType } from '../cardsTemplates';
+import TemplateDropdown from './TemplateDropdown';
 
 type PortalMenuType = {
   top: number | string;
@@ -15,6 +17,8 @@ type PortalMenuType = {
   setLocalColors: (colors: string[]) => void;
   localColors: string[];
   rotateMainImage: () => void;
+  localTemplate: templateType;
+  setLocalTemplate: (t: templateType) => void;
 };
 
 export const PortalMenu = ({
@@ -25,6 +29,8 @@ export const PortalMenu = ({
   setLocalColors,
   localColors,
   rotateMainImage,
+  localTemplate,
+  setLocalTemplate,
 }: PortalMenuType) => {
   const { customColors, template } = useAppDataContext();
   return createPortal(
@@ -51,6 +57,8 @@ export const PortalMenu = ({
         <IconButton onClick={deleteLabel}>
           <DeleteIcon />
         </IconButton>
+        <div className="spacer" />
+        <TemplateDropdown />
       </div>
     </ClickAwayListener>,
     document.body,

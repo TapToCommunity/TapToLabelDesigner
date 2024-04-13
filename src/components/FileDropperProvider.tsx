@@ -1,7 +1,10 @@
-import { useState, useRef, useMemo } from 'react';
-import type { Canvas } from 'fabric';
+import { useState, useMemo, useCallback } from 'react';
 import type { FC, JSX } from 'react';
-import { FileDropContext, type contextType } from '../contexts/fileDropper';
+import {
+  type CardData,
+  FileDropContext,
+  type contextType,
+} from '../contexts/fileDropper';
 
 type FileDropperProps = {
   children: JSX.Element | JSX.Element[];
@@ -10,16 +13,37 @@ type FileDropperProps = {
 export const FileDropperContextProvider: FC<FileDropperProps> = ({
   children,
 }) => {
-  const [files, setFiles] = useState<(File | HTMLImageElement)[]>([]);
-  const canvasArrayRef = useRef<Canvas[]>([]);
+  const [files, setFilesImpl] = useState<(File | HTMLImageElement)[]>([]);
+  const [cards, setCards] = useState<CardData[]>([]);
+
+  const addFiles = useCallback(
+    (totalFiles: (File | HTMLImageElement)[]) => {
+      let newFiles: (File | HTMLImageElement)[] = [];
+      if (totalFiles.length > files.length) {
+        newFiles = totalFiles.slice(files.length - totalFiles.length);
+      }
+      setFilesImpl(totalFiles);
+      setCards([
+        ...cards,
+        ...newFiles.map<CardData>((file) => ({
+          file,
+          canvas: {
+            current: undefined,
+          },
+          template: undefined,
+        })),
+      ]);
+    },
+    [files, cards],
+  );
 
   const contextValue = useMemo<contextType>(
     () => ({
       files,
-      canvasArrayRef,
-      setFiles,
+      setFiles: addFiles,
+      cards,
     }),
-    [files, setFiles],
+    [files, addFiles, cards],
   );
 
   return (

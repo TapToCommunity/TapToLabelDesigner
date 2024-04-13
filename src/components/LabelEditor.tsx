@@ -1,15 +1,13 @@
 import { useState, useRef, useCallback } from 'react';
-import type { MutableRefObject } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
-import { type StaticCanvas } from 'fabric';
 import { PortalMenu } from './PortalMenu';
 import { useLabelEditor } from '../hooks/useLabelEditor';
+import { type CardData } from '../contexts/fileDropper';
 
 type LabelEditorProps = {
-  file: File | HTMLImageElement;
-  canvasArrayRef: MutableRefObject<StaticCanvas[]>;
   index: number;
   className: string;
+  card: CardData;
 };
 
 type MenuInfo = {
@@ -18,12 +16,7 @@ type MenuInfo = {
   left: number | string;
 };
 
-export const LabelEditor = ({
-  file,
-  canvasArrayRef,
-  index,
-  className,
-}: LabelEditorProps) => {
+export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
   const [isMenuOpen, setMenuOpen] = useState<MenuInfo>({
     open: false,
     top: 0,
@@ -36,10 +29,11 @@ export const LabelEditor = ({
     localColors,
     setLocalColors,
     rotateMainImage,
+    localTemplate,
+    setLocalTemplate,
   } = useLabelEditor({
-    canvasArrayRef,
+    card,
     index,
-    file,
     padderRef,
   });
 
@@ -64,6 +58,8 @@ export const LabelEditor = ({
           left={isMenuOpen.left}
           localColors={localColors}
           setLocalColors={setLocalColors}
+          setLocaltemplate={setLocalTemplate}
+          localTemplate={localTemplate}
           setIsOpen={setMenuOpen}
         />
       )}

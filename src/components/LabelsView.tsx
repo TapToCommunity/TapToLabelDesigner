@@ -6,22 +6,21 @@ import { SmallDropZone } from './SmallDropZone';
 import { useAppDataContext } from '../contexts/appData';
 
 export const LabelsView = () => {
-  const { files, canvasArrayRef } = useFileDropperContext();
+  const { cards } = useFileDropperContext();
   const { template } = useAppDataContext();
   return (
     <div className="labelsView">
-      {files.map((file, index) => (
+      {cards.map((card, index) => (
         <LabelEditor
-          className={`labelContainer ${template.layout}`}
+          className="labelContainer horizontal"
           key={`key-susp-${
-            (file as File).name || (file as HTMLImageElement).src
+            (card.file as File).name || (card.file as HTMLImageElement).src
           }`}
           index={index}
-          file={file}
-          canvasArrayRef={canvasArrayRef}
+          card={card}
         />
       ))}
-      <SmallDropZone className={`labelContainer ${template.layout} dropzone`} />
+      <SmallDropZone className="labelContainer horizontal" />
       <DataToCanvasReconciler />
     </div>
   );
