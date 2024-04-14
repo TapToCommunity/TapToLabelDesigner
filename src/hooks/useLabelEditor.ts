@@ -99,7 +99,6 @@ export const useLabelEditor = ({
   }, [card, fabricCanvas, isImageReady]);
 
   useEffect(() => {
-    console.log(card.template, localTemplate)
     if (fabricCanvas && fullyReady && card.template !== localTemplate) {
       card.template = localTemplate;
       setTemplateOnCanvases([card], localTemplate).then((colors) => {

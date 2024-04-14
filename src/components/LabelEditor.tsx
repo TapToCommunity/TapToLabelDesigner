@@ -10,15 +10,17 @@ type LabelEditorProps = {
   card: CardData;
 };
 
-type MenuInfo = {
+export type MenuInfo = {
   open: boolean;
   top: number | string;
   left: number | string;
+  closedAt?: number;
 };
 
 export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
-  const [isMenuOpen, setMenuOpen] = useState<MenuInfo>({
-    open: false,
+  const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
+  const menuOpenData = useRef<MenuInfo>({
+    open: true,
     top: 0,
     left: 0,
   });
@@ -39,23 +41,29 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
 
   const openMenu = useCallback(() => {
     const divRef = padderRef.current!;
+    const dataRef = menuOpenData.current;
     const bbox = divRef.getBoundingClientRect();
-    setMenuOpen({
-      open: true,
-      left: `${(100 * (bbox.left + bbox.width / 2)) / window.innerWidth}%`,
-      top: bbox.top + bbox.height / 2 + window.scrollY,
-    });
+    if (!!dataRef.closedAt && dataRef.closedAt > Date.now() - 250) {
+      return;
+    }
+    setMenuOpen(true);
+    dataRef.left = `${
+      (100 * (bbox.left + bbox.width / 2)) / window.innerWidth
+    }%`;
+    dataRef.top = bbox.top + bbox.height / 2 + window.scrollY;
+    dataRef.closedAt = undefined;
   }, [setMenuOpen]);
 
   return (
     <div className={className} ref={padderRef} onClick={openMenu}>
       <FabricCanvasWrapper setFabricCanvas={setFabricCanvas} />
-      {isMenuOpen.open && (
+      {isMenuOpen && (
         <PortalMenu
+          menuOpenData={menuOpenData.current}
           rotateMainImage={rotateMainImage}
           deleteLabel={deleteLabel}
-          top={isMenuOpen.top}
-          left={isMenuOpen.left}
+          top={menuOpenData.current.top}
+          left={menuOpenData.current.left}
           localColors={localColors}
           setLocalColors={setLocalColors}
           setLocalTemplate={setLocalTemplate}

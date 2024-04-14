@@ -8,23 +8,19 @@ import { useAppDataContext } from '../contexts/appData';
 import './portalMenu.css';
 import { templateType } from '../cardsTemplates';
 import TemplateDropdown from './TemplateDropdown';
-import { MouseEventHandler } from 'react';
+import { MenuInfo } from './LabelEditor';
 
 type PortalMenuType = {
   top: number | string;
   left: number | string;
-  setIsOpen: (arg: { open: boolean; top: number; left: number }) => void;
+  setIsOpen: (arg: boolean) => void;
   deleteLabel: () => void;
   setLocalColors: (colors: string[]) => void;
   localColors: string[];
   rotateMainImage: () => void;
   localTemplate: templateType;
   setLocalTemplate: (t: templateType) => void;
-};
-
-const dontClickAway: MouseEventHandler<HTMLDivElement> = (e: MouseEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
+  menuOpenData: MenuInfo;
 };
 
 export const PortalMenu = ({
@@ -37,19 +33,23 @@ export const PortalMenu = ({
   rotateMainImage,
   localTemplate,
   setLocalTemplate,
+  menuOpenData,
 }: PortalMenuType) => {
   const { customColors, template } = useAppDataContext();
+
+  const onClickAway = () => {
+    menuOpenData.closedAt = Date.now();
+    setIsOpen(false);
+  };
+
   return createPortal(
-    <ClickAwayListener
-      onClickAway={() => setIsOpen({ open: false, top: 0, left: 0 })}
-    >
+    <ClickAwayListener mouseEvent="onMouseDown" onClickAway={onClickAway}>
       <div
         className={`colorChangerContainer ${template.layout}`}
         style={{
           top,
           left,
         }}
-        onClick={dontClickAway}
       >
         <ColorChanger
           originalColors={customColors}
@@ -66,6 +66,7 @@ export const PortalMenu = ({
         </IconButton>
         <div className="spacer" />
         <TemplateDropdown
+          id="portalmenu"
           localTemplate={localTemplate}
           setLocalTemplate={setLocalTemplate}
         />
