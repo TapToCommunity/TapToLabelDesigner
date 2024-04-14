@@ -13,12 +13,14 @@ export type contextType = {
   files: (File | HTMLImageElement)[];
   setFiles: (files: (File | HTMLImageElement)[]) => void;
   cards: CardData[];
+  removeCard: (index: number) => void;
 };
 
 export const FileDropContext = createContext<contextType>({
   files: [],
   cards: [],
   setFiles: () => {},
+  removeCard: () => {},
 });
 
 export const useFileDropperContext = () => useContext(FileDropContext);

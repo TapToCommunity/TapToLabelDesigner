@@ -37,11 +37,20 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
     [files, cards],
   );
 
+  const removeCard = useCallback(
+    (index: number) => {
+      setFilesImpl([...files.slice(0, index), ...files.slice(index + 1)]);
+      setCards([...cards.slice(0, index), ...cards.slice(index + 1)]);
+    },
+    [files, cards],
+  );
+
   const contextValue = useMemo<contextType>(
     () => ({
       files,
       setFiles: addFiles,
       cards,
+      removeCard,
     }),
     [files, addFiles, cards],
   );
