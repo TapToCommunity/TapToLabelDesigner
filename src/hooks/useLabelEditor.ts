@@ -29,6 +29,7 @@ export const useLabelEditor = ({
   const [fullyReady, setFullyReady] = useState<boolean>(false);
   const [isImageReady, setImageReady] = useState<boolean>(false);
   const [localColors, setLocalColors] = useState<string[]>(customColors);
+  const [localTemplateOriginalColors, setLocalTemplateOriginalColors] = useState<string[]>(originalColors);
   const [localTemplate, setLocalTemplate] = useState<templateType>(template);
 
   const deleteLabel = useCallback(() => {
@@ -102,6 +103,7 @@ export const useLabelEditor = ({
     if (fabricCanvas && fullyReady && card.template !== localTemplate) {
       card.template = localTemplate;
       setTemplateOnCanvases([card], localTemplate).then((colors) => {
+        setLocalTemplateOriginalColors(colors);
         if (colorsDiffer(colors, localColors)) {
           setLocalColors(colors);
         }
@@ -122,12 +124,13 @@ export const useLabelEditor = ({
     if (
       isIdle &&
       fabricCanvas &&
-      originalColors.length === localColors.length &&
+      localTemplateOriginalColors.length === localColors.length &&
       localColors.length
     ) {
-      updateColors([fabricCanvas], localColors, originalColors);
+      console.log('tringgering this')
+      updateColors([fabricCanvas], localColors, localTemplateOriginalColors);
     }
-  }, [localColors, fabricCanvas, originalColors, isIdle]);
+  }, [localColors, fabricCanvas, localTemplateOriginalColors, isIdle]);
 
   return {
     fabricCanvas,
