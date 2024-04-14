@@ -162,7 +162,7 @@ export const setTemplateOnCanvases = async (
   const finalHeight = isHorizontal ? height : width;
 
   for (const card of cards) {
-    const { canvas: { current: canvas }} = card;
+    const { canvas } = card;
     if (!canvas) {
       continue;
     }

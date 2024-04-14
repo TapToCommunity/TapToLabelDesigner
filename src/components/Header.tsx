@@ -61,7 +61,9 @@ export const Header = () => {
             <Typography>&nbsp;Search image</Typography>
           </Button>
         </div>
-        <div className="content">{hasFiles && <TemplateDropdown />}</div>
+        <div className="content">
+          {hasFiles && <TemplateDropdown id="header" />}
+        </div>
       </div>
       {(hasFiles || true) && (
         <div className="spacedContent">

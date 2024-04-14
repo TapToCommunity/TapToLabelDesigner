@@ -2,7 +2,6 @@ import { createContext, useContext } from 'react';
 import {
   type templateType,
   defaultTemplate,
-  defaultTemplateKey,
 } from '../cardsTemplates';
 import {
   type PrintTemplate,

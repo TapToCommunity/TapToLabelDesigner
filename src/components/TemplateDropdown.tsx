@@ -7,11 +7,6 @@ import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import { templateType, templates } from '../cardsTemplates';
 import { useAppDataContext } from '../contexts/appData';
 
-const stopClick = (e) => {
-  e.stopPropagation();
-  e.preventDefault();
-};
-
 type TemplateDropdownProps = {
   setLocalTemplate?: (t: templateType) => void;
   localTemplate?: templateType;
@@ -53,15 +48,11 @@ const TemplateDropdown = ({
         labelId={id}
         label="Card template"
         value={currentKey}
-        onMouseDown={stopClick}
-        onClick={stopClick}
-        onOpen={stopClick}
         onChange={toggleTemplate}
         sx={{ fontWeight: 400 }}
       >
         {Object.entries(templates).map(([key, value]) => (
           <MenuItem
-            onClick={stopClick}
             key={key}
             value={key}
             selected={value === currentTemplate}

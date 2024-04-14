@@ -5,20 +5,22 @@ import type { templateType } from '../cardsTemplates';
 
 export type CardData = {
   file: File | HTMLImageElement,
-  canvas: MutableRefObject<StaticCanvas | undefined>;
+  canvas?: StaticCanvas;
   template?: templateType;
 }
 
 export type contextType = {
   files: (File | HTMLImageElement)[];
   setFiles: (files: (File | HTMLImageElement)[]) => void;
-  cards: CardData[];
+  cards: MutableRefObject<CardData[]>;
   removeCard: (index: number) => void;
 };
 
 export const FileDropContext = createContext<contextType>({
   files: [],
-  cards: [],
+  cards: {
+    current: [],
+  },
   setFiles: () => {},
   removeCard: () => {},
 });

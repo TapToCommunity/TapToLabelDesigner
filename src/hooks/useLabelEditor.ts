@@ -83,7 +83,7 @@ export const useLabelEditor = ({
         },
         { cssOnly: true },
       );
-      card.canvas.current = fabricCanvas;
+      card.canvas = fabricCanvas;
       card.template = localTemplate;
       setTemplateOnCanvases([card], localTemplate).then((colors) => {
         setFullyReady(true);

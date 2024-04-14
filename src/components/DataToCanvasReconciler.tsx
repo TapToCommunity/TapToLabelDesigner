@@ -10,9 +10,9 @@ export const DataToCanvasReconciler = () => {
 
   // takes care of template change
   useEffect(() => {
-    if (cards.length) {
+    if (cards.current.length) {
       setIsIdle(false);
-      setTemplateOnCanvases(cards, template).then((colors) => {
+      setTemplateOnCanvases(cards.current, template).then((colors) => {
         setOriginalColors(colors);
         setCustomColors(colors);
         setIsIdle(true);

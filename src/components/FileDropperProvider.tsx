@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import type { FC, JSX } from 'react';
 import {
   type CardData,
@@ -14,7 +14,7 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
   children,
 }) => {
   const [files, setFilesImpl] = useState<(File | HTMLImageElement)[]>([]);
-  const [cards, setCards] = useState<CardData[]>([]);
+  const cards = useRef<CardData[]>([]);
 
   const addFiles = useCallback(
     (totalFiles: (File | HTMLImageElement)[]) => {
@@ -23,16 +23,13 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
         newFiles = totalFiles.slice(files.length - totalFiles.length);
       }
       setFilesImpl(totalFiles);
-      setCards([
-        ...cards,
+      cards.current.push(
         ...newFiles.map<CardData>((file) => ({
           file,
-          canvas: {
-            current: undefined,
-          },
+          canvas: undefined,
           template: undefined,
         })),
-      ]);
+      );
     },
     [files, cards],
   );
@@ -40,7 +37,7 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
   const removeCard = useCallback(
     (index: number) => {
       setFilesImpl([...files.slice(0, index), ...files.slice(index + 1)]);
-      setCards([...cards.slice(0, index), ...cards.slice(index + 1)]);
+      cards.current.splice(index);
     },
     [files, cards],
   );
@@ -52,7 +49,7 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
       cards,
       removeCard,
     }),
-    [files, addFiles, cards],
+    [files, addFiles, cards, removeCard],
   );
 
   return (
