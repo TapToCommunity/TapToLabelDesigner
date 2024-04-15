@@ -21,6 +21,7 @@
   flex-direction: column;
   align-items: center;
   height: fit-content;
+  border: 2px solid transparent;
   margin-bottom: 20px;
 }
 
@@ -28,6 +29,24 @@
   max-width: var(--cell-width);
   width: calc(49.9% - 20px);
   max-height: var(--cell-width);
+}
+
+.labelContainer .floating-checkbox {
+  opacity: 0;
+  background-color: #5361D9;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transition: opacity 400ms;
+  border-radius: 8px;
+}
+
+.labelContainer.card-selected .floating-checkbox {
+  opacity: 1;
+}
+
+.labelContainer:hover .floating-checkbox {
+  opacity: 1;
 }
 
 .labelContainer.vertical {

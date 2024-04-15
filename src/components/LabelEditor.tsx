@@ -1,8 +1,17 @@
-import { useState, useRef, useCallback } from 'react';
+import {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  type MouseEvent,
+  useTransition,
+} from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import { PortalMenu } from './PortalMenu';
 import { useLabelEditor } from '../hooks/useLabelEditor';
-import { type CardData } from '../contexts/fileDropper';
+import { useFileDropperContext, type CardData } from '../contexts/fileDropper';
+import Checkbox from '@mui/material/Checkbox';
+import { useFileDropper } from '../hooks/useFileDropper';
 
 type LabelEditorProps = {
   index: number;
@@ -19,6 +28,9 @@ export type MenuInfo = {
 
 export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
+  const [isSelected, setSelected] = useState<boolean>(false);
+  const { selectedCardsCount, setSelectedCardsCount } = useFileDropperContext();
+  const [, startTransition] = useTransition();
   const menuOpenData = useRef<MenuInfo>({
     open: true,
     top: 0,
@@ -54,8 +66,14 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
     dataRef.closedAt = undefined;
   }, [setMenuOpen]);
 
+  useEffect(() => {}, [isSelected]);
+
   return (
-    <div className={className} ref={padderRef} onClick={openMenu}>
+    <div
+      className={`${className} ${isSelected ? 'card-selected' : ''}`}
+      ref={padderRef}
+      onClick={openMenu}
+    >
       <FabricCanvasWrapper setFabricCanvas={setFabricCanvas} />
       {isMenuOpen && (
         <PortalMenu
@@ -71,6 +89,21 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
           setIsOpen={setMenuOpen}
         />
       )}
+      <div className="floating-checkbox">
+        <Checkbox
+          color="secondary"
+          onClick={(e: MouseEvent<HTMLButtonElement>) => {
+            e.stopPropagation();
+            const isSelected = (e.target as HTMLInputElement).checked;
+            setSelected(isSelected);
+            startTransition(() => {
+              setSelectedCardsCount(
+                isSelected ? selectedCardsCount + 1 : selectedCardsCount - 1,
+              );
+            });
+          }}
+        />
+      </div>
     </div>
   );
 };

@@ -12,7 +12,8 @@ export const DataToCanvasReconciler = () => {
   useEffect(() => {
     if (cards.current.length) {
       setIsIdle(false);
-      setTemplateOnCanvases(cards.current, template).then((colors) => {
+      const selectedCards = cards.current.filter((card) => card.isSelected);
+      setTemplateOnCanvases(selectedCards, template).then((colors) => {
         setOriginalColors(colors);
         setCustomColors(colors);
         setIsIdle(true);

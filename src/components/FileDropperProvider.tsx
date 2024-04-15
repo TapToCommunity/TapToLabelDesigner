@@ -15,6 +15,7 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
 }) => {
   const [files, setFilesImpl] = useState<(File | HTMLImageElement)[]>([]);
   const cards = useRef<CardData[]>([]);
+  const [selectedCardsCount, setSelectedCardsCount] = useState<number>(0);
 
   const addFiles = useCallback(
     (totalFiles: (File | HTMLImageElement)[]) => {
@@ -28,6 +29,7 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
           file,
           canvas: undefined,
           template: undefined,
+          isSelected: false,
         })),
       );
     },
@@ -36,10 +38,13 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
 
   const removeCard = useCallback(
     (index: number) => {
+      if (cards.current[index].isSelected) {
+        setSelectedCardsCount(selectedCardsCount - 1);
+      }
       setFilesImpl([...files.slice(0, index), ...files.slice(index + 1)]);
       cards.current.splice(index);
     },
-    [files, cards],
+    [files, selectedCardsCount],
   );
 
   const contextValue = useMemo<contextType>(
@@ -48,8 +53,10 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
       setFiles: addFiles,
       cards,
       removeCard,
+      selectedCardsCount,
+      setSelectedCardsCount,
     }),
-    [files, addFiles, cards, removeCard],
+    [files, addFiles, removeCard, selectedCardsCount],
   );
 
   return (

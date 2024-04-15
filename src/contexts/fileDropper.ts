@@ -7,6 +7,7 @@ export type CardData = {
   file: File | HTMLImageElement,
   canvas?: StaticCanvas;
   template?: templateType;
+  isSelected: boolean;
 }
 
 export type contextType = {
@@ -14,6 +15,8 @@ export type contextType = {
   setFiles: (files: (File | HTMLImageElement)[]) => void;
   cards: MutableRefObject<CardData[]>;
   removeCard: (index: number) => void;
+  selectedCardsCount: number;
+  setSelectedCardsCount: (qty: number) => void;
 };
 
 export const FileDropContext = createContext<contextType>({
@@ -23,6 +26,8 @@ export const FileDropContext = createContext<contextType>({
   },
   setFiles: () => {},
   removeCard: () => {},
+  selectedCardsCount: 0,
+  setSelectedCardsCount: () => {},
 });
 
 export const useFileDropperContext = () => useContext(FileDropContext);

@@ -127,7 +127,6 @@ export const useLabelEditor = ({
       localTemplateOriginalColors.length === localColors.length &&
       localColors.length
     ) {
-      console.log('tringgering this')
       updateColors([fabricCanvas], localColors, localTemplateOriginalColors);
     }
   }, [localColors, fabricCanvas, localTemplateOriginalColors, isIdle]);

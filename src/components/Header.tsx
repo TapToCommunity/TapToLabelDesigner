@@ -16,7 +16,7 @@ const ImageSearch = lazy(() => import('./ImageSearch'));
 const PrintModal = lazy(() => import('./PrintModal'));
 
 export const Header = () => {
-  const { files } = useFileDropperContext();
+  const { selectedCardsCount, files } = useFileDropperContext();
   const { originalColors, customColors, setCustomColors } = useAppDataContext();
   const [searchOpen, setSearchOpen] = useState(false);
   const [printOpen, setPrintOpen] = useState(false);
@@ -31,8 +31,8 @@ export const Header = () => {
     setPrintOpen(true);
   }, []);
 
+  const hasSelectedCards = selectedCardsCount;
   const hasFiles = !!files.length;
-
   return (
     <div className={`${hasFiles ? 'fullHeader' : 'emptyHeader'} topHeader`}>
       {(hasFiles || searchOpen) && (
@@ -62,29 +62,33 @@ export const Header = () => {
           </Button>
         </div>
         <div className="content">
-          {hasFiles && <TemplateDropdown id="header" />}
+          {hasSelectedCards && <TemplateDropdown id="header" />}
         </div>
       </div>
-      {(hasFiles || true) && (
+      {(hasSelectedCards || hasFiles) && (
         <div className="spacedContent">
-          <div className="content">
-            <ColorChanger
-              setCustomColors={setCustomColors}
-              customColors={customColors}
-              originalColors={originalColors}
-            />
-          </div>
-          <div className="content">
-            <Button
-              variant="contained"
-              size="large"
-              color="primary"
-              onClick={openPrintModal}
-            >
-              <PrintIcon />
-              <Typography>&nbsp;Print</Typography>
-            </Button>
-          </div>
+          {hasSelectedCards && (
+            <div className="content">
+              <ColorChanger
+                setCustomColors={setCustomColors}
+                customColors={customColors}
+                originalColors={originalColors}
+              />
+            </div>
+          )}
+          {hasFiles && (
+            <div className="content">
+              <Button
+                variant="contained"
+                size="large"
+                color="primary"
+                onClick={openPrintModal}
+              >
+                <PrintIcon />
+                <Typography>&nbsp;Print</Typography>
+              </Button>
+            </div>
+          )}
         </div>
       )}
       <Suspense>
