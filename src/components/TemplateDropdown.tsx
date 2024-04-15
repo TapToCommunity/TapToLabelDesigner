@@ -4,18 +4,14 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
-import { templateType, templates } from '../cardsTemplates';
+import { templates } from '../cardsTemplates';
 import { useAppDataContext } from '../contexts/appData';
 
 type TemplateDropdownProps = {
-  setLocalTemplate?: (t: templateType) => void;
-  localTemplate?: templateType;
   id: string;
 };
 
 const TemplateDropdown = ({
-  setLocalTemplate,
-  localTemplate,
   id = 'header-dropdown',
 }: TemplateDropdownProps): JSX.Element => {
   const { setTemplate, template } = useAppDataContext();
@@ -23,19 +19,13 @@ const TemplateDropdown = ({
     async (evt: SelectChangeEvent<string>) => {
       const value = evt.target.value;
       const chosenTemplate = templates[value];
-      if (setLocalTemplate) {
-        setLocalTemplate(chosenTemplate);
-      } else {
-        setTemplate(chosenTemplate);
-      }
+      setTemplate(chosenTemplate);
     },
-    [setLocalTemplate, setTemplate],
+    [setTemplate],
   );
 
-  const currentTemplate = localTemplate || template;
-
   const currentKey = Object.entries(templates).find(
-    ([, value]) => value === currentTemplate,
+    ([, value]) => value === template,
   )?.[0];
 
   return (
@@ -55,7 +45,7 @@ const TemplateDropdown = ({
           <MenuItem
             key={key}
             value={key}
-            selected={value === currentTemplate}
+            selected={value === template}
             sx={{ fontWeight: 400 }}
           >
             {value.label}

@@ -22,17 +22,15 @@ export const PortalMenu = ({
   setIsOpen,
   deleteLabel,
   rotateMainImage,
-  menuOpenData,
 }: PortalMenuType) => {
   const { template } = useAppDataContext();
 
   const onClickAway = () => {
-    menuOpenData.closedAt = Date.now();
     setIsOpen(false);
   };
 
   return createPortal(
-    <ClickAwayListener mouseEvent="onMouseDown" onClickAway={onClickAway}>
+    <ClickAwayListener onClickAway={onClickAway}>
       <div
         className={`colorChangerContainer ${template.layout}`}
         style={{

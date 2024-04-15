@@ -21,7 +21,6 @@ export type MenuInfo = {
   open: boolean;
   top: number | string;
   left: number | string;
-  closedAt?: number;
 };
 
 export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
@@ -45,15 +44,11 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
     const divRef = padderRef.current!;
     const dataRef = menuOpenData.current;
     const bbox = divRef.getBoundingClientRect();
-    if (!!dataRef.closedAt && dataRef.closedAt > Date.now() - 250) {
-      return;
-    }
     setMenuOpen(true);
     dataRef.left = `${
       (100 * (bbox.left + bbox.width / 2)) / window.innerWidth
     }%`;
     dataRef.top = bbox.top + bbox.height / 2 + window.scrollY;
-    dataRef.closedAt = undefined;
   }, [setMenuOpen]);
 
   return (
