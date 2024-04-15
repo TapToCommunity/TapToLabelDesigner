@@ -42,7 +42,7 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
         setSelectedCardsCount(selectedCardsCount - 1);
       }
       setFilesImpl([...files.slice(0, index), ...files.slice(index + 1)]);
-      cards.current.splice(index);
+      cards.current.splice(index, 1);
     },
     [files, selectedCardsCount],
   );
