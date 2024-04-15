@@ -12,15 +12,6 @@
   background-color: rgba(15, 15, 15, 0.9);
   box-shadow: 0px 4px 9px 0px rgba(0, 0, 0, 0.35);
   max-width: 338px;
-}
-
-.colorChangerContainer.horizontal {
-  /* width: 45%; */
-  width: fit-content;
-}
-
-.colorChangerContainer.vertical {
-  /* width: 29%; */
   width: fit-content;
 }
 

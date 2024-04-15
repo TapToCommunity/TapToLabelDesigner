@@ -79,14 +79,6 @@
     /* max width twice as a card */
     max-width: calc(100% - 20px);
   }
-
-  .colorChangerContainer.horizontal {
-    /* max-width: 90%; */
-  }
-
-  .colorChangerContainer.vertical {
-    /* max-width: 40%; */
-  }
 }
 
 @media (max-width: 414px) {

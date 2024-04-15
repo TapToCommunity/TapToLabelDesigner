@@ -1,5 +1,4 @@
 import { createPortal } from 'react-dom';
-import { ColorChanger } from './ColorChanger';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Rotate90DegreesCwIcon from '@mui/icons-material/Rotate90DegreesCw';
 import IconButton from '@mui/material/IconButton';
@@ -7,7 +6,6 @@ import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { useAppDataContext } from '../contexts/appData';
 import './portalMenu.css';
 import { templateType } from '../cardsTemplates';
-import TemplateDropdown from './TemplateDropdown';
 import { MenuInfo } from './LabelEditor';
 
 type PortalMenuType = {
@@ -28,11 +26,7 @@ export const PortalMenu = ({
   left,
   setIsOpen,
   deleteLabel,
-  // setLocalColors,
-  // localColors,
   rotateMainImage,
-  // localTemplate,
-  // setLocalTemplate,
   menuOpenData,
 }: PortalMenuType) => {
   const { template } = useAppDataContext();
@@ -51,12 +45,6 @@ export const PortalMenu = ({
           left,
         }}
       >
-        {/* <ColorChanger
-          originalColors={customColors}
-          setCustomColors={setLocalColors}
-          customColors={localColors}
-        />
-        <div className="spacer" /> */}
         <IconButton onClick={rotateMainImage}>
           <Rotate90DegreesCwIcon />
         </IconButton>
@@ -64,12 +52,6 @@ export const PortalMenu = ({
         <IconButton onClick={deleteLabel}>
           <DeleteIcon />
         </IconButton>
-        {/* <div className="spacer" />
-        <TemplateDropdown
-          id="portalmenu"
-          localTemplate={localTemplate}
-          setLocalTemplate={setLocalTemplate}
-        /> */}
       </div>
     </ClickAwayListener>,
     document.body,
