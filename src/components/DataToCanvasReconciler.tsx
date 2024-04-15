@@ -30,14 +30,25 @@ export const DataToCanvasReconciler = () => {
   }, [template, setCustomColors, cards, setOriginalColors, setIsIdle]);
 
   useEffect(() => {
+    const selectedCardsWithDifferentTemplate = cards.current.filter(
+      (card): card is Required<CardData> =>
+        card.isSelected && card.template !== template,
+    );
+
     const selectedCanvases = cards.current
       .filter(
         (card): card is Required<CardData> =>
           !!card.isSelected && !!card.canvas,
       )
       .map<StaticCanvas>((card) => card.canvas);
-    updateColors(selectedCanvases, customColors, originalColors);
-  }, [cards, customColors, originalColors]);
+    setIsIdle(false);
+    setTemplateOnCanvases(selectedCardsWithDifferentTemplate, template).then(
+      () => {
+        updateColors(selectedCanvases, customColors, originalColors);
+        setIsIdle(true);
+      },
+    );
+  }, [cards, customColors, originalColors, setIsIdle, template]);
 
   return null;
 };
