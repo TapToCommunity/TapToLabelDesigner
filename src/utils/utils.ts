@@ -15,3 +15,4 @@ export const downloadBlob = (blob: Blob, name: string): void => {
 }
 
 export const fromMMtoPxAt72DPI = (mm: number): number => mm / 25.4 * 72;
+export const fromMMtoPxAt144DPI = (mm: number): number => mm / 25.4 * 144;

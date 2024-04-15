@@ -30,6 +30,16 @@ export const printTemplates: Record<string, PrintTemplate> = {
     layout: 'portrait',
     paperSize: [210, 297],
   },
+  a4cricut: {
+    gridSize: [90, 56],
+    label: 'Cricut A4',
+    rows: 2,
+    columns: 2,
+    leftMargin: 60,
+    topMargin: 50,
+    layout: 'landscape',
+    paperSize: [297, 210],
+  },
   horizontalLetter: {
     gridSize: [88, 59],
     label: 'Letter, Horizontal 3x3',

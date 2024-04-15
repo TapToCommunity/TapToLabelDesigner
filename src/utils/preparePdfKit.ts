@@ -9,6 +9,8 @@ import { type PrintOptions } from '../contexts/appData';
 import { printTemplates } from '../printTemplates';
 
 const fromMMtoPoint = (x: number): number => (x / 25.4) * 72;
+// const fromPointToMM = (x: number): number => (x * 25.4) / 72;
+
 
 export const preparePdf = async (
   printOptions: PrintOptions,
@@ -66,6 +68,31 @@ export const preparePdf = async (
     cutHelperY.clear();
   }
 
+  const makeTheCricutMarks = () => {
+    const markStartY = fromMMtoPoint(13.5);
+    const markStartX = fromMMtoPoint(26);
+    const markLength = fromMMtoPoint(25);
+
+    pdfDoc.lineWidth(fromMMtoPoint(1.5));
+    pdfDoc.moveTo(markStartX + markLength, markStartY);
+    pdfDoc.lineTo(markStartX, markStartY);
+    pdfDoc.lineTo(markStartX, markStartY + markLength);
+
+    pdfDoc.moveTo(ptPaperSize[0] - (markStartX + markLength), markStartY);
+    pdfDoc.lineTo(ptPaperSize[0] - markStartX, markStartY);
+    pdfDoc.lineTo(ptPaperSize[0] - markStartX, markStartY + markLength);
+
+    pdfDoc.moveTo(markStartX + markLength, ptPaperSize[1] - markStartY);
+    pdfDoc.lineTo(markStartX, ptPaperSize[1] - markStartY);
+    pdfDoc.lineTo(markStartX, ptPaperSize[1] - (markStartY + markLength));
+
+    pdfDoc.moveTo(ptPaperSize[0] - (markStartX + markLength), ptPaperSize[1] - markStartY);
+    pdfDoc.lineTo(ptPaperSize[0] - markStartX, ptPaperSize[1] - markStartY);
+    pdfDoc.lineTo(ptPaperSize[0] - markStartX, ptPaperSize[1] - (markStartY + markLength));
+
+    pdfDoc.stroke();
+  }
+
   if (canvases) {
 
     let pageNumber = 0;
@@ -77,6 +104,7 @@ export const preparePdf = async (
       if (newPageNumber > pageNumber) {
         // do the cropmarks
         cutMarks === 'crop' && makeTheCropMarks();
+        cutMarks === 'cri-cut' && makeTheCricutMarks();
         pageNumber = newPageNumber;
         pdfDoc.addPage({ margins: 0, size: ptPaperSize });
         pdfDoc.switchToPage(pageNumber);
@@ -110,6 +138,7 @@ export const preparePdf = async (
     }
   }
   cutMarks === 'crop' && makeTheCropMarks();
+  cutMarks === 'cri-cut' && makeTheCricutMarks();
   pdfDoc.end();
   downloadPromise.then((blob) => {
     const link = document.createElement('a');
