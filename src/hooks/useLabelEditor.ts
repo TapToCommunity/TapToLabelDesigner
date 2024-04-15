@@ -1,6 +1,4 @@
 import { useEffect, useCallback, useState, MutableRefObject } from 'react';
-import { colorsDiffer } from '../utils/utils';
-import { updateColors } from '../utils/updateColors';
 import { type CardData, useFileDropperContext } from '../contexts/fileDropper';
 import {
   scaleImageToOverlayArea,
@@ -8,7 +6,6 @@ import {
 } from '../utils/setTemplate';
 import { util, FabricImage, type StaticCanvas } from 'fabric';
 import { useAppDataContext } from '../contexts/appData';
-import { type templateType } from '../cardsTemplates';
 
 type useLabelEditorParams = {
   padderRef: MutableRefObject<HTMLDivElement | null>;
@@ -22,15 +19,12 @@ export const useLabelEditor = ({
   padderRef,
 }: useLabelEditorParams) => {
   const { removeCard } = useFileDropperContext();
-  const { template, customColors, originalColors, isIdle } =
+  const { template, isIdle } =
     useAppDataContext();
   const [fabricCanvas, setFabricCanvas] = useState<StaticCanvas | null>(null);
   // local ready state, when template is loaded
   const [fullyReady, setFullyReady] = useState<boolean>(false);
   const [isImageReady, setImageReady] = useState<boolean>(false);
-  const [localColors, setLocalColors] = useState<string[]>(customColors);
-  const [localTemplateOriginalColors, setLocalTemplateOriginalColors] = useState<string[]>(originalColors);
-  const [localTemplate, setLocalTemplate] = useState<templateType>(template);
 
   const deleteLabel = useCallback(() => {
     removeCard(index);
@@ -85,12 +79,9 @@ export const useLabelEditor = ({
         { cssOnly: true },
       );
       card.canvas = fabricCanvas;
-      card.template = localTemplate;
-      setTemplateOnCanvases([card], localTemplate).then((colors) => {
+      card.template = template;
+      setTemplateOnCanvases([card], template).then(() => {
         setFullyReady(true);
-        if (colorsDiffer(colors, localColors)) {
-          setLocalColors(colors);
-        }
         fabricCanvas.requestRenderAll();
       });
     }
@@ -99,46 +90,11 @@ export const useLabelEditor = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [card, fabricCanvas, isImageReady]);
 
-  useEffect(() => {
-    if (fabricCanvas && fullyReady && card.template !== localTemplate) {
-      card.template = localTemplate;
-      setTemplateOnCanvases([card], localTemplate).then((colors) => {
-        setLocalTemplateOriginalColors(colors);
-        if (colorsDiffer(colors, localColors)) {
-          setLocalColors(colors);
-        }
-        fabricCanvas.requestRenderAll();
-      });
-    }
-  }, [localTemplate, fullyReady, fabricCanvas, card, localColors]);
-
-  useEffect(() => {
-    // every time customColors change reset the local
-    isIdle && setLocalColors(customColors);
-  }, [customColors, isIdle]);
-
-  useEffect(() => {
-    // every time local colors change update the canvas
-    // only if we have colors in place
-    // this could also be detected by inspecting the template
-    if (
-      isIdle &&
-      fabricCanvas &&
-      localTemplateOriginalColors.length === localColors.length &&
-      localColors.length
-    ) {
-      updateColors([fabricCanvas], localColors, localTemplateOriginalColors);
-    }
-  }, [localColors, fabricCanvas, localTemplateOriginalColors, isIdle]);
 
   return {
     fabricCanvas,
-    localColors,
-    setLocalColors,
     deleteLabel,
     setFabricCanvas,
     rotateMainImage,
-    localTemplate,
-    setLocalTemplate,
   };
 };

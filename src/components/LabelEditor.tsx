@@ -2,7 +2,6 @@ import {
   useState,
   useRef,
   useCallback,
-  useEffect,
   type MouseEvent,
   useTransition,
 } from 'react';
@@ -11,7 +10,6 @@ import { PortalMenu } from './PortalMenu';
 import { useLabelEditor } from '../hooks/useLabelEditor';
 import { useFileDropperContext, type CardData } from '../contexts/fileDropper';
 import Checkbox from '@mui/material/Checkbox';
-import { useFileDropper } from '../hooks/useFileDropper';
 
 type LabelEditorProps = {
   index: number;
@@ -37,15 +35,7 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
     left: 0,
   });
   const padderRef = useRef<HTMLDivElement | null>(null);
-  const {
-    deleteLabel,
-    setFabricCanvas,
-    localColors,
-    setLocalColors,
-    rotateMainImage,
-    localTemplate,
-    setLocalTemplate,
-  } = useLabelEditor({
+  const { deleteLabel, setFabricCanvas, rotateMainImage } = useLabelEditor({
     card,
     index,
     padderRef,
@@ -80,10 +70,6 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
           deleteLabel={deleteLabel}
           top={menuOpenData.current.top}
           left={menuOpenData.current.left}
-          localColors={localColors}
-          setLocalColors={setLocalColors}
-          setLocalTemplate={setLocalTemplate}
-          localTemplate={localTemplate}
           setIsOpen={setMenuOpen}
         />
       )}

@@ -5,7 +5,6 @@ import IconButton from '@mui/material/IconButton';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { useAppDataContext } from '../contexts/appData';
 import './portalMenu.css';
-import { templateType } from '../cardsTemplates';
 import { MenuInfo } from './LabelEditor';
 
 type PortalMenuType = {
@@ -13,11 +12,7 @@ type PortalMenuType = {
   left: number | string;
   setIsOpen: (arg: boolean) => void;
   deleteLabel: () => void;
-  setLocalColors: (colors: string[]) => void;
-  localColors: string[];
   rotateMainImage: () => void;
-  localTemplate: templateType;
-  setLocalTemplate: (t: templateType) => void;
   menuOpenData: MenuInfo;
 };
 
