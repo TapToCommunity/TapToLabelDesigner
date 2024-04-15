@@ -178,7 +178,9 @@ export const setTemplateOnCanvases = async (
 
       canvas.setDimensions(
         {
+          // @ts-expect-error fabric
           width: isHorizontal ? 'var(--cell-width)' : 'auto',
+          // @ts-expect-error fabric
           height: isHorizontal ? 'auto' : 'var(--cell-width)',
         },
         { cssOnly: true },

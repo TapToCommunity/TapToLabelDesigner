@@ -13,6 +13,8 @@ import { preparePdf as preparePdfVector } from '../utils/preparePdfKit';
 import { preparePdf } from '../utils/preparePdf';
 import type { templateType } from '../cardsTemplates';
 import { generateCutShapes } from '../utils/generateCutShapes';
+import type { RefObject } from 'react';
+import type { Canvas } from 'fabric';
 
 type PrintModalProps = {
   open: boolean;
@@ -25,17 +27,29 @@ const createOutput = async (
   template: templateType,
 ) => {
   if (printOptions.fileType === 'zip') {
-    await prepareZip(cards);
+    await prepareZip(cards as unknown as RefObject<Canvas[]>);
   } else if (
     printOptions.fileType === 'pdf' &&
     printOptions.imageType === 'vector'
   ) {
-    await preparePdfVector(printOptions, template, cards);
+    await preparePdfVector(
+      printOptions,
+      template,
+      cards as unknown as RefObject<Canvas[]>,
+    );
   } else {
-    await preparePdf(printOptions, template, cards);
+    await preparePdf(
+      printOptions,
+      template,
+      cards as unknown as RefObject<Canvas[]>,
+    );
   }
   if (printOptions.cutMarks === 'cut') {
-    await generateCutShapes(printOptions, template, cards);
+    await generateCutShapes(
+      printOptions,
+      template,
+      cards as unknown as RefObject<Canvas[]>,
+    );
   }
 };
 
@@ -173,7 +187,7 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             variant="contained"
             size="large"
             color="primary"
-            onClick={() => createOutput(cards, printOptions, template)}
+            onClick={() => createOutput(cards.current, printOptions, template)}
           >
             <Typography>Download</Typography>
           </Button>
