@@ -81,11 +81,11 @@
   }
 
   .colorChangerContainer.horizontal {
-    max-width: 90%;
+    /* max-width: 90%; */
   }
 
   .colorChangerContainer.vertical {
-    max-width: 40%;
+    /* max-width: 40%; */
   }
 }
 

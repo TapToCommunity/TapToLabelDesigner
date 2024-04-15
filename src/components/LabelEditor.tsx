@@ -66,8 +66,6 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
     dataRef.closedAt = undefined;
   }, [setMenuOpen]);
 
-  useEffect(() => {}, [isSelected]);
-
   return (
     <div
       className={`${className} ${isSelected ? 'card-selected' : ''}`}
@@ -95,6 +93,7 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
           onClick={(e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
             const isSelected = (e.target as HTMLInputElement).checked;
+            card.isSelected = isSelected;
             setSelected(isSelected);
             startTransition(() => {
               setSelectedCardsCount(

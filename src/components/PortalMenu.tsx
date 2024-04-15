@@ -28,14 +28,14 @@ export const PortalMenu = ({
   left,
   setIsOpen,
   deleteLabel,
-  setLocalColors,
-  localColors,
+  // setLocalColors,
+  // localColors,
   rotateMainImage,
-  localTemplate,
-  setLocalTemplate,
+  // localTemplate,
+  // setLocalTemplate,
   menuOpenData,
 }: PortalMenuType) => {
-  const { customColors, template } = useAppDataContext();
+  const { template } = useAppDataContext();
 
   const onClickAway = () => {
     menuOpenData.closedAt = Date.now();
@@ -51,12 +51,12 @@ export const PortalMenu = ({
           left,
         }}
       >
-        <ColorChanger
+        {/* <ColorChanger
           originalColors={customColors}
           setCustomColors={setLocalColors}
           customColors={localColors}
         />
-        <div className="spacer" />
+        <div className="spacer" /> */}
         <IconButton onClick={rotateMainImage}>
           <Rotate90DegreesCwIcon />
         </IconButton>
@@ -64,12 +64,12 @@ export const PortalMenu = ({
         <IconButton onClick={deleteLabel}>
           <DeleteIcon />
         </IconButton>
-        <div className="spacer" />
+        {/* <div className="spacer" />
         <TemplateDropdown
           id="portalmenu"
           localTemplate={localTemplate}
           setLocalTemplate={setLocalTemplate}
-        />
+        /> */}
       </div>
     </ClickAwayListener>,
     document.body,

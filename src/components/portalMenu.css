@@ -15,11 +15,13 @@
 }
 
 .colorChangerContainer.horizontal {
-  width: 45%;
+  /* width: 45%; */
+  width: fit-content;
 }
 
 .colorChangerContainer.vertical {
-  width: 29%;
+  /* width: 29%; */
+  width: fit-content;
 }
 
 .colorChangerContainer > button {

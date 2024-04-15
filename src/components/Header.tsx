@@ -31,7 +31,7 @@ export const Header = () => {
     setPrintOpen(true);
   }, []);
 
-  const hasSelectedCards = selectedCardsCount;
+  const hasSelectedCards = !!selectedCardsCount;
   const hasFiles = !!files.length;
   return (
     <div className={`${hasFiles ? 'fullHeader' : 'emptyHeader'} topHeader`}>
@@ -62,33 +62,36 @@ export const Header = () => {
           </Button>
         </div>
         <div className="content">
-          {hasSelectedCards && <TemplateDropdown id="header" />}
+          {hasFiles && <TemplateDropdown id="header" />}
         </div>
       </div>
       {(hasSelectedCards || hasFiles) && (
         <div className="spacedContent">
-          {hasSelectedCards && (
-            <div className="content">
-              <ColorChanger
-                setCustomColors={setCustomColors}
-                customColors={customColors}
-                originalColors={originalColors}
-              />
-            </div>
-          )}
-          {hasFiles && (
-            <div className="content">
-              <Button
-                variant="contained"
-                size="large"
-                color="primary"
-                onClick={openPrintModal}
-              >
-                <PrintIcon />
-                <Typography>&nbsp;Print</Typography>
-              </Button>
-            </div>
-          )}
+          <div className="content">
+            {hasSelectedCards && (
+              <>
+                <ColorChanger
+                  setCustomColors={setCustomColors}
+                  customColors={customColors}
+                  originalColors={originalColors}
+                />
+                <Typography color="secondary">
+                  &nbsp;{selectedCardsCount} cards
+                </Typography>
+              </>
+            )}
+          </div>
+          <div className="content">
+            <Button
+              variant="contained"
+              size="large"
+              color="primary"
+              onClick={openPrintModal}
+            >
+              <PrintIcon />
+              <Typography>&nbsp;Print</Typography>
+            </Button>
+          </div>
         </div>
       )}
       <Suspense>
