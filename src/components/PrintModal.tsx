@@ -13,8 +13,6 @@ import { preparePdf as preparePdfVector } from '../utils/preparePdfKit';
 import { preparePdf } from '../utils/preparePdf';
 import type { templateType } from '../cardsTemplates';
 import { generateCutShapes } from '../utils/generateCutShapes';
-import type { RefObject } from 'react';
-import type { Canvas } from 'fabric';
 
 type PrintModalProps = {
   open: boolean;
@@ -34,18 +32,10 @@ const createOutput = async (
   ) {
     await preparePdfVector(printOptions, cards);
   } else {
-    await preparePdf(
-      printOptions,
-      template,
-      cards as unknown as RefObject<Canvas[]>,
-    );
+    await preparePdf(printOptions, cards);
   }
   if (printOptions.cutMarks === 'cut') {
-    await generateCutShapes(
-      printOptions,
-      template,
-      cards as unknown as RefObject<Canvas[]>,
-    );
+    await generateCutShapes(printOptions, template, cards);
   }
 };
 
