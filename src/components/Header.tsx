@@ -76,7 +76,8 @@ export const Header = () => {
                   originalColors={originalColors}
                 />
                 <Typography color="secondary">
-                  &nbsp;{selectedCardsCount} cards
+                  Change colors and template of {selectedCardsCount} selected
+                  card(s)
                 </Typography>
               </>
             )}
