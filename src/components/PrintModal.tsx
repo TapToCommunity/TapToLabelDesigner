@@ -11,7 +11,6 @@ import { printTemplates } from '../printTemplates';
 import { prepareZip } from '../utils/prepareZip';
 import { preparePdf as preparePdfVector } from '../utils/preparePdfKit';
 import { preparePdf } from '../utils/preparePdf';
-import type { templateType } from '../cardsTemplates';
 import { generateCutShapes } from '../utils/generateCutShapes';
 
 type PrintModalProps = {
@@ -19,11 +18,7 @@ type PrintModalProps = {
   onClose: () => void;
 };
 
-const createOutput = async (
-  cards: CardData[],
-  printOptions: PrintOptions,
-  template: templateType,
-) => {
+const createOutput = async (cards: CardData[], printOptions: PrintOptions) => {
   if (printOptions.fileType === 'zip') {
     await prepareZip(cards);
   } else if (
@@ -35,13 +30,13 @@ const createOutput = async (
     await preparePdf(printOptions, cards);
   }
   if (printOptions.cutMarks === 'cut') {
-    await generateCutShapes(printOptions, template, cards);
+    await generateCutShapes(printOptions, cards);
   }
 };
 
 export const PrintModal = ({ open, onClose }: PrintModalProps) => {
   const { cards } = useFileDropperContext();
-  const { printOptions, setPrintOptions, template } = useAppDataContext();
+  const { printOptions, setPrintOptions } = useAppDataContext();
   const { fileType, imageType, cutMarks, printerTemplateKey } = printOptions;
   const isZip = fileType === 'zip';
 
@@ -173,7 +168,7 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             variant="contained"
             size="large"
             color="primary"
-            onClick={() => createOutput(cards.current, printOptions, template)}
+            onClick={() => createOutput(cards.current, printOptions)}
           >
             <Typography>Download</Typography>
           </Button>
