@@ -166,6 +166,7 @@ export const setTemplateOnCanvases = async (
     if (!canvas) {
       continue;
     }
+    card.template = template;
     // resize only if necessary
     if (finalHeight !== canvas.height || finalWidth !== canvas.width) {
       canvas.setDimensions(

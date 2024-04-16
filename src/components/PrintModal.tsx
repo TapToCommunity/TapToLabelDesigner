@@ -27,16 +27,12 @@ const createOutput = async (
   template: templateType,
 ) => {
   if (printOptions.fileType === 'zip') {
-    await prepareZip(cards as unknown as RefObject<Canvas[]>);
+    await prepareZip(cards);
   } else if (
     printOptions.fileType === 'pdf' &&
     printOptions.imageType === 'vector'
   ) {
-    await preparePdfVector(
-      printOptions,
-      template,
-      cards as unknown as RefObject<Canvas[]>,
-    );
+    await preparePdfVector(printOptions, cards);
   } else {
     await preparePdf(
       printOptions,
