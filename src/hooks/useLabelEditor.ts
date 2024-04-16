@@ -6,6 +6,7 @@ import {
 } from '../utils/setTemplate';
 import { util, FabricImage, type StaticCanvas } from 'fabric';
 import { useAppDataContext } from '../contexts/appData';
+import { updateColors } from '../utils/updateColors';
 
 type useLabelEditorParams = {
   padderRef: MutableRefObject<HTMLDivElement | null>;
@@ -19,7 +20,7 @@ export const useLabelEditor = ({
   padderRef,
 }: useLabelEditorParams) => {
   const { removeCard } = useFileDropperContext();
-  const { template, isIdle } =
+  const { template, isIdle, customColors, originalColors } =
     useAppDataContext();
   const [fabricCanvas, setFabricCanvas] = useState<StaticCanvas | null>(null);
   // local ready state, when template is loaded
@@ -68,6 +69,7 @@ export const useLabelEditor = ({
     }
   }, [card, fabricCanvas]);
 
+  // creation of a new card
   useEffect(() => {
     const divRef = padderRef.current;
     if (fabricCanvas && divRef && isImageReady) {
@@ -80,7 +82,10 @@ export const useLabelEditor = ({
       );
       card.canvas = fabricCanvas;
       card.template = template;
+      card.colors = customColors;
+      card.originalColors = originalColors;
       setTemplateOnCanvases([card], template).then(() => {
+        updateColors([card], customColors, originalColors);
         setFullyReady(true);
         fabricCanvas.requestRenderAll();
       });

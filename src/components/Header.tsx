@@ -16,8 +16,9 @@ const ImageSearch = lazy(() => import('./ImageSearch'));
 const PrintModal = lazy(() => import('./PrintModal'));
 
 export const Header = () => {
-  const { selectedCardsCount, files } = useFileDropperContext();
-  const { originalColors, customColors, setCustomColors } = useAppDataContext();
+  const { selectedCardsCount, cards } = useFileDropperContext();
+  const { originalColors, customColors, setCustomColors, template } =
+    useAppDataContext();
   const [searchOpen, setSearchOpen] = useState(false);
   const [printOpen, setPrintOpen] = useState(false);
   const { inputElement, openInputFile } = useFileAdder();
@@ -32,7 +33,18 @@ export const Header = () => {
   }, []);
 
   const hasSelectedCards = !!selectedCardsCount;
-  const hasFiles = !!files.length;
+  const hasFiles = !!cards.current.length;
+  let colorToDisplay = customColors;
+  let originalColorsToUse = originalColors;
+  let currentTemplate = template;
+  if (hasSelectedCards) {
+    const selectedCard = cards.current.find((card) => card.isSelected);
+    if (selectedCard) {
+      colorToDisplay = selectedCard.colors;
+      originalColorsToUse = selectedCard.originalColors;
+      currentTemplate = selectedCard.template!;
+    }
+  }
   return (
     <div className={`${hasFiles ? 'fullHeader' : 'emptyHeader'} topHeader`}>
       {(hasFiles || searchOpen) && (
@@ -62,25 +74,29 @@ export const Header = () => {
           </Button>
         </div>
         <div className="content">
-          {hasFiles && <TemplateDropdown id="header" />}
+          {hasFiles && (
+            <TemplateDropdown template={currentTemplate} id="header" />
+          )}
         </div>
       </div>
-      {(hasSelectedCards || hasFiles) && (
+      {hasFiles && (
         <div className="spacedContent">
           <div className="content">
-            {hasSelectedCards && (
+            {
               <>
                 <ColorChanger
                   setCustomColors={setCustomColors}
-                  customColors={customColors}
-                  originalColors={originalColors}
+                  customColors={colorToDisplay}
+                  originalColors={originalColorsToUse}
                 />
                 <Typography color="secondary">
-                  Change colors and template of {selectedCardsCount} selected
-                  card(s)
+                  {selectedCardsCount > 0
+                    ? `Change colors and template of ${selectedCardsCount} selected
+                  card(s)`
+                    : `Colors and template for new cards`}
                 </Typography>
               </>
-            )}
+            }
           </div>
           <div className="content">
             <Button

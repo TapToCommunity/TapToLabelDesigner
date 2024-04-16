@@ -4,17 +4,19 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
-import { templates } from '../cardsTemplates';
+import { type templateType, templates } from '../cardsTemplates';
 import { useAppDataContext } from '../contexts/appData';
 
 type TemplateDropdownProps = {
   id: string;
+  template: templateType;
 };
 
 const TemplateDropdown = ({
   id = 'header-dropdown',
+  template,
 }: TemplateDropdownProps): JSX.Element => {
-  const { setTemplate, template } = useAppDataContext();
+  const { setTemplate } = useAppDataContext();
   const toggleTemplate = useCallback(
     async (evt: SelectChangeEvent<string>) => {
       const value = evt.target.value;
@@ -24,7 +26,7 @@ const TemplateDropdown = ({
     [setTemplate],
   );
 
-  const currentKey = Object.entries(templates).find(
+  let currentKey = Object.entries(templates).find(
     ([, value]) => value === template,
   )?.[0];
 
