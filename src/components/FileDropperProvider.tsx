@@ -27,6 +27,9 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
       cards.current.push(
         ...newFiles.map<CardData>((file) => ({
           file,
+          key: `${
+            (file as File).name || (file as HTMLImageElement).src
+          }-${Date.now()}`,
           canvas: undefined,
           template: undefined,
           isSelected: false,

@@ -10,6 +10,7 @@ export type CardData = {
   isSelected: boolean;
   colors: string[];
   originalColors: string[];
+  key: string;
 }
 
 export type contextType = {

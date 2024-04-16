@@ -35,10 +35,10 @@ export const useLabelEditor = ({
       const mainImage = fabricCanvas.getObjects('image')[0] as FabricImage;
       mainImage.angle += 90;
       mainImage.angle %= 360;
-      scaleImageToOverlayArea(template, fabricCanvas.overlayImage!, mainImage);
+      scaleImageToOverlayArea(card.template!, fabricCanvas.overlayImage!, mainImage);
       fabricCanvas.requestRenderAll();
     }
-  }, [fullyReady, isIdle, fabricCanvas, template]);
+  }, [fullyReady, isIdle, fabricCanvas, card]);
 
   useEffect(() => {
     if (fabricCanvas) {

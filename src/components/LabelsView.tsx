@@ -11,9 +11,7 @@ export const LabelsView = () => {
       {cards.current.map((card, index) => (
         <LabelEditor
           className="labelContainer horizontal"
-          key={`key-susp-${
-            (card.file as File).name || (card.file as HTMLImageElement).src
-          }`}
+          key={card.key}
           index={index}
           card={card}
         />
