@@ -1,11 +1,18 @@
-import { Group, type StaticCanvas } from 'fabric';
+import { Group } from 'fabric';
+import { type CardData } from '../contexts/fileDropper';
 
 export const updateColors = (
-  canvases: StaticCanvas[],
+  cards: CardData[],
   colors: string[],
   originalColors: string[],
 ) => {
-  canvases.forEach((canvas) => {
+  cards.forEach((card) => {
+    const { canvas } = card;
+    if (!canvas) {
+      return;
+    }
+    card.colors = colors;
+    card.originalColors = originalColors;
     const { overlayImage, backgroundImage } = canvas;
     if (overlayImage instanceof Group) {
       overlayImage.forEachObject((object) => {

@@ -8,6 +8,8 @@ export type CardData = {
   canvas?: StaticCanvas;
   template?: templateType;
   isSelected: boolean;
+  colors: string[];
+  originalColors: string[];
 }
 
 export type contextType = {

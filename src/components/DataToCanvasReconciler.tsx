@@ -3,7 +3,6 @@ import { useAppDataContext } from '../contexts/appData';
 import { CardData, useFileDropperContext } from '../contexts/fileDropper';
 import { setTemplateOnCanvases } from '../utils/setTemplate';
 import { updateColors } from '../utils/updateColors';
-import { type StaticCanvas } from 'fabric';
 
 export const DataToCanvasReconciler = () => {
   const { cards } = useFileDropperContext();
@@ -35,16 +34,13 @@ export const DataToCanvasReconciler = () => {
         card.isSelected && card.template !== template,
     );
 
-    const selectedCanvases = cards.current
-      .filter(
-        (card): card is Required<CardData> =>
-          !!card.isSelected && !!card.canvas,
-      )
-      .map<StaticCanvas>((card) => card.canvas);
+    const selectedCards = cards.current.filter(
+      (card): card is Required<CardData> => !!card.isSelected && !!card.canvas,
+    );
     setIsIdle(false);
     setTemplateOnCanvases(selectedCardsWithDifferentTemplate, template).then(
       () => {
-        updateColors(selectedCanvases, customColors, originalColors);
+        updateColors(selectedCards, customColors, originalColors);
         setIsIdle(true);
       },
     );

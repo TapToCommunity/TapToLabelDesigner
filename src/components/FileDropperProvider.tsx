@@ -30,6 +30,8 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
           canvas: undefined,
           template: undefined,
           isSelected: false,
+          colors: [],
+          originalColors: [],
         })),
       );
     },
