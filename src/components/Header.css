@@ -1,3 +1,7 @@
+:root {
+  --header-height: 80px;
+}
+
 .topHeader {
   z-index: 10;
   position: fixed;
@@ -13,6 +17,17 @@
   padding-left: 18px;
 }
 
+.topHeader.purpleHeader {
+  background-color: #5361D9;
+  transition: all 250ms;
+  top: calc(var(--header-height) * -1);
+  justify-content: center;
+}
+
+.topHeader.purpleHeader.show {
+  top: 0px;
+}
+
 .topHeader .spacedContent {
   display: flex;
   flex-wrap: nowrap;
@@ -22,7 +37,7 @@
 
 .topHeader .content {
   align-items: center;
-  height: 80px;
+  height: var(--header-height);
   display: flex;
   flex-direction: row;
 }
@@ -35,6 +50,13 @@
 
 .dropdowns {
   color: #fff;
+}
+
+.spacer {
+  height: 42px;
+  width: 1px;
+  background-color: #fff;
+  margin: 2px;
 }
 
 @media (max-width: 1200px) {

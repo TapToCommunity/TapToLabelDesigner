@@ -26,7 +26,7 @@ const TemplateDropdown = ({
     [setTemplate],
   );
 
-  let currentKey = Object.entries(templates).find(
+  const currentKey = Object.entries(templates).find(
     ([, value]) => value === template,
   )?.[0];
 
