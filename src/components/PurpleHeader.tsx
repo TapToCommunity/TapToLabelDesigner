@@ -8,25 +8,51 @@ import Typography from '@mui/material/Typography';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { useAppDataContext } from '../contexts/appData';
 import { scaleImageToOverlayArea } from '../utils/setTemplate';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
+import { colorsDiffer } from '../utils/utils';
 
 const PurpleHeader = () => {
-  const { selectedCardsCount, cards } = useFileDropperContext();
-  const { originalColors, customColors, setCustomColors, template } =
-    useAppDataContext();
+  const { selectedCardsCount, cards, removeCards, setSelectedCardsCount } =
+    useFileDropperContext();
+  const {
+    originalColors,
+    customColors,
+    setCustomColors,
+    template,
+    setOriginalColors,
+    setTemplate,
+  } = useAppDataContext();
   const hasSelectedCards = !!selectedCardsCount;
 
-  let colorToDisplay = customColors;
-  let originalColorsToUse = originalColors;
-  let currentTemplate = template;
-  if (hasSelectedCards) {
-    const selectedCard = cards.current.find((card) => card.isSelected);
-    if (selectedCard) {
-      colorToDisplay = selectedCard.colors;
-      originalColorsToUse = selectedCard.originalColors;
-      currentTemplate = selectedCard.template!;
+  // when selecting a card, update the selected colors with the first card clicled.
+  // run on mount only. so first selection.
+
+  useEffect(() => {
+    if (selectedCardsCount === 1) {
+      const selectedCard = cards.current.find((card) => card.isSelected)!;
+      const currentColors = selectedCard.colors;
+      const currentOriginalColors = selectedCard.originalColors;
+      const currentTemplate = selectedCard.template!;
+      if (colorsDiffer(currentColors, customColors)) {
+        setCustomColors(currentColors);
+      }
+      if (colorsDiffer(currentOriginalColors, originalColors)) {
+        setOriginalColors(currentOriginalColors);
+      }
+      if (currentTemplate !== template) {
+        setTemplate(currentTemplate);
+      }
     }
-  }
+    // we want to run this only on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCardsCount]);
+
+  const deselectAll = useCallback(() => {
+    cards.current.forEach((card) => {
+      card.isSelected = false;
+    });
+    setSelectedCardsCount(0);
+  }, [cards, setSelectedCardsCount]);
 
   // const rotateMainImage = useCallback(() => {
   //   if (fullyReady && isIdle && fabricCanvas) {
@@ -41,11 +67,11 @@ const PurpleHeader = () => {
   return (
     <div className={`topHeader purpleHeader ${hasSelectedCards ? 'show' : ''}`}>
       <div className="content">
-        <TemplateDropdown template={currentTemplate} id="header" />
+        <TemplateDropdown template={template} id="header" />
         <ColorChanger
           setCustomColors={setCustomColors}
-          customColors={colorToDisplay}
-          originalColors={originalColorsToUse}
+          customColors={customColors}
+          originalColors={originalColors}
         />
         <Typography color="secondary">
           {`Apply on ${selectedCardsCount} selected card(s)`}
@@ -56,12 +82,12 @@ const PurpleHeader = () => {
           <Rotate90DegreesCwIcon />
         </IconButton>
         <div className="spacer" />
-        <IconButton onClick={() => {}}>
+        <IconButton onClick={() => removeCards()}>
           <DeleteIcon />
         </IconButton>
       </div>
       <div className="content">
-        <IconButton onClick={() => {}}>
+        <IconButton onClick={() => deselectAll()}>
           <CancelIcon />
         </IconButton>
       </div>

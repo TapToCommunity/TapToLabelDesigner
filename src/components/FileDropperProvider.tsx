@@ -41,27 +41,33 @@ export const FileDropperContextProvider: FC<FileDropperProps> = ({
     [files, cards],
   );
 
-  const removeCard = useCallback(
-    (index: number) => {
-      if (cards.current[index].isSelected) {
-        setSelectedCardsCount(selectedCardsCount - 1);
+  const removeCards = useCallback(() => {
+    const indexToRemove: number[] = [];
+    cards.current = cards.current.filter((card, index) => {
+      if (card.isSelected) {
+        indexToRemove.push(index);
+        return false;
       }
-      setFilesImpl([...files.slice(0, index), ...files.slice(index + 1)]);
-      cards.current.splice(index, 1);
-    },
-    [files, selectedCardsCount],
-  );
+      return true;
+    });
+    setFilesImpl(
+      files.filter((_, index) => {
+        return !indexToRemove.includes(index);
+      }),
+    );
+    setSelectedCardsCount(0);
+  }, [files]);
 
   const contextValue = useMemo<contextType>(
     () => ({
       files,
       setFiles: addFiles,
       cards,
-      removeCard,
+      removeCards,
       selectedCardsCount,
       setSelectedCardsCount,
     }),
-    [files, addFiles, removeCard, selectedCardsCount],
+    [files, addFiles, removeCards, selectedCardsCount],
   );
 
   return (

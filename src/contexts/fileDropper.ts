@@ -17,7 +17,7 @@ export type contextType = {
   files: (File | HTMLImageElement)[];
   setFiles: (files: (File | HTMLImageElement)[]) => void;
   cards: MutableRefObject<CardData[]>;
-  removeCard: (index: number) => void;
+  removeCards: () => void;
   selectedCardsCount: number;
   setSelectedCardsCount: (qty: number) => void;
 };
@@ -28,7 +28,7 @@ export const FileDropContext = createContext<contextType>({
     current: [],
   },
   setFiles: () => {},
-  removeCard: () => {},
+  removeCards: () => {},
   selectedCardsCount: 0,
   setSelectedCardsCount: () => {},
 });

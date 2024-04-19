@@ -1,6 +1,13 @@
 import { useFileDropperContext } from '../contexts/fileDropper';
 import './Header.css';
-import { Suspense, lazy, useCallback, useState, useTransition } from 'react';
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useState,
+  useTransition,
+  memo,
+} from 'react';
 import logoUrl from '../assets/log.svg';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import SearchIcon from '@mui/icons-material/Search';
@@ -13,7 +20,7 @@ const ImageSearch = lazy(() => import('./ImageSearch'));
 const PrintModal = lazy(() => import('./PrintModal'));
 const PurpleHeader = lazy(() => import('./PurpleHeader'));
 
-export const Header = () => {
+export const Header = memo(() => {
   const { cards } = useFileDropperContext();
   const [searchOpen, setSearchOpen] = useState(false);
   const [printOpen, setPrintOpen] = useState(false);
@@ -33,9 +40,11 @@ export const Header = () => {
   return (
     <>
       <div className={`${hasFiles ? 'fullHeader' : 'emptyHeader'} topHeader`}>
-        {(hasFiles || searchOpen) && (
-          <ImageSearch open={searchOpen} setOpen={setSearchOpen} />
-        )}
+        <Suspense>
+          {searchOpen && (
+            <ImageSearch open={searchOpen} setOpen={setSearchOpen} />
+          )}
+        </Suspense>
         {inputElement}
         <div className="spacedContent">
           <div className="content" style={{ columnGap: 10 }}>
@@ -88,4 +97,4 @@ export const Header = () => {
       {hasFiles && <PurpleHeader />}
     </>
   );
-};
+});

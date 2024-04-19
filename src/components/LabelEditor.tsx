@@ -1,4 +1,4 @@
-import { useState, useRef, type MouseEvent, useTransition } from 'react';
+import { useRef, type MouseEvent, useTransition } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
 import { useLabelEditor } from '../hooks/useLabelEditor';
 import { useFileDropperContext, type CardData } from '../contexts/fileDropper';
@@ -17,7 +17,6 @@ export type MenuInfo = {
 };
 
 export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
-  const [isSelected, setSelected] = useState<boolean>(false);
   const { selectedCardsCount, setSelectedCardsCount } = useFileDropperContext();
   const [, startTransition] = useTransition();
   const padderRef = useRef<HTMLDivElement | null>(null);
@@ -26,6 +25,8 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
     index,
     padderRef,
   });
+
+  const isSelected = card.isSelected;
 
   return (
     <div
@@ -38,14 +39,16 @@ export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
           <Checkbox
             color="secondary"
             id={card.key}
+            checked={isSelected}
             onClick={(e: MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
-              const isSelected = (e.target as HTMLInputElement).checked;
-              card.isSelected = isSelected;
-              setSelected(isSelected);
+              const isSelectedCheckbox = (e.target as HTMLInputElement).checked;
+              card.isSelected = isSelectedCheckbox;
               startTransition(() => {
                 setSelectedCardsCount(
-                  isSelected ? selectedCardsCount + 1 : selectedCardsCount - 1,
+                  isSelectedCheckbox
+                    ? selectedCardsCount + 1
+                    : selectedCardsCount - 1,
                 );
               });
             }}
