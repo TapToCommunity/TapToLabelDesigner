@@ -21,7 +21,7 @@
   background-color: #5361D9;
   transition: all 250ms;
   top: calc(var(--header-height) * -1);
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .topHeader.purpleHeader.show {

@@ -1,7 +1,6 @@
-import { useEffect, useCallback, useState, MutableRefObject } from 'react';
-import { type CardData, useFileDropperContext } from '../contexts/fileDropper';
+import { useEffect, useState, MutableRefObject } from 'react';
+import { type CardData } from '../contexts/fileDropper';
 import {
-  scaleImageToOverlayArea,
   setTemplateOnCanvases,
 } from '../utils/setTemplate';
 import { util, FabricImage, type StaticCanvas } from 'fabric';
@@ -16,30 +15,13 @@ type useLabelEditorParams = {
 
 export const useLabelEditor = ({
   card,
-  index,
   padderRef,
 }: useLabelEditorParams) => {
-  const { removeCard } = useFileDropperContext();
-  const { template, isIdle, customColors, originalColors } =
+  const { template, customColors, originalColors } =
     useAppDataContext();
   const [fabricCanvas, setFabricCanvas] = useState<StaticCanvas | null>(null);
   // local ready state, when template is loaded
-  const [fullyReady, setFullyReady] = useState<boolean>(false);
   const [isImageReady, setImageReady] = useState<boolean>(false);
-
-  const deleteLabel = useCallback(() => {
-    removeCard(index);
-  }, [removeCard, index]);
-
-  const rotateMainImage = useCallback(() => {
-    if (fullyReady && isIdle && fabricCanvas) {
-      const mainImage = fabricCanvas.getObjects('image')[0] as FabricImage;
-      mainImage.angle += 90;
-      mainImage.angle %= 360;
-      scaleImageToOverlayArea(card.template!, fabricCanvas.overlayImage!, mainImage);
-      fabricCanvas.requestRenderAll();
-    }
-  }, [fullyReady, isIdle, fabricCanvas, card]);
 
   useEffect(() => {
     if (fabricCanvas) {
@@ -86,7 +68,6 @@ export const useLabelEditor = ({
       card.originalColors = originalColors;
       setTemplateOnCanvases([card], template).then(() => {
         updateColors([card], customColors, originalColors);
-        setFullyReady(true);
         fabricCanvas.requestRenderAll();
       });
     }
@@ -98,8 +79,6 @@ export const useLabelEditor = ({
 
   return {
     fabricCanvas,
-    deleteLabel,
     setFabricCanvas,
-    rotateMainImage,
   };
 };
