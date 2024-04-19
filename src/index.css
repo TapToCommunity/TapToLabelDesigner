@@ -13,6 +13,10 @@ body {
   scrollbar-color: rgba(244, 244, 244, 0.4) transparent;
 }
 
+:root {
+  --cell-width: 450px;
+}
+
 ::-webkit-scrollbar {
   transition: background-color 0.2s ease;
   width: 8px;

@@ -3,25 +3,20 @@ import { DataToCanvasReconciler } from './DataToCanvasReconciler';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import './LabelsView.css';
 import { SmallDropZone } from './SmallDropZone';
-import { useAppDataContext } from '../contexts/appData';
 
 export const LabelsView = () => {
-  const { files, canvasArrayRef } = useFileDropperContext();
-  const { template } = useAppDataContext();
+  const { cards } = useFileDropperContext();
   return (
     <div className="labelsView">
-      {files.map((file, index) => (
+      {cards.current.map((card, index) => (
         <LabelEditor
-          className={`labelContainer ${template.layout}`}
-          key={`key-susp-${
-            (file as File).name || (file as HTMLImageElement).src
-          }`}
+          className="labelContainer horizontal"
+          key={card.key}
           index={index}
-          file={file}
-          canvasArrayRef={canvasArrayRef}
+          card={card}
         />
       ))}
-      <SmallDropZone className={`labelContainer ${template.layout} dropzone`} />
+      <SmallDropZone className="labelContainer horizontal" />
       <DataToCanvasReconciler />
     </div>
   );

@@ -21,7 +21,7 @@ export const SmallDropZone = ({ className }: SmallDropZoneProps) => {
       onDragOver={onDragOver}
     >
       {inputElement}
-      <svg width="320" height="320">
+      <svg width="100%" height="100%" viewBox="0 0 320 320">
         <rect
           rx="40"
           ry="40"
@@ -45,7 +45,9 @@ export const SmallDropZone = ({ className }: SmallDropZoneProps) => {
           <br /> or{' '}
           <a onClick={openInputFile} href="#">
             browse
-          </a>
+          </a>{' '}
+          <br />
+          or use copy paste
         </Typography>
       </div>
     </div>

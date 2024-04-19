@@ -1,19 +1,16 @@
-import type { RefObject } from 'react';
-import type { templateType } from '../cardsTemplates';
-import type { Canvas } from 'fabric';
 import {
   addCanvasToPdfPage,
   createDownloadStream,
 } from '../extensions/fabricToPdfKit';
 import { type PrintOptions } from '../contexts/appData';
 import { printTemplates } from '../printTemplates';
+import { type CardData } from '../contexts/fileDropper';
 
 const fromMMtoPoint = (x: number): number => (x / 25.4) * 72;
 
 export const preparePdf = async (
   printOptions: PrintOptions,
-  template: templateType,
-  canvasArrayRef: RefObject<Canvas[]>,
+  cards: CardData[],
 ) => {
   const { printerTemplateKey, cutMarks } = printOptions;
   const printerTemplate = printTemplates[printerTemplateKey];
@@ -30,14 +27,11 @@ export const preparePdf = async (
     ];
   }
 
-  const imageNeedsRotation = template.layout === 'vertical';
-
   const { default: PDFDocument } = await import(
     'pdfkit/js/pdfkit.standalone.js'
   );
   const pdfDoc = new PDFDocument({ autoFirstPage: false });
   const downloadPromise = createDownloadStream(pdfDoc);
-  const canvases = canvasArrayRef.current;
   const paperHeightInPt = fromMMtoPoint(paperSize[1])
   const topMarginInPt = fromMMtoPoint(topMargin);
   const paperWidthInPt = fromMMtoPoint(paperSize[0])
@@ -66,13 +60,13 @@ export const preparePdf = async (
     cutHelperY.clear();
   }
 
-  if (canvases) {
+  if (cards) {
 
     let pageNumber = 0;
     pdfDoc.addPage({ margins: 0, size: ptPaperSize });
     pdfDoc.switchToPage(pageNumber);
-    for (let index = 0; index < canvases.length; index++) {
-      const canvas = canvases[index];
+    for (let index = 0; index < cards.length; index++) {
+      const canvas = cards[index].canvas!;
       const newPageNumber = Math.floor(index / labelsPerPage);
       if (newPageNumber > pageNumber) {
         // do the cropmarks
@@ -95,6 +89,8 @@ export const preparePdf = async (
         cutHelperY.add(yStart);
         cutHelperY.add(yStart + height);
       }
+
+      const imageNeedsRotation = cards[index].template?.layout === 'vertical';
 
       await addCanvasToPdfPage(
         canvas,

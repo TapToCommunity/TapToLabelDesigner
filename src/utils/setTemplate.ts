@@ -2,7 +2,6 @@ import {
   FabricImage,
   util,
   Point,
-  type StaticCanvas,
   Shadow,
   loadSVGFromURL,
   Group,
@@ -15,6 +14,7 @@ import {
 } from 'fabric';
 import { cardLikeOptions } from '../constants';
 import { type templateType, type templateOverlay } from '../cardsTemplates';
+import { CardData } from '../contexts/fileDropper';
 
 FabricObject.ownDefaults.objectCaching = false;
 
@@ -125,7 +125,7 @@ const reposition = (
 const emptyImageHack = new Image(100, 100);
 
 export const setTemplateOnCanvases = async (
-  canvases: StaticCanvas[],
+  cards: CardData[],
   template: templateType,
 ): Promise<string[]> => {
   const { overlay, background, shadow, layout } = template || {};
@@ -161,7 +161,12 @@ export const setTemplateOnCanvases = async (
   const finalWidth = isHorizontal ? width : height;
   const finalHeight = isHorizontal ? height : width;
 
-  for (const canvas of canvases) {
+  for (const card of cards) {
+    const { canvas } = card;
+    if (!canvas) {
+      continue;
+    }
+    card.template = template;
     // resize only if necessary
     if (finalHeight !== canvas.height || finalWidth !== canvas.width) {
       canvas.setDimensions(
@@ -170,6 +175,16 @@ export const setTemplateOnCanvases = async (
           height: finalHeight,
         },
         { backstoreOnly: true },
+      );
+
+      canvas.setDimensions(
+        {
+          // @ts-expect-error fabric
+          width: isHorizontal ? 'var(--cell-width)' : 'auto',
+          // @ts-expect-error fabric
+          height: isHorizontal ? 'auto' : 'var(--cell-width)',
+        },
+        { cssOnly: true },
       );
     }
     const mainImage = canvas.getObjects('image')[0] as FabricImage;

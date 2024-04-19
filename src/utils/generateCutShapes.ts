@@ -1,23 +1,21 @@
 import {
   StaticCanvas,
   Rect,
-  type Canvas,
   Point
 } from 'fabric';
 import type { PrintOptions } from '../contexts/appData';
-import type { templateType } from '../cardsTemplates';
-import type { RefObject } from 'react';
 import { printTemplates } from '../printTemplates';
 import { downloadBlob, fromMMtoPxAt72DPI } from './utils';
+import { type CardData } from '../contexts/fileDropper';
 
-export const generateCutShapes = async (printOptions: PrintOptions, _template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
+export const generateCutShapes = async (printOptions: PrintOptions, cards: CardData[]) => {
   const { printerTemplateKey } = printOptions;
   const printerTemplate = printTemplates[printerTemplateKey];
   const { gridSize, leftMargin, topMargin, paperSize, columns, rows } = printerTemplate;
 
   const labelsPerPage = rows * columns;
 
-  const numberOfCuts = Math.min(canvasArrayRef.current!.length, labelsPerPage);
+  const numberOfCuts = Math.min(cards.length, labelsPerPage);
   const canvas = new StaticCanvas(undefined, {
     renderOnAddRemove: false,
   });

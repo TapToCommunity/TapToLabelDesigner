@@ -1,72 +1,60 @@
-import { useState, useRef, useCallback } from 'react';
-import type { MutableRefObject } from 'react';
+import { useRef, type MouseEvent, useTransition } from 'react';
 import { FabricCanvasWrapper } from './FabricCanvasWrapper';
-import { type StaticCanvas } from 'fabric';
-import { PortalMenu } from './PortalMenu';
 import { useLabelEditor } from '../hooks/useLabelEditor';
+import { useFileDropperContext, type CardData } from '../contexts/fileDropper';
+import Checkbox from '@mui/material/Checkbox';
 
 type LabelEditorProps = {
-  file: File | HTMLImageElement;
-  canvasArrayRef: MutableRefObject<StaticCanvas[]>;
   index: number;
   className: string;
+  card: CardData;
 };
 
-type MenuInfo = {
+export type MenuInfo = {
   open: boolean;
   top: number | string;
   left: number | string;
 };
 
-export const LabelEditor = ({
-  file,
-  canvasArrayRef,
-  index,
-  className,
-}: LabelEditorProps) => {
-  const [isMenuOpen, setMenuOpen] = useState<MenuInfo>({
-    open: false,
-    top: 0,
-    left: 0,
-  });
+export const LabelEditor = ({ index, className, card }: LabelEditorProps) => {
+  const { selectedCardsCount, setSelectedCardsCount } = useFileDropperContext();
+  const [, startTransition] = useTransition();
   const padderRef = useRef<HTMLDivElement | null>(null);
-  const {
-    deleteLabel,
-    setFabricCanvas,
-    localColors,
-    setLocalColors,
-    rotateMainImage,
-  } = useLabelEditor({
-    canvasArrayRef,
+  const { setFabricCanvas } = useLabelEditor({
+    card,
     index,
-    file,
     padderRef,
   });
 
-  const openMenu = useCallback(() => {
-    const divRef = padderRef.current!;
-    const bbox = divRef.getBoundingClientRect();
-    setMenuOpen({
-      open: true,
-      left: `${(100 * (bbox.left + bbox.width / 2)) / window.innerWidth}%`,
-      top: bbox.top + bbox.height / 2 + window.scrollY,
-    });
-  }, [setMenuOpen]);
+  const isSelected = card.isSelected;
 
   return (
-    <div className={className} ref={padderRef} onClick={openMenu}>
-      <FabricCanvasWrapper setFabricCanvas={setFabricCanvas} />
-      {isMenuOpen.open && (
-        <PortalMenu
-          rotateMainImage={rotateMainImage}
-          deleteLabel={deleteLabel}
-          top={isMenuOpen.top}
-          left={isMenuOpen.left}
-          localColors={localColors}
-          setLocalColors={setLocalColors}
-          setIsOpen={setMenuOpen}
-        />
-      )}
+    <div
+      className={`${className} ${isSelected ? 'card-selected' : ''}`}
+      ref={padderRef}
+    >
+      <label htmlFor={card.key}>
+        <FabricCanvasWrapper setFabricCanvas={setFabricCanvas} />
+        <div className="floating-checkbox">
+          <Checkbox
+            color="secondary"
+            id={card.key}
+            checked={isSelected}
+            onClick={(e: MouseEvent<HTMLButtonElement>) => {
+              e.stopPropagation();
+              const isSelectedCheckbox = (e.target as HTMLInputElement).checked;
+              card.isSelected = isSelectedCheckbox;
+              startTransition(() => {
+                setSelectedCardsCount(
+                  isSelectedCheckbox
+                    ? selectedCardsCount + 1
+                    : selectedCardsCount - 1,
+                );
+              });
+            }}
+          />
+        </div>
+      </label>
     </div>
   );
 };

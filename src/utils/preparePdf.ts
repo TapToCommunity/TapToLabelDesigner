@@ -1,11 +1,9 @@
-import type { RefObject } from 'react';
-import type { templateType } from '../cardsTemplates';
-import type { Canvas } from 'fabric';
 import { util } from 'fabric';
 import type { PrintOptions } from '../contexts/appData';
 import { printTemplates } from '../printTemplates';
+import type { CardData } from '../contexts/fileDropper';
 
-export const preparePdf = async (printOptions: PrintOptions, template: templateType, canvasArrayRef: RefObject<Canvas[]>) => {
+export const preparePdf = async (printOptions: PrintOptions, cards: CardData[]) => {
   const { printerTemplateKey, cutMarks } = printOptions;
   const printerTemplate = printTemplates[printerTemplateKey];
   const {
@@ -19,8 +17,6 @@ export const preparePdf = async (printOptions: PrintOptions, template: templateT
   } = printerTemplate;
 
   const labelsPerPage = rows * columns;
-
-  const imageNeedsRotation = template.layout === 'vertical';
 
   import('jspdf').then(({ jsPDF }) => {
     const doc = new jsPDF({
@@ -57,10 +53,13 @@ export const preparePdf = async (printOptions: PrintOptions, template: templateT
       cutHelperY.clear();
     }
 
-    const canvases = canvasArrayRef.current;
-    if (canvases) {
+    if (cards) {
       let pageNumber = 0;
-      canvases.map((canvas, index) => {
+      cards.map(({ canvas, template }, index) => {
+        if (!canvas || !template) {
+          return;
+        }
+        const imageNeedsRotation = template.layout === 'vertical';
         const { top, left, width, height } =
           canvas.clipPath!.getBoundingRect();
         const newPageNumber = Math.floor(index / labelsPerPage);

@@ -2,7 +2,6 @@ import { createContext, useContext } from 'react';
 import {
   type templateType,
   defaultTemplate,
-  defaultTemplateKey,
 } from '../cardsTemplates';
 import {
   type PrintTemplate,
@@ -23,7 +22,6 @@ export type contextType = {
   originalColors: string[];
   customColors: string[];
   template: templateType;
-  templateKey: string;
   printerTemplate: PrintTemplate;
   printerTemplateKey: string;
   printOptions: PrintOptions;
@@ -31,7 +29,6 @@ export type contextType = {
   setOriginalColors: (colors: string[]) => void;
   setCustomColors: (colors: string[]) => void;
   setTemplate: (template: templateType) => void;
-  setTemplateKey: (templateKey: string) => void;
   setPrinterTemplate: (template: PrintTemplate) => void;
   setPrinterTemplateKey: (templateKey: string) => void;
   setIsIdle: (value: boolean) => void;
@@ -43,7 +40,6 @@ export const defaultContextValue: contextType = {
   originalColors: [],
   customColors: [],
   template: defaultTemplate,
-  templateKey: defaultTemplateKey,
   printerTemplate: defaultPrinterTemplate,
   printerTemplateKey: defaultPrinterTemplateKey,
   printOptions: {
@@ -56,7 +52,6 @@ export const defaultContextValue: contextType = {
   setOriginalColors: noop,
   setCustomColors: noop,
   setTemplate: noop,
-  setTemplateKey: noop,
   setPrinterTemplate: noop,
   setPrinterTemplateKey: noop,
 };

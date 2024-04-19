@@ -1,11 +1,10 @@
-import type { RefObject } from 'react';
-import type { Canvas } from 'fabric';
 import type { InputWithSizeMeta } from 'client-zip';
 import { downloadBlob } from './utils';
+import { CardData } from '../contexts/fileDropper';
 
-export const prepareZip = async (canvasArrayRef: RefObject<Canvas[]>) => {
+export const prepareZip = async (cards: CardData[]) => {
   const { downloadZip } = await import('client-zip');
-  const canvases = canvasArrayRef.current;
+  const canvases = cards.map(card => card.canvas!);
   if (canvases) {
     const inputs = await Promise.all(
       canvases.map<Promise<InputWithSizeMeta>>((canvas, index) => {
@@ -21,7 +20,7 @@ export const prepareZip = async (canvasArrayRef: RefObject<Canvas[]>) => {
           height: height * canvas.getZoom(),
         });
         return new Promise((resolve) => {
-          htmlCanvas.toBlob((blob) => {
+          htmlCanvas.toBlob((blob: Blob | null) => {
             blob &&
               resolve({
                 name: `label_${index}.png`,

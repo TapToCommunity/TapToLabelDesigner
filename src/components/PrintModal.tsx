@@ -2,17 +2,15 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import './PrintModal.css';
-import { useFileDropperContext } from '../contexts/fileDropper';
+import { type CardData, useFileDropperContext } from '../contexts/fileDropper';
 import { type PrintOptions, useAppDataContext } from '../contexts/appData';
 import Paper from '@mui/material/Paper';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { printTemplates } from '../printTemplates';
 import { prepareZip } from '../utils/prepareZip';
-import type { Canvas } from 'fabric';
 import { preparePdf as preparePdfVector } from '../utils/preparePdfKit';
 import { preparePdf } from '../utils/preparePdf';
-import type { templateType } from '../cardsTemplates';
 import { generateCutShapes } from '../utils/generateCutShapes';
 
 type PrintModalProps = {
@@ -20,29 +18,25 @@ type PrintModalProps = {
   onClose: () => void;
 };
 
-const createOutput = async (
-  canvasArrayRef: React.MutableRefObject<Canvas[]>,
-  printOptions: PrintOptions,
-  template: templateType,
-) => {
+const createOutput = async (cards: CardData[], printOptions: PrintOptions) => {
   if (printOptions.fileType === 'zip') {
-    await prepareZip(canvasArrayRef);
+    await prepareZip(cards);
   } else if (
     printOptions.fileType === 'pdf' &&
     printOptions.imageType === 'vector'
   ) {
-    await preparePdfVector(printOptions, template, canvasArrayRef);
+    await preparePdfVector(printOptions, cards);
   } else {
-    await preparePdf(printOptions, template, canvasArrayRef);
+    await preparePdf(printOptions, cards);
   }
   if (printOptions.cutMarks === 'cut') {
-    await generateCutShapes(printOptions, template, canvasArrayRef);
+    await generateCutShapes(printOptions, cards);
   }
 };
 
 export const PrintModal = ({ open, onClose }: PrintModalProps) => {
-  const { canvasArrayRef } = useFileDropperContext();
-  const { printOptions, setPrintOptions, template } = useAppDataContext();
+  const { cards } = useFileDropperContext();
+  const { printOptions, setPrintOptions } = useAppDataContext();
   const { fileType, imageType, cutMarks, printerTemplateKey } = printOptions;
   const isZip = fileType === 'zip';
 
@@ -174,7 +168,7 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             variant="contained"
             size="large"
             color="primary"
-            onClick={() => createOutput(canvasArrayRef, printOptions, template)}
+            onClick={() => createOutput(cards.current, printOptions)}
           >
             <Typography>Download</Typography>
           </Button>

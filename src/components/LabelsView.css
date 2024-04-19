@@ -9,7 +9,7 @@
   height: fit-content;
   width: 100%;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   column-gap: 20px;
   overflow: hidden;
 }
@@ -21,31 +21,38 @@
   flex-direction: column;
   align-items: center;
   height: fit-content;
+  border: 2px solid transparent;
   margin-bottom: 20px;
 }
 
 .labelContainer.horizontal {
-  max-width: 1029px;
+  max-width: var(--cell-width);
   width: calc(49.9% - 20px);
-  max-height: 657px;
+  max-height: var(--cell-width);
 }
 
-.labelContainer.dropzone.horizontal {
-  /* max width twice as a card */
-  flex-shrink: 1;
-  max-width: calc(66.4% - 20px);
+.labelContainer .floating-checkbox {
+  opacity: 0;
+  background-color: #5361D9;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transition: opacity 400ms;
+  border-radius: 8px;
+}
+
+.labelContainer.card-selected .floating-checkbox {
+  opacity: 1;
+}
+
+.labelContainer:hover .floating-checkbox {
+  opacity: 1;
 }
 
 .labelContainer.vertical {
-  max-width: 657px;
+  max-width: 370px;
   width: calc(33.2% - 20px);
   max-height: 1029px;
-}
-
-.labelContainer.dropzone.vertical {
-  /* max width twice as a card */
-  max-width: calc(66.4% - 20px);
-  flex-grow: 1;
 }
 
 @media (max-width: 920px) {
@@ -56,9 +63,9 @@
 
 @media (max-width: 768px) {
   .labelContainer.horizontal {
-    max-width: 1029px;
+    max-width: 768px;
     width: 98%;
-    max-height: 657px;
+    max-height: 768px;
   }
 
   .labelContainer.vertical {
@@ -71,14 +78,6 @@
     flex-grow: 1;
     /* max width twice as a card */
     max-width: calc(100% - 20px);
-  }
-
-  .colorChangerContainer.horizontal {
-    max-width: 90%;
-  }
-
-  .colorChangerContainer.vertical {
-    max-width: 40%;
   }
 }
 
