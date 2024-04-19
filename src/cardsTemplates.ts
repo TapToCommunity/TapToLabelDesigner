@@ -11,6 +11,7 @@ import emptyHorizontal from './assets/empty_horizontal.svg';
 import tapToFloppy from './assets/tapto_floppy.svg';
 import floppy525 from './assets/tapto_floppy525.svg';
 import floppy525Bg from './assets/tapto_floppy525_bg.svg';
+import taptoNes from './assets/tapto_nes.svg';
 
 import { type SerializedGroupProps } from 'fabric';
 
@@ -229,6 +230,26 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Floppy 5.25',
+  },
+  tapToNes: {
+    layout: 'vertical',
+    background: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: tapToBgV,
+      isSvg: true,
+    },
+    overlay: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: taptoNes,
+      width: 1 - (37 * 2) / 619,
+      height: 1 - (37 + 144) / 994,
+      x: 37 / 619,
+      y: 37 / 994,
+      isSvg: true,
+    },
+    label: 'Nes',
   },
 } as const;
 
