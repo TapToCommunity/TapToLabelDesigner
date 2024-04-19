@@ -15,13 +15,14 @@ import { Button } from './ResponsiveIconButton';
 import Typography from '@mui/material/Typography';
 import { useFileAdder } from '../hooks/useFileAdder';
 import PrintIcon from '@mui/icons-material/Print';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 const ImageSearch = lazy(() => import('./ImageSearch'));
 const PrintModal = lazy(() => import('./PrintModal'));
 const PurpleHeader = lazy(() => import('./PurpleHeader'));
 
 export const Header = memo(() => {
-  const { cards } = useFileDropperContext();
+  const { cards, setSelectedCardsCount } = useFileDropperContext();
   const [searchOpen, setSearchOpen] = useState(false);
   const [printOpen, setPrintOpen] = useState(false);
   const { inputElement, openInputFile } = useFileAdder();
@@ -34,6 +35,13 @@ export const Header = memo(() => {
   const openPrintModal = useCallback(() => {
     setPrintOpen(true);
   }, []);
+
+  const selectAll = useCallback(() => {
+    cards.current.forEach((card) => {
+      card.isSelected = true;
+    });
+    setSelectedCardsCount(cards.current.length);
+  }, [cards, setSelectedCardsCount]);
 
   const hasFiles = !!cards.current.length;
 
@@ -68,7 +76,19 @@ export const Header = memo(() => {
               <Typography>&nbsp;Search image</Typography>
             </Button>
           </div>
-          <div className="content"></div>
+          {hasFiles && (
+            <div className="content">
+              <Button
+                variant="contained"
+                size="large"
+                color="primary"
+                onClick={selectAll}
+              >
+                <CheckBoxIcon />
+                <Typography>&nbsp;Select all</Typography>
+              </Button>
+            </div>
+          )}
         </div>
         {hasFiles && (
           <>
