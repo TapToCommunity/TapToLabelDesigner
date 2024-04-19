@@ -10,6 +10,7 @@ import { useAppDataContext } from '../contexts/appData';
 import { scaleImageToOverlayArea } from '../utils/setTemplate';
 import { useCallback, useEffect } from 'react';
 import { colorsDiffer } from '../utils/utils';
+import { FabricImage } from 'fabric';
 
 const PurpleHeader = () => {
   const { selectedCardsCount, cards, removeCards, setSelectedCardsCount } =
@@ -54,15 +55,21 @@ const PurpleHeader = () => {
     setSelectedCardsCount(0);
   }, [cards, setSelectedCardsCount]);
 
-  // const rotateMainImage = useCallback(() => {
-  //   if (fullyReady && isIdle && fabricCanvas) {
-  //     const mainImage = fabricCanvas.getObjects('image')[0] as FabricImage;
-  //     mainImage.angle += 90;
-  //     mainImage.angle %= 360;
-  //     scaleImageToOverlayArea(card.template!, fabricCanvas.overlayImage!, mainImage);
-  //     fabricCanvas.requestRenderAll();
-  //   }
-  // }, [fullyReady, isIdle, fabricCanvas, card]);
+  const rotateMainImage = useCallback(() => {
+    cards.current.forEach((card) => {
+      if (card.isSelected && card.canvas) {
+        const mainImage = card.canvas.getObjects('image')[0] as FabricImage;
+        mainImage.angle += 90;
+        mainImage.angle %= 360;
+        scaleImageToOverlayArea(
+          card.template!,
+          card.canvas.overlayImage!,
+          mainImage,
+        );
+        card.canvas.requestRenderAll();
+      }
+    });
+  }, [cards]);
 
   return (
     <div className={`topHeader purpleHeader ${hasSelectedCards ? 'show' : ''}`}>
@@ -78,16 +85,16 @@ const PurpleHeader = () => {
         </Typography>
       </div>
       <div className="content">
-        <IconButton onClick={() => {}}>
+        <IconButton onClick={rotateMainImage}>
           <Rotate90DegreesCwIcon />
         </IconButton>
         <div className="spacer" />
-        <IconButton onClick={() => removeCards()}>
+        <IconButton onClick={removeCards}>
           <DeleteIcon />
         </IconButton>
       </div>
       <div className="content">
-        <IconButton onClick={() => deselectAll()}>
+        <IconButton onClick={deselectAll}>
           <CancelIcon />
         </IconButton>
       </div>
