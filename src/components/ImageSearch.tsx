@@ -63,16 +63,12 @@ export default function ImageSearch({
   });
 
   const addImage = async (e: MouseEvent<HTMLImageElement>, url: string) => {
-    const currentIndex = files.length;
     const target = e.target as HTMLImageElement;
-    startTransition(() => {
-      setTimeout(() => setOpen(false), 250);
-      setFiles([...files, target as HTMLImageElement]);
-    });
     getImage(url, target.src).then((file) => {
-      files[currentIndex] = file;
-      const newFiles = [...files];
-      setFiles(newFiles);
+      startTransition(() => {
+        setTimeout(() => setOpen(false), 250);
+        setFiles([...files, file]);
+      });
     });
   };
 
