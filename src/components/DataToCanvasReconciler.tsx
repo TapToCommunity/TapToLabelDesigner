@@ -17,7 +17,6 @@ export const DataToCanvasReconciler = () => {
 
   // takes care of template change
   useEffect(() => {
-    console.log('running template update');
     if (cards.current.length) {
       setIsIdle(false);
       const selectedCards = cards.current.filter((card) => card.isSelected);
@@ -30,7 +29,6 @@ export const DataToCanvasReconciler = () => {
   }, [template, setCustomColors, cards, setOriginalColors, setIsIdle]);
 
   useEffect(() => {
-    console.log('running color update');
     const selectedCardsWithDifferentTemplate = cards.current.filter(
       (card): card is Required<CardData> =>
         card.isSelected && card.template !== template,

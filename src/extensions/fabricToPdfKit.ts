@@ -160,16 +160,25 @@ const addImageToPdfKit = async (
   fabricImage: FabricImage<ImageProps>,
   pdfDoc: any,
 ) => {
-  // @ts-expect-error this isn't typed
-  const arrayBuffer = await (fabricImage.originalFile as File).arrayBuffer();
-
   pdfDoc.save();
   transformPdf(fabricImage, pdfDoc);
   const originalSize = fabricImage.getOriginalSize();
-  pdfDoc.image(arrayBuffer, -fabricImage.width / 2, -fabricImage.height / 2, {
-    width: originalSize.width,
-    height: originalSize.height,
-  });
+  // @ts-expect-error this isn't typed
+  if ((fabricImage.originalFile as File) instanceof File) {
+    // @ts-expect-error this isn't typed
+    const arrayBuffer = await (fabricImage.originalFile as File).arrayBuffer();
+    pdfDoc.image(arrayBuffer, -fabricImage.width / 2, -fabricImage.height / 2, {
+      width: originalSize.width,
+      height: originalSize.height,
+    });
+  } else {
+    // @ts-expect-error this isn't typed
+    const imageFetch = await (await fetch(fabricImage.originalFile.src)).arrayBuffer();
+    pdfDoc.image(imageFetch, -fabricImage.width / 2, -fabricImage.height / 2, {
+      width: originalSize.width,
+      height: originalSize.height,
+    });
+  }
   pdfDoc.restore();
 };
 
