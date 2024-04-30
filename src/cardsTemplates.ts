@@ -12,6 +12,8 @@ import tapToFloppy from './assets/tapto_floppy.svg';
 import floppy525 from './assets/tapto_floppy525.svg';
 import floppy525Bg from './assets/tapto_floppy525_bg.svg';
 import taptoNes from './assets/tapto_nes.svg';
+import tapToGenesis from './assets/tapto_genesis.svg';
+import genesisBg from './assets/genesis_bg.svg';
 
 import { type SerializedGroupProps } from 'fabric';
 
@@ -251,6 +253,26 @@ export const templates: Record<string, templateType> = {
     },
     label: 'Nes',
   },
+  tapToGenesis: {
+    layout: 'vertical',
+    background: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: genesisBg,
+      isSvg: true,
+    },
+    overlay: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: tapToGenesis,
+      width: 1 - (37 * 2) / 619,
+      height: 1 - (37 + 144) / 994,
+      x: 37 / 619,
+      y: 37 / 994,
+      isSvg: true,
+    },
+    label: 'Genesis',
+  }
 } as const;
 
 export const defaultTemplateKey = 'tapto2';
