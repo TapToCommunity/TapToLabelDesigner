@@ -5,6 +5,9 @@ import logoUrl from '../assets/log.svg';
 import examplesUrl from '../assets/tapto_cards.jpg';
 import { SmallDropZone } from './SmallDropZone';
 import './HomePage.css';
+import { lazy } from 'react';
+
+const Carousel = lazy(() => import('./Carousel'));
 
 export const HomePage = () => {
   return (
@@ -23,6 +26,7 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
+      <Carousel />
       <div className="intro">
         <div className="textLayout">
           <Typography variant="h3" color="primary">

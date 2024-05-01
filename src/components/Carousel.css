@@ -1,0 +1,42 @@
+.carousel-container {
+  min-height: 300px;
+}
+
+.carouselItemOuter {
+}
+
+.carouselItem {
+  background-color: white;
+  height: 300px;
+  display: flex;
+  max-width: 300px;
+}
+
+.carouselItem.horizontal {
+
+}
+
+.carouselItem.vertical {
+
+}
+
+.carouselItem > img {
+  max-width: 300px;
+  max-height: 300px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.carouselItem.horizontal > img {
+  width: 100%;
+  height: auto;
+
+}
+
+.carouselItem.vertical > img {
+  height: 100%;
+  width: auto;
+}
