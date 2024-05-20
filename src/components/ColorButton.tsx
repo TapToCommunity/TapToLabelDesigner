@@ -49,11 +49,6 @@ export const ColorButtons = memo(({ color, onClick }: ColorButtonsProps) => {
     setOpen(false);
   }, [setOpen]);
 
-  const colorChange = (color: string) => {
-    onClick(color);
-    close();
-  };
-
   return (
     <ClickAwayListener onClickAway={close}>
       <ColorSwatch onClick={() => setOpen(true)} color={color}>
@@ -61,7 +56,7 @@ export const ColorButtons = memo(({ color, onClick }: ColorButtonsProps) => {
           {open && (
             <CompactColor
               color={color}
-              onChange={(color) => colorChange(color.hex)}
+              onChange={(color) => onClick(color.hex)}
               style={{
                 width: '296px',
                 zIndex: 20,
@@ -75,7 +70,10 @@ export const ColorButtons = memo(({ color, onClick }: ColorButtonsProps) => {
               rectRender={({ color }) => (
                 <ColorSwatch
                   color={color}
-                  onClick={() => colorChange(color)}
+                  onClick={() => {
+                    onClick(color);
+                    close();
+                  }}
                   className="smallSwatch"
                 />
               )}
