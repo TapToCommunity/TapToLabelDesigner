@@ -96,7 +96,7 @@ export async function fetchGameList(
                 coop,
                 players,
                 overview,
-                boxart: `${base_url.large}${boxArts[id][0].filename}`,
+                boxart: boxArts[id] ? `${base_url.large}${boxArts[id][0].filename}` : '',
               }),
             ),
             moreLink: pages.next
