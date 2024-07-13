@@ -1,54 +1,56 @@
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
+import Typography from '@mui/material/Typography';
 import { templateType, templates } from '../cardsTemplates';
 import './Carousel.css';
+import { MouseEventHandler } from 'react';
+import { useAppDataContext } from '../contexts/appData';
 
-const responsive = {
-  superLargeDesktop: {
-    // the naming can be any, depends on you.
-    breakpoint: { max: 4000, min: 3000 },
-    items: 5,
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 3,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 2,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-  },
+type TemplateCarouselProps = {
+  onCarouselItemClick?: MouseEventHandler;
 };
 
-const items = Object.entries(templates)
-  .map<templateType & { key: string }>(([key, value]) => ({
-    ...value,
-    key,
-  }))
-  .filter((tData) => !!tData.overlay || !!tData.background);
+const TemplatesCarousel = ({ onCarouselItemClick }: TemplateCarouselProps) => {
+  const { setTemplate } = useAppDataContext();
 
-const TemplatesCarousel = () => {
+  const items = Object.entries(templates)
+    .map<templateType & { key: string }>(([key, value]) => ({
+      ...value,
+      key,
+    }))
+    .filter(
+      (tData) =>
+        (!!tData.overlay || !!tData.background) && !tData.key.includes('blank'),
+    );
+
   return (
-    <Carousel
-      responsive={responsive}
-      swipeable={true}
-      draggable={true}
-      infinite={true}
-      autoPlay={false}
-      keyBoardControl={false}
-      containerClass="carousel-container"
-      itemClass="carouselItemOuter"
-    >
-      {items.map((tData) => (
-        <div key={tData.key} className={`carouselItem ${tData.layout}`}>
-          {tData.background && <img src={tData.background.url} />}
-          {tData.overlay && <img src={tData.overlay.url} />}
+    <>
+      <Typography variant="h3" color="primary">
+        Choose a template to get started from the {items.length} available
+      </Typography>
+      <div className="carousel-container">
+        <div className="carousel-scroll">
+          {items.map((tData) => (
+            <div
+              className="carouselItem-externals"
+              onDragStart={(e) => {
+                e.preventDefault();
+                return false;
+              }}
+            >
+              <div
+                className={`carouselItem ${tData.layout}`}
+                key={tData.key}
+                onClick={() => {
+                  setTemplate(tData);
+                }}
+              >
+                {tData.background && <img src={tData.background.url} />}
+                {tData.overlay && <img src={tData.overlay.url} />}
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-    </Carousel>
+      </div>
+    </>
   );
 };
 

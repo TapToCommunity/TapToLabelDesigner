@@ -52,7 +52,7 @@ export type templateType = {
 };
 
 export const templates: Record<string, templateType> = {
-  blank: {
+  blankH: {
     layout: 'horizontal',
     label: 'Blank H cover',
   },
