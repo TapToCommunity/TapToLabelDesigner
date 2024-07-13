@@ -1,14 +1,9 @@
 import Typography from '@mui/material/Typography';
 import { templateType, templates } from '../cardsTemplates';
 import './Carousel.css';
-import { MouseEventHandler } from 'react';
 import { useAppDataContext } from '../contexts/appData';
 
-type TemplateCarouselProps = {
-  onCarouselItemClick?: MouseEventHandler;
-};
-
-const TemplatesCarousel = ({ onCarouselItemClick }: TemplateCarouselProps) => {
+const TemplatesCarousel = () => {
   const { setTemplate } = useAppDataContext();
 
   const items = Object.entries(templates)
