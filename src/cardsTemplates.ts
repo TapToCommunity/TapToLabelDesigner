@@ -14,6 +14,8 @@ import floppy525Bg from './assets/tapto_floppy525_bg.svg';
 import taptoNes from './assets/tapto_nes.svg';
 import tapToGenesis from './assets/tapto_genesis.svg';
 import genesisBg from './assets/genesis_bg.svg';
+import pcEngine from './assets/pcengine.svg';
+import pcEngineBG from './assets/pcengine_bg.svg';
 
 import { type SerializedGroupProps } from 'fabric';
 
@@ -272,6 +274,26 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Genesis',
+  },
+  tapToPcEngine: {
+    layout: 'vertical',
+    background: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: pcEngineBG,
+      isSvg: true,
+    },
+    overlay: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: pcEngine,
+      height: 1 - (84 + 268) / 994,
+      width: 1 - (37 * 2) / 619,
+      y: 268 / 994,
+      x: 37 / 619,
+      isSvg: true,
+    },
+    label: 'PcEngineCD',
   }
 } as const;
 
