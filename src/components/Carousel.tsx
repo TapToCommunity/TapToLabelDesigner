@@ -19,7 +19,7 @@ const TemplatesCarousel = () => {
   return (
     <>
       <Typography variant="h3" color="primary">
-        Choose a template to get started from the {items.length} available
+        Choose a template from the {items.length} availables to get started
       </Typography>
       <div className="carousel-container">
         <div className="carousel-scroll">
