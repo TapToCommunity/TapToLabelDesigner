@@ -22,13 +22,24 @@ export const scaleImageToOverlayArea = (
   template: templateType,
   overlayImg: FabricObject,
   mainImage: FabricImage,
+  noMargin = false, 
 ) => {
   const { overlay } = template;
   // scale the art to the designed area in the template. to fit
   // TODO: add option later for fit or cover
   const isRotated = mainImage.angle % 180 !== 0;
-  const scaledTemplateOverlaySize = overlayImg._getTransformedDimensions();
-  const pictureScaleToTemplate = util.findScaleToFit(
+  let pictureScaleToTemplate = 1;
+  let scaledTemplateOverlaySize = new Point();
+  let scaler = util.findScaleToFit;
+
+  if (noMargin) {
+    scaler = util.findScaleToCover;
+    scaledTemplateOverlaySize = template.layout === 'horizontal' ? new Point(cardLikeOptions.width, cardLikeOptions.height) : new Point(cardLikeOptions.height, cardLikeOptions.width);
+  } else {
+    scaledTemplateOverlaySize = overlayImg._getTransformedDimensions();
+  }
+
+  pictureScaleToTemplate = scaler(
     {
       width: isRotated ? mainImage.height : mainImage.width,
       height: isRotated ? mainImage.width : mainImage.height,
@@ -38,6 +49,7 @@ export const scaleImageToOverlayArea = (
       height: scaledTemplateOverlaySize.y * overlay!.height,
     },
   );
+
   mainImage.set({
     scaleX: pictureScaleToTemplate,
     scaleY: pictureScaleToTemplate,
@@ -128,7 +140,7 @@ export const setTemplateOnCanvases = async (
   cards: CardData[],
   template: templateType,
 ): Promise<string[]> => {
-  const { overlay, background, shadow, layout } = template || {};
+  const { overlay, background, shadow, layout, noMargin } = template || {};
   const [overlayImageSource, backgroundImageSource] = await Promise.all([
     overlay &&
       (overlay.parsed
@@ -246,7 +258,7 @@ export const setTemplateOnCanvases = async (
         // set the overlay of the template in the center of the card
         reposition(fabricLayer, template.layout);
         if (templateLayer === overlay) {
-          scaleImageToOverlayArea(template, fabricLayer, mainImage);
+          scaleImageToOverlayArea(template, fabricLayer, mainImage, noMargin);
           canvas.overlayImage = fabricLayer;
         }
         if (templateLayer === background) {
