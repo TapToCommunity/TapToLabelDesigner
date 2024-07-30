@@ -106,6 +106,9 @@ export const HomePage = () => {
             <a href="https://www.artisticpixels305.com/">Ariel Aces</a>,{' '}
             <a href="https://timwilsie.com/">Tim Wilsie</a>,{' '}
             <a href="https://github.com/asturur">Andrea Bogazzi</a>
+            <a href="https://github.com/Anime0t4ku/TapToCassetteCovers">
+              Anime0t4ku
+            </a>
           </Typography>
         </div>
       </div>
