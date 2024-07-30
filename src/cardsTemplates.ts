@@ -300,8 +300,8 @@ export const templates: Record<string, templateType> = {
   anime0taku: {
     layout: 'vertical',
     overlay: {
-      layerWidth: 638,
-      layerHeight: 1034,
+      layerWidth: 640,
+      layerHeight: 1006,
       url: animeOt4ku,
       height: 1,
       width: 1,
