@@ -54,24 +54,29 @@ export const scaleImageToOverlayArea = (
     scaleX: pictureScaleToTemplate,
     scaleY: pictureScaleToTemplate,
   });
-  // get the top left corner of the template overlay
-  const templatePostion = overlayImg.translateToGivenOrigin(
-    overlayImg.getRelativeXY(),
-    'center',
-    'center',
-    'left',
-    'top',
-  );
-  mainImage.setPositionByOrigin(
-    new Point(
-      scaledTemplateOverlaySize.x * (overlay!.x + overlay!.width / 2) +
-        templatePostion.x,
-      scaledTemplateOverlaySize.y * (overlay!.y + overlay!.height / 2) +
-        templatePostion.y,
-    ),
-    'center',
-    'center',
-  );
+
+  if (noMargin) {
+    mainImage.canvas?.centerObject(mainImage);
+  } else {
+    // get the top left corner of the template overlay
+    const templatePostion = overlayImg.translateToGivenOrigin(
+      overlayImg.getRelativeXY(),
+      'center',
+      'center',
+      'left',
+      'top',
+    );
+    mainImage.setPositionByOrigin(
+      new Point(
+        scaledTemplateOverlaySize.x * (overlay!.x + overlay!.width / 2) +
+          templatePostion.x,
+        scaledTemplateOverlaySize.y * (overlay!.y + overlay!.height / 2) +
+          templatePostion.y,
+      ),
+      'center',
+      'center',
+    );
+  }
   mainImage.setCoords();
 };
 
