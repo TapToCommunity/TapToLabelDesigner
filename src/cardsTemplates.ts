@@ -16,6 +16,7 @@ import tapToGenesis from './assets/tapto_genesis.svg';
 import genesisBg from './assets/genesis_bg.svg';
 import pcEngine from './assets/pcengine.svg';
 import pcEngineBG from './assets/pcengine_bg.svg';
+import animeOt4ku from './assets/tapto_0t4ku.svg';
 
 import { type SerializedGroupProps } from 'fabric';
 
@@ -49,6 +50,7 @@ export type templateType = {
   label: string;
   /* box-shadow like property for the main image, 3 numbers + color */
   shadow?: string;
+  noMargin?: boolean;
 };
 
 export const templates: Record<string, templateType> = {
@@ -294,6 +296,21 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'PcEngineCD',
+  },
+  anime0taku: {
+    layout: 'vertical',
+    overlay: {
+      layerWidth: 640,
+      layerHeight: 1006,
+      url: animeOt4ku,
+      height: 1,
+      width: 1,
+      y: 0,
+      x: 0,
+      isSvg: true,
+    },
+    label: 'full image + system',
+    noMargin: true,
   }
 } as const;
 

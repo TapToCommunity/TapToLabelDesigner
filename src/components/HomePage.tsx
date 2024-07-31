@@ -4,6 +4,8 @@ import bgUrl from '../assets/homebg.jpg';
 import logoUrl from '../assets/log.svg';
 import examplesUrl from '../assets/tapto_cards.jpg';
 import { SmallDropZone } from './SmallDropZone';
+import { templateAuthors } from '../templateAuthors';
+
 import './HomePage.css';
 
 export const HomePage = () => {
@@ -103,9 +105,14 @@ export const HomePage = () => {
             Designed by <a href="https://timwilsie.com/">Tim Wilsie</a>
             <br />
             Templates provided by{' '}
-            <a href="https://www.artisticpixels305.com/">Ariel Aces</a>,{' '}
-            <a href="https://timwilsie.com/">Tim Wilsie</a>,{' '}
-            <a href="https://github.com/asturur">Andrea Bogazzi</a>
+            {Object.values(templateAuthors).map(({ name, href }, index) => (
+              <>
+                <a key={`auth_${index}`} href={href}>
+                  {name}
+                </a>
+                ,{' '}
+              </>
+            ))}
           </Typography>
         </div>
       </div>
