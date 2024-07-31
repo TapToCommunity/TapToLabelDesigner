@@ -23,12 +23,22 @@ export const scaleImageToOverlayArea = (
   overlayImg: FabricObject,
   mainImage: FabricImage,
 ) => {
-  const { overlay } = template;
+  const { overlay, noMargin } = template;
   // scale the art to the designed area in the template. to fit
   // TODO: add option later for fit or cover
   const isRotated = mainImage.angle % 180 !== 0;
-  const scaledTemplateOverlaySize = overlayImg._getTransformedDimensions();
-  const pictureScaleToTemplate = util.findScaleToFit(
+  let pictureScaleToTemplate = 1;
+  let scaledTemplateOverlaySize = new Point();
+  let scaler = util.findScaleToFit;
+
+  if (noMargin) {
+    scaler = util.findScaleToCover;
+    scaledTemplateOverlaySize = template.layout === 'horizontal' ? new Point(cardLikeOptions.width, cardLikeOptions.height) : new Point(cardLikeOptions.height, cardLikeOptions.width);
+  } else {
+    scaledTemplateOverlaySize = overlayImg._getTransformedDimensions();
+  }
+
+  pictureScaleToTemplate = scaler(
     {
       width: isRotated ? mainImage.height : mainImage.width,
       height: isRotated ? mainImage.width : mainImage.height,
@@ -38,28 +48,34 @@ export const scaleImageToOverlayArea = (
       height: scaledTemplateOverlaySize.y * overlay!.height,
     },
   );
+
   mainImage.set({
     scaleX: pictureScaleToTemplate,
     scaleY: pictureScaleToTemplate,
   });
-  // get the top left corner of the template overlay
-  const templatePostion = overlayImg.translateToGivenOrigin(
-    overlayImg.getRelativeXY(),
-    'center',
-    'center',
-    'left',
-    'top',
-  );
-  mainImage.setPositionByOrigin(
-    new Point(
-      scaledTemplateOverlaySize.x * (overlay!.x + overlay!.width / 2) +
-        templatePostion.x,
-      scaledTemplateOverlaySize.y * (overlay!.y + overlay!.height / 2) +
-        templatePostion.y,
-    ),
-    'center',
-    'center',
-  );
+
+  if (noMargin) {
+    mainImage.canvas?.centerObject(mainImage);
+  } else {
+    // get the top left corner of the template overlay
+    const templatePostion = overlayImg.translateToGivenOrigin(
+      overlayImg.getRelativeXY(),
+      'center',
+      'center',
+      'left',
+      'top',
+    );
+    mainImage.setPositionByOrigin(
+      new Point(
+        scaledTemplateOverlaySize.x * (overlay!.x + overlay!.width / 2) +
+          templatePostion.x,
+        scaledTemplateOverlaySize.y * (overlay!.y + overlay!.height / 2) +
+          templatePostion.y,
+      ),
+      'center',
+      'center',
+    );
+  }
   mainImage.setCoords();
 };
 
