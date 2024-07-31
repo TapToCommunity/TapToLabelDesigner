@@ -23,14 +23,14 @@
    inkscape:pagecheckerboard="0"
    inkscape:deskcolor="#505050"
    inkscape:zoom="1.4142136"
-   inkscape:cx="663.6197"
-   inkscape:cy="500.98514"
+   inkscape:cx="663.26614"
+   inkscape:cy="161.5739"
    inkscape:window-width="5120"
    inkscape:window-height="1369"
    inkscape:window-x="-8"
    inkscape:window-y="331"
    inkscape:window-maximized="1"
-   inkscape:current-layer="svg10" />
+   inkscape:current-layer="Card-Top" />
     <g
    id="Background"
    transform="scale(0.31999999)"
@@ -97,7 +97,7 @@
    style="fill:url(#_Linear1)" />
         <g
    id="g1"
-   transform="matrix(0.72216363,0,0,0.72216363,35.001739,52.181797)"><path
+   transform="matrix(0.72216363,0,0,0.72216363,31.002141,54.181596)"><path
      d="M 45.084,1 C 21.846,1 2.809,18.918 1,41.689 l 23.71,9.803 c 2.009,-1.374 4.436,-2.179 7.047,-2.179 0.234,0 0.467,0.01 0.698,0.021 L 42.999,34.051 c 0,-0.073 0,-0.144 0,-0.216 0,-9.199 7.483,-16.683 16.683,-16.683 9.199,0 16.682,7.484 16.682,16.683 0,9.199 -7.483,16.684 -16.682,16.684 -0.127,0 -0.253,0 -0.379,-0.01 l -15.038,10.73 c 0.01,0.195 0.015,0.394 0.015,0.592 0,6.906 -5.617,12.522 -12.522,12.522 -6.061,0 -11.129,-4.326 -12.277,-10.055 L 2.524,57.292 c 5.25,18.568 22.309,32.181 42.56,32.181 24.432,0 44.237,-19.806 44.237,-44.235 C 89.321,20.805 69.515,1 45.084,1"
      id="path1-8"
      style="fill:#ffffff" /><path
