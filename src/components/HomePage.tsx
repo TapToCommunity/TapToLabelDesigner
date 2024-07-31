@@ -7,6 +7,9 @@ import { SmallDropZone } from './SmallDropZone';
 import { templateAuthors } from '../templateAuthors';
 
 import './HomePage.css';
+import { lazy } from 'react';
+
+const Carousel = lazy(() => import('./Carousel'));
 
 export const HomePage = () => {
   return (
@@ -77,6 +80,11 @@ export const HomePage = () => {
               API
             </Link>
           </Typography>
+        </div>
+      </div>
+      <div className="choose-template">
+        <div className="textLayout">
+          <Carousel />
         </div>
       </div>
       <div className="content">

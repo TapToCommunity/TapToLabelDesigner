@@ -45,7 +45,13 @@
   background-color: #202744;
   background: #202744;
   background: linear-gradient(to bottom, #202744 0%, #323D6A 100%);
+}
 
+.homepage .choose-template {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  background-color: #323D6A;
 }
 
 .homepage h3 {
