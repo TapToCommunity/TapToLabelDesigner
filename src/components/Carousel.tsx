@@ -3,6 +3,7 @@ import { templateType, templates } from '../cardsTemplates';
 import './Carousel.css';
 import { useAppDataContext } from '../contexts/appData';
 import { useFileAdder } from '../hooks/useFileAdder';
+import { templateAuthors } from '../templateAuthors';
 
 const TemplatesCarousel = () => {
   const { setTemplate } = useAppDataContext();
@@ -44,6 +45,13 @@ const TemplatesCarousel = () => {
                 {tData.background && <img src={tData.background.url} />}
                 {tData.overlay && <img src={tData.overlay.url} />}
               </div>
+              <Typography className="carouselCaption">
+                {tData.label}
+                <br />
+                by
+                <br />
+                {templateAuthors[tData.author].name}
+              </Typography>
             </div>
           ))}
         </div>

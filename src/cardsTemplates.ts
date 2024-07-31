@@ -19,6 +19,7 @@ import pcEngineBG from './assets/pcengine_bg.svg';
 import animeOt4ku from './assets/tapto_0t4ku.svg';
 
 import { type SerializedGroupProps } from 'fabric';
+import { Authors } from './templateAuthors';
 
 export type templateLayer = {
   url: string;
@@ -51,16 +52,19 @@ export type templateType = {
   /* box-shadow like property for the main image, 3 numbers + color */
   shadow?: string;
   noMargin?: boolean;
+  author: Authors;
 };
 
 export const templates: Record<string, templateType> = {
   blankH: {
     layout: 'horizontal',
     label: 'Blank H cover',
+    author: Authors.andrea,
   },
   blankV: {
     layout: 'vertical',
     label: 'Blank V cover',
+    author: Authors.andrea,
   },
   blankHF: {
     layout: 'horizontal',
@@ -76,6 +80,7 @@ export const templates: Record<string, templateType> = {
       height: 0.96,
       isSvg: true,
     },
+    author: Authors.andrea,
   },
   blankVF: {
     layout: 'vertical',
@@ -91,6 +96,7 @@ export const templates: Record<string, templateType> = {
       height: 0.92,
       isSvg: true,
     },
+    author: Authors.andrea,
   },
   tapto2: {
     layout: 'horizontal',
@@ -112,6 +118,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Tap-to H',
+    author: Authors.tim,
   },
   tapto3: {
     layout: 'vertical',
@@ -133,6 +140,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Tap-to V',
+    author: Authors.tim
   },
   hucard: {
     layout: 'vertical',
@@ -154,6 +162,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'HuCard',
+    author: Authors.tim,
   },
   hucardc64: {
     layout: 'vertical',
@@ -175,6 +184,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'HuCard (C64)',
+    author: Authors.ben,
   },
   taptoGB: {
     layout: 'horizontal',
@@ -196,6 +206,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Tap-to Gameboy',
+    author: Authors.ariel,
   },
   taptoFloppy: {
     layout: 'vertical',
@@ -216,6 +227,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Floppy 3.5',
+    author: Authors.andrea,
   },
   taptoFloppy525: {
     layout: 'vertical',
@@ -236,6 +248,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Floppy 5.25',
+    author: Authors.andrea,
   },
   tapToNes: {
     layout: 'vertical',
@@ -256,6 +269,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Nes',
+    author: Authors.ariel,
   },
   tapToGenesis: {
     layout: 'vertical',
@@ -276,6 +290,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Genesis',
+    author: Authors.ariel,
   },
   tapToPcEngine: {
     layout: 'vertical',
@@ -296,6 +311,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'PcEngineCD',
+    author: Authors.ariel,
   },
   anime0taku: {
     layout: 'vertical',
@@ -311,6 +327,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'full image + system',
     noMargin: true,
+    author: Authors.animeotaku,
   }
 } as const;
 
