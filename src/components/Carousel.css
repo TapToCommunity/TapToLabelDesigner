@@ -3,6 +3,7 @@
   min-height: 300px;
   height: 300px;
   overflow-x: scroll;
+  overflow-y: hidden;
   padding-bottom: 32px;
   /* max-width: 100% */
   /* code for out of bound carousel */
@@ -16,6 +17,7 @@
 .carousel-scroll {
   display: flex;
   width: fit-content;
+  overflow-y: hidden;
 }
 
 .carouselItem-externals {
