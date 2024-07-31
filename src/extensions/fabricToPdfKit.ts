@@ -213,6 +213,7 @@ export const addCanvasToPdfPage = async (
   pdfDoc.stroke('black');
 
   pdfDoc.save();
+  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, 8).clip();
   // 0.24 is a scale factor between px and points to keep the 300dpi
   pdfDoc.transform(0.24, 0, 0, 0.24, box.x, box.y);
   if (needsRotation) {
