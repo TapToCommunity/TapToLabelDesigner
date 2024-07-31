@@ -309,7 +309,7 @@ export const templates: Record<string, templateType> = {
       x: 0,
       isSvg: true,
     },
-    label: 'ToBeNamed',
+    label: 'full image + system',
     noMargin: true,
   }
 } as const;
