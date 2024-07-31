@@ -2,10 +2,11 @@ import Typography from '@mui/material/Typography';
 import { templateType, templates } from '../cardsTemplates';
 import './Carousel.css';
 import { useAppDataContext } from '../contexts/appData';
+import { useFileAdder } from '../hooks/useFileAdder';
 
 const TemplatesCarousel = () => {
   const { setTemplate } = useAppDataContext();
-
+  const { inputElement, openInputFile } = useFileAdder();
   const items = Object.entries(templates)
     .map<templateType & { key: string }>(([key, value]) => ({
       ...value,
@@ -18,8 +19,9 @@ const TemplatesCarousel = () => {
 
   return (
     <>
+      {inputElement}
       <Typography variant="h3" color="primary">
-        Choose a template from the {items.length} availables to get started
+        Click a template from the {items.length} availables to get started:
       </Typography>
       <div className="carousel-container">
         <div className="carousel-scroll">
@@ -36,6 +38,7 @@ const TemplatesCarousel = () => {
                 key={tData.key}
                 onClick={() => {
                   setTemplate(tData);
+                  openInputFile();
                 }}
               >
                 {tData.background && <img src={tData.background.url} />}
