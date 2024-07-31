@@ -2,13 +2,15 @@
   padding-top: 32px;
   min-height: 300px;
   height: 300px;
+  overflow-x: scroll;
+  padding-bottom: 32px;
+  /* max-width: 100% */
+  /* code for out of bound carousel */
   max-width: calc(100vw - 64px);
   width: calc(100vw - 64px);
   position: relative;
   left: 50%;
   transform: translate(-50%, 0);
-  overflow-x: scroll;
-  padding-bottom: 32px;
 }
 
 .carousel-scroll {
