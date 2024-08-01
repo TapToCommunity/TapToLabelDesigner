@@ -187,6 +187,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'HuCardSteam',
+    author: Authors.ewrt,
   },
   hucardsteamVR: {
     layout: 'vertical',
@@ -208,6 +209,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'HuCardSteamVR',
+    author: Authors.ewrt,
   },
   hucardc64: {
     layout: 'vertical',
