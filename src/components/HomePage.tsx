@@ -4,7 +4,12 @@ import bgUrl from '../assets/homebg.jpg';
 import logoUrl from '../assets/log.svg';
 import examplesUrl from '../assets/tapto_cards.jpg';
 import { SmallDropZone } from './SmallDropZone';
+import { templateAuthors } from '../templateAuthors';
+
 import './HomePage.css';
+import { lazy } from 'react';
+
+const Carousel = lazy(() => import('./Carousel'));
 
 export const HomePage = () => {
   return (
@@ -77,6 +82,11 @@ export const HomePage = () => {
           </Typography>
         </div>
       </div>
+      <div className="choose-template">
+        <div className="textLayout">
+          <Carousel />
+        </div>
+      </div>
       <div className="content">
         <div className="textLayout">
           <Typography variant="h3">What's TapTo Designer?</Typography>
@@ -103,10 +113,14 @@ export const HomePage = () => {
             Designed by <a href="https://timwilsie.com/">Tim Wilsie</a>
             <br />
             Templates provided by{' '}
-            <a href="https://www.artisticpixels305.com/">Ariel Aces</a>,{' '}
-            <a href="https://timwilsie.com/">Tim Wilsie</a>,{' '}
-            <a href="https://github.com/asturur">Andrea Bogazzi</a>,{' '}
-            <a href="https://github.com/ewrt101">Ewrt</a>
+            {Object.values(templateAuthors).map(({ name, href }, index) => (
+              <>
+                <a key={`auth_${index}`} href={href}>
+                  {name}
+                </a>
+                ,{' '}
+              </>
+            ))}
           </Typography>
         </div>
       </div>
