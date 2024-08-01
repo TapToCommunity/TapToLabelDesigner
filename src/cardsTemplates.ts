@@ -3,7 +3,10 @@ import tapToVertical from './assets/tapto_vertical.svg';
 import tapToBg from './assets/tapto_pattern_bg.svg';
 import tapToBgV from './assets/tapto_pattern_bg_vertical.svg';
 import tapToHu from './assets/tapto_hucard.svg';
+import tapToHuSteam from './assets/tapto_hucard_steam.svg';
+import tapToHuSteamVR from './assets/tapto_hucard_steamVR.svg';
 import tapToHuBg from './assets/tapto_hucard_bg.svg';
+import tapToHuBgLarge from './assets/tapto_hucard_bg_large.svg';
 import tapToHuC64 from './assets/tapto_hucard_c64.svg';
 import tapToGB from './assets/tapto_gameboy_f.svg';
 import emptyVertical from './assets/empty_vertical.svg';
@@ -163,6 +166,50 @@ export const templates: Record<string, templateType> = {
     },
     label: 'HuCard',
     author: Authors.tim,
+  },
+  hucardsteam: {
+    layout: 'vertical',
+    overlay: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: tapToHuSteam,
+      height: 1 - (84 + 125) / 994,
+      width: 1 - (37 * 2) / 619,
+      y: 168 / 994,
+      x: 37 / 619,
+      isSvg: true,
+    },
+    shadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
+    background: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: tapToHuBgLarge,
+      isSvg: true,
+    },
+    label: 'HuCardSteam',
+    author: Authors.ewrt,
+  },
+  hucardsteamVR: {
+    layout: 'vertical',
+    overlay: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: tapToHuSteamVR,
+      height: 1 - (84 + 125) / 994,
+      width: 1 - (37 * 2) / 619,
+      y: 168 / 994,
+      x: 37 / 619,
+      isSvg: true,
+    },
+    shadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
+    background: {
+      layerWidth: 619,
+      layerHeight: 994,
+      url: tapToHuBgLarge,
+      isSvg: true,
+    },
+    label: 'HuCardSteamVR',
+    author: Authors.ewrt,
   },
   hucardc64: {
     layout: 'vertical',
