@@ -105,7 +105,8 @@ export const HomePage = () => {
             Templates provided by{' '}
             <a href="https://www.artisticpixels305.com/">Ariel Aces</a>,{' '}
             <a href="https://timwilsie.com/">Tim Wilsie</a>,{' '}
-            <a href="https://github.com/asturur">Andrea Bogazzi</a>
+            <a href="https://github.com/asturur">Andrea Bogazzi</a>,{' '}
+            <a href="https://github.com/ewrt101">Ewrt</a>
           </Typography>
         </div>
       </div>
