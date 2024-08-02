@@ -380,6 +380,9 @@ export const templates: Record<string, templateType> = {
       x: 0,
       isSvg: true,
     },
+    edits: [
+
+    ]
     label: 'full image + system',
     noMargin: true,
     author: Authors.animeotaku,
