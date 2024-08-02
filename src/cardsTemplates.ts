@@ -54,8 +54,15 @@ export type templateType = {
   label: string;
   /* box-shadow like property for the main image, 3 numbers + color */
   shadow?: string;
+  /* if noMargin is true the image you load will cover the full card and bleed outside */
   noMargin?: boolean;
+  /* a reference to the author data */
   author: Authors;
+  /**
+   * if true it means a button to edit the tempalte is shown on screen
+   * More data in the template is needed to make that happen.
+   * */ 
+  canEdit?: boolean;
 };
 
 export const templates: Record<string, templateType> = {
@@ -361,6 +368,7 @@ export const templates: Record<string, templateType> = {
     author: Authors.ariel,
   },
   anime0taku: {
+    canEdit: true,
     layout: 'vertical',
     overlay: {
       layerWidth: 640,
