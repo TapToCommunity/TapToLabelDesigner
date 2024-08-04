@@ -11,63 +11,65 @@ import segaCd from './assets/logos/Sega_CD.png';
 import sFamicom from './assets/logos/Super_Famicom.png';
 import snesEU from './assets/logos/Super_Nintendo_EU.png';
 import snesUS from './assets/logos/Super_Nintendo_US.png';
+import { EditType, type EditResource, type ResourceArray } from './resourcesTypedef';
 
-type Logo = {
-  label: string;
-  url: string;
-}
 
-export const logos: Logo[] = [
+export const logos: ResourceArray[] = [
   {
     label: 'Famicom',
-    url: famicom,
+    value: famicom,
   },
   {
     label: 'Game Boy Advance',
-    url: gba,
+    value: gba,
   },
   {
     label: 'Game Boy Color',
-    url: gbc,
+    value: gbc,
   },
   {
     label: 'Game Boy',
-    url: gb,
+    value: gb,
   },
   {
     label: 'Mega CD (Europe)',
-    url: megaCdEU,
+    value: megaCdEU,
   },
   {
     label: 'Mega CD (Japan)',
-    url: megaCdJP,
+    value: megaCdJP,
   },
   {
     label: 'Nintendo Entertainment System',
-    url: nes,
+    value: nes,
   },
   {
     label: 'Nintendo 64',
-    url: n64,
+    value: n64,
   },
   {
     label: 'PC Engine',
-    url: pce,
+    value: pce,
   },
   {
     label: 'Sega CD',
-    url: segaCd,
+    value: segaCd,
   },
   {
     label: 'Super Famicom',
-    url: sFamicom,
+    value: sFamicom,
   },
   {
     label: 'Super Nintendo (Europe)',
-    url: snesEU,
+    value: snesEU,
   },
   {
     label: 'Super Nintendo (US)',
-    url: snesUS,
+    value: snesUS,
   },
 ];
+
+export const logoResource: EditResource = {
+  data: logos,
+  type: EditType.image,
+}

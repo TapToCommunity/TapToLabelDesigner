@@ -13,8 +13,8 @@ import {
   Rect,
 } from 'fabric';
 import { cardLikeOptions } from '../constants';
-import { type templateType, type templateOverlay } from '../cardsTemplates';
 import { CardData } from '../contexts/fileDropper';
+import type { templateType, templateOverlay } from '../resourcesTypedef';
 
 FabricObject.ownDefaults.objectCaching = false;
 
