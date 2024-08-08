@@ -350,5 +350,5 @@ export const templates: Record<string, templateType> = {
   }
 } as const;
 
-export const defaultTemplateKey = 'tapto2';
+export const defaultTemplateKey = 'anime0taku';
 export const defaultTemplate = templates[defaultTemplateKey];

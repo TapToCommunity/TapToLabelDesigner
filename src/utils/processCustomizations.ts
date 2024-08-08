@@ -1,9 +1,9 @@
 import {
   type FabricObject,
-  type Canvas,
   type Group,
   FabricImage,
   util,
+  type StaticCanvas,
 } from 'fabric';
 import type { templateType } from '../resourcesTypedef';
 
@@ -24,10 +24,10 @@ const findById = (objects: (FabricObject | Group)[], id: string): FabricObject |
   }
 }
 
-export const processCustomizations = async (canvas: Canvas, template: templateType) => {
+export const processCustomizations = async (canvas: StaticCanvas, template: templateType) => {
   if (template.edits) {
     const { edits } = template;
-    const objects = [...canvas.getObjects(), canvas.overlayImage, canvas.backgroundImage].filter((a) => !!a);
+    const objects: (FabricObject | Group)[] = ([...canvas.getObjects(), canvas.overlayImage, canvas.backgroundImage] as  (FabricObject | Group)[]).filter((a) => !!a);
     for (const { id, resource } of edits) {
       const fabricObject = findById(objects, id);
       if (fabricObject) {

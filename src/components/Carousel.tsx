@@ -34,6 +34,7 @@ const TemplatesCarousel = () => {
                 e.preventDefault();
                 return false;
               }}
+              key={tData.key}
             >
               <div
                 className={`carouselItem ${tData.layout}`}

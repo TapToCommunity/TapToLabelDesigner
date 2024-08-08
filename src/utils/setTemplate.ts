@@ -125,7 +125,6 @@ const parseSvg = (url: string): Promise<SerializedGroupProps> =>
     extractUniqueColorsFromGroup(group);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    console.log(group.toObject(['original_stroke', 'original_fill', 'id']))
     return group.toObject(['original_stroke', 'original_fill', 'id']);
   });
 
