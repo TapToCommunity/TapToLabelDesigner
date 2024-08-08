@@ -1,0 +1,18 @@
+.cardEditModal {
+  display: flex;
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  width: calc(100vw - 36px);
+  box-sizing: border-box;
+  background-color: #292c34;
+  height: calc(100vh - 36px);
+  color: white;
+  overflow-y: hidden;
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.editSpace {
+  flex-grow: 1;
+}
