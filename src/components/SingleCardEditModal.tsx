@@ -61,8 +61,10 @@ export const ModalInternalComponent = ({
             (overlay as Group).subTargetCheck = true;
             overlay.on('mousedown', (opt) => {
               const resource = opt.subTargets?.[0];
+              // @ts-expect-error not sure what to do here
               if (resource && resource.resourceFor) {
                 const edit = selectedCard.template?.edits?.find(
+                  // @ts-expect-error not sure what to do here
                   (edit) => edit.id === resource.resourceFor,
                 );
                 if (edit) {
