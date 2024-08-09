@@ -45,7 +45,12 @@ export const ModalInternalComponent = ({
     canvas.remove(group);
     canvas.overlayImage = group;
     group.canvas = canvas;
-    const data = canvas.toObject(['resourceFor', 'id']);
+    const data = canvas.toObject([
+      'resourceFor',
+      'id',
+      'original_fill',
+      'original_stroke',
+    ]);
     const selectedCard = cards.current[currentCardIndex];
     const targetCanvas = selectedCard.canvas!;
     targetCanvas.clear();
@@ -64,7 +69,12 @@ export const ModalInternalComponent = ({
       editableCanvas.current = canvas;
       const selectedCard = cards.current[currentCardIndex];
       if (selectedCard.canvas) {
-        const jsonData = selectedCard.canvas.toObject(['resourceFor', 'id']);
+        const jsonData = selectedCard.canvas.toObject([
+          'resourceFor',
+          'id',
+          'original_fill',
+          'original_stroke',
+        ]);
         canvas.loadFromJSON(jsonData).then(() => {
           if (canvas.overlayImage) {
             const overlay = canvas.overlayImage;
@@ -89,7 +99,6 @@ export const ModalInternalComponent = ({
             });
             canvas.add(overlay);
           }
-          console.log('finished cloning template');
           setReady(true);
         });
       }
