@@ -308,8 +308,9 @@ export const setTemplateOnCanvases = async (
       }
       reposition(clipPath, template.layout);
     }
-
-    processCustomizations(canvas, template);
+    if (template.edits) {
+      processCustomizations(canvas, template.edits);
+    }
 
     canvas.requestRenderAll();
   }

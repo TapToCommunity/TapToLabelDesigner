@@ -49,7 +49,7 @@ export const ModalInternalComponent = ({
       editableCanvas.current = canvas;
       const selectedCard = cards.current[currentCardIndex];
       if (selectedCard.canvas) {
-        const jsonData = selectedCard.canvas.toObject(['resourceFor']);
+        const jsonData = selectedCard.canvas.toObject(['resourceFor', 'id']);
         canvas.loadFromJSON(jsonData).then(() => {
           if (canvas.overlayImage) {
             const overlay = canvas.overlayImage;
@@ -88,12 +88,13 @@ export const ModalInternalComponent = ({
     layout === 'horizontal' ? 'horizontalStack' : 'verticalStack';
   return (
     <>
-      <div className={`${classNameExt} editSpace`}>
+      <div className={`${classNameExt} topSpace`}>
         <div className={`${classNameInt} resourceSpace`}>
           <ResourceDisplay
             className={`${classNameInt}`}
             resource={currentResource?.[0]}
             target={currentResource?.[1]}
+            setCurrentResource={setCurrentResource}
           />
         </div>
         <div className="verticalStack editSpace" ref={padderRef}>

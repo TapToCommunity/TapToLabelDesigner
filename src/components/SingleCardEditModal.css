@@ -14,20 +14,25 @@
 }
 
 .editSpace {
+  position: relative;
   flex-grow: 1;
   height: 100%;
+}
+
+.topSpace {
+  align-items: flex-start;
 }
 
 .verticalStack.resourceSpace {
   overflow-y: scroll;
   align-items: center;
   max-width: 30%;
-  max-height: 100%;
+  height: calc(100vh - 110px);
 }
 
 .horizontalStack.resourceSpace {
   overflow-x: scroll;
-  align-items: center;
+  align-items: flex-end;
   max-height: 30%;
   max-width: 100%;
 }
