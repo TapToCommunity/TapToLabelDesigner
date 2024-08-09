@@ -36,3 +36,7 @@
   max-height: 30%;
   max-width: 100%;
 }
+
+.confirmButtons {
+  justify-content: space-between;
+}

@@ -2,7 +2,7 @@ import Modal from '@mui/material/Modal';
 import './SingleCardEditModal.css';
 import Button from '@mui/material/Button';
 import { useFileDropperContext } from '../contexts/fileDropper';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Canvas, type FabricObject, type Group } from 'fabric';
 import { useRealTimeResize } from '../hooks/useRealtimeResize';
 import { type TemplateEdit } from '../resourcesTypedef';
@@ -29,7 +29,7 @@ export const ModalInternalComponent = ({
   const layout = selectedCard.template?.layout;
   const padderRef = useRef<HTMLDivElement>(null);
   const [currentResource, setCurrentResource] =
-    useState<[TemplateEdit, FabricObject]>();
+    useState<[TemplateEdit | undefined, FabricObject]>();
 
   useRealTimeResize({
     fabricCanvas: editableCanvas.current,
@@ -38,6 +38,21 @@ export const ModalInternalComponent = ({
     padderRef,
     throttleMs: 100,
   });
+
+  const confirmAndClose = useCallback(async () => {
+    const canvas = editableCanvas.current!;
+    const [group] = canvas.getObjects('group');
+    canvas.remove(group);
+    canvas.overlayImage = group;
+    group.canvas = canvas;
+    const data = canvas.toObject(['resourceFor', 'id']);
+    const selectedCard = cards.current[currentCardIndex];
+    const targetCanvas = selectedCard.canvas!;
+    targetCanvas.clear();
+    await targetCanvas.loadFromJSON(data);
+    targetCanvas.requestRenderAll();
+    onClose();
+  }, [cards, currentCardIndex, onClose]);
 
   useEffect(() => {
     // mount, we duplicate a card
@@ -103,9 +118,23 @@ export const ModalInternalComponent = ({
           <canvas key="doNotChangePlease" ref={canvasElement} />
         </div>
       </div>
-      <div className="horizontalStack">
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={onClose}>Confirm</Button>
+      <div className="horizontalStack confirmButtons">
+        <Button
+          variant="contained"
+          size="large"
+          color="primary"
+          onClick={onClose}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          size="large"
+          color="primary"
+          onClick={confirmAndClose}
+        >
+          Confirm
+        </Button>
       </div>
     </>
   );
