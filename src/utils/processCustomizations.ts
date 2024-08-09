@@ -39,9 +39,9 @@ export const processCustomizations = async (canvas: StaticCanvas | Canvas, edits
         const index = insertObjects.indexOf(fabricObject);
         insertTarget.insertAt(index + 1, image);
         const scale = util.findScaleToFit(image, fabricObject);
-        const center = fabricObject.getRelativeCenterPoint();
+        const leftTop = fabricObject.translateToOriginPoint(fabricObject.getRelativeCenterPoint(), 'left', 'top');
         image.scale(scale);
-        image.setPositionByOrigin(center, 'center', 'center');
+        image.setPositionByOrigin(leftTop, 'left', 'top');
         // @ts-expect-error not sure what to do here
         image.resourceFor = id;
         image.canvas = canvas as Canvas;
