@@ -1,5 +1,5 @@
 import { type MutableRefObject, useEffect } from 'react';
-import { cardLikeOptions, cardRatio } from '../constants';
+import { cardLikeOptions } from '../constants';
 import { type layoutOrientation } from '../resourcesTypedef';
 import { util } from 'fabric';
 import { throttle } from '../utils';

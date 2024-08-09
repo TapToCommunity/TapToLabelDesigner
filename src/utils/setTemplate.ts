@@ -21,7 +21,6 @@ FabricObject.ownDefaults.objectCaching = false;
 /* add the ability to parse 'id' to rects */
 Rect.ATTRIBUTE_NAMES = [...Rect.ATTRIBUTE_NAMES, 'id'];
 
-console.log(Rect.ATTRIBUTE_NAMES)
 export const scaleImageToOverlayArea = (
   template: templateType,
   overlayImg: FabricObject,
@@ -208,10 +207,9 @@ export const setTemplateOnCanvases = async (
       );
     }
     const mainImage = canvas.getObjects('image')[0] as FabricImage;
-    mainImage.shadow = shadow
-      ? new Shadow({ ...Shadow.parseShadow(shadow), nonScaling: true })
-      : null;
-
+    if (mainImage && shadow) {
+      mainImage.shadow = new Shadow({ ...Shadow.parseShadow(shadow), nonScaling: true });
+    }
     const couple1 = [overlayImageElement, overlay, overlayImageSource] as [
       Group | HTMLImageElement,
       templateOverlay,

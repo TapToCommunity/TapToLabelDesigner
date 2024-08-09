@@ -15,4 +15,19 @@
 
 .editSpace {
   flex-grow: 1;
+  height: 100%;
+}
+
+.verticalStack.resourceSpace {
+  overflow-y: scroll;
+  align-items: center;
+  max-width: 30%;
+  max-height: 100%;
+}
+
+.horizontalStack.resourceSpace {
+  overflow-x: scroll;
+  align-items: center;
+  max-height: 30%;
+  max-width: 100%;
 }

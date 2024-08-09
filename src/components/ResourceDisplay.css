@@ -1,0 +1,15 @@
+.resourceItem {
+  display: flex;
+  max-width: 100%;
+  flex-direction: column;
+  padding: 8px;
+  align-items: center;
+}
+
+.verticalStack .resourceItem img {
+  max-width: 100%;
+}
+
+.horizontalStack .resourceItem img {
+  max-height: 100%;
+}

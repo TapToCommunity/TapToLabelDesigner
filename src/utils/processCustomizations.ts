@@ -42,6 +42,7 @@ export const processCustomizations = async (canvas: StaticCanvas, template: temp
           const center = fabricObject.getRelativeCenterPoint();
           image.scale(scale);
           image.setPositionByOrigin(center, 'center', 'center');
+          image.resourceFor = id;
           insertTarget.set('dirty', true);
           canvas.requestRenderAll();
         }
