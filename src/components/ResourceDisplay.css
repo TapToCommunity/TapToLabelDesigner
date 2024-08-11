@@ -16,10 +16,10 @@
   border: 1px solid white;
 }
 
-.verticalStack .resourceItem img {
-  max-width: 100%;
+.verticalStack > .resourceItem img {
+  max-width: 65%;
 }
 
-.horizontalStack .resourceItem img {
-  max-height: 100%;
+.horizontalStack > .resourceItem img {
+  max-height: 65%;
 }
