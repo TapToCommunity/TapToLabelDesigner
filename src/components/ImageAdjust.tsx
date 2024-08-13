@@ -1,5 +1,5 @@
 import Slider from '@mui/material/Slider';
-import type { Canvas } from 'fabric';
+import type { Canvas, FabricImage } from 'fabric';
 import { util } from 'fabric';
 import { type RefObject, useCallback, useEffect, useState } from 'react';
 import { CardData } from '../contexts/fileDropper';
@@ -29,19 +29,22 @@ export const ImageAdjust = ({
     const canvas = canvasRef.current!;
     const image = canvas.getObjects('image')[0];
     const template = card.template;
-    const destination = template?.noMargin
-      ? {
-          width: template.overlay?.layerWidth,
-          height: template.overlay?.layerHeight,
-        }
-      : {
-          width: 100,
-          height: 100,
-        };
-    const coverScale = util.findScaleToCover(image, destination);
-    setMinScale(coverScale);
-    setMaxScale(coverScale * 10);
-    setValue(image.scaleX);
+    const overlay = template?.overlay;
+    if (overlay) {
+      const destination = template?.noMargin
+        ? {
+            width: overlay.layerWidth,
+            height: overlay.layerHeight,
+          }
+        : {
+            width: overlay.width,
+            height: overlay.height,
+          };
+      const coverScale = util.findScaleToCover(image, destination);
+      setMinScale(coverScale);
+      setMaxScale(coverScale * 10);
+      setValue(image.scaleX);
+    }
   }, [canvasRef, card]);
 
   const scaleChange = useCallback(
@@ -49,7 +52,7 @@ export const ImageAdjust = ({
     ({ target }: any) => {
       const { value } = target;
       const canvas = canvasRef.current!;
-      const image = canvas.getObjects('image')[0];
+      const image = canvas.getObjects('image')[0] as FabricImage;
       image.scale(value);
       fixImageInsideCanvas(image);
       canvas.requestRenderAll();
