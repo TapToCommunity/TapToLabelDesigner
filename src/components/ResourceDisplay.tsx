@@ -41,6 +41,7 @@ export const ResourceDisplay = ({
       {resource.resource.data.map(({ label, value }) => {
         return (
           <div
+            key={value}
             className="resourceItem"
             onClick={() =>
               clickSwap(value, target, resource, setCurrentResource)
