@@ -3,10 +3,20 @@ import './SingleCardEditModal.css';
 import Button from '@mui/material/Button';
 import { useFileDropperContext } from '../contexts/fileDropper';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Canvas, type FabricObject, type Group } from 'fabric';
+import {
+  Canvas,
+  FabricImage,
+  Point,
+  type TOriginX,
+  type TOriginY,
+  type FabricObject,
+  type Group,
+} from 'fabric';
 import { useRealTimeResize } from '../hooks/useRealtimeResize';
 import { type TemplateEdit } from '../resourcesTypedef';
 import { ResourceDisplay } from './ResourceDisplay';
+import { ImageAdjust } from './ImageAdjust';
+import { fixImageInsideCanvas } from '../utils/fixImageInsideCanvas';
 
 type SingleCardEditSpaceProps = {
   onClose: () => void;
@@ -29,7 +39,8 @@ export const ModalInternalComponent = ({
   const layout = selectedCard.template?.layout;
   const padderRef = useRef<HTMLDivElement>(null);
   const [currentResource, setCurrentResource] =
-    useState<[TemplateEdit | undefined, FabricObject]>();
+    useState<[TemplateEdit | undefined, FabricObject | undefined]>();
+  const [isImageAdjust, setImageAdjust] = useState<boolean>(false);
 
   useRealTimeResize({
     fabricCanvas: editableCanvas.current,
@@ -51,13 +62,12 @@ export const ModalInternalComponent = ({
       'original_fill',
       'original_stroke',
     ]);
-    const selectedCard = cards.current[currentCardIndex];
     const targetCanvas = selectedCard.canvas!;
     targetCanvas.clear();
     await targetCanvas.loadFromJSON(data);
     targetCanvas.requestRenderAll();
     onClose();
-  }, [cards, currentCardIndex, onClose]);
+  }, [onClose, selectedCard.canvas]);
 
   useEffect(() => {
     // mount, we duplicate a card
@@ -67,7 +77,6 @@ export const ModalInternalComponent = ({
       });
       // this is not great but we do not care for now
       editableCanvas.current = canvas;
-      const selectedCard = cards.current[currentCardIndex];
       if (selectedCard.canvas) {
         const jsonData = selectedCard.canvas.toObject([
           'resourceFor',
@@ -98,6 +107,39 @@ export const ModalInternalComponent = ({
               }
             });
             canvas.add(overlay);
+            const [mainImage] = canvas.getObjects('image') as FabricImage[];
+            if (mainImage) {
+              mainImage.hasControls = false;
+              mainImage.hasBorders = false;
+              mainImage.strokeWidth = 0;
+              mainImage.imageSmoothing = false;
+            }
+            canvas.on('selection:created', ({ selected }) => {
+              if (selected[0] instanceof FabricImage) {
+                setImageAdjust(true);
+                setCurrentResource([undefined, undefined]);
+              } else {
+                setImageAdjust(false);
+              }
+            });
+            canvas.on('selection:cleared', ({ deselected }) => {
+              if (deselected[0] instanceof FabricImage) {
+                setImageAdjust(false);
+              }
+            });
+            canvas.on('selection:updated', ({ selected }) => {
+              if (selected[0] instanceof FabricImage) {
+                setImageAdjust(true);
+                setCurrentResource([undefined, undefined]);
+              } else {
+                setImageAdjust(false);
+              }
+            });
+            canvas.on('object:moving', ({ target }) => {
+              if (target instanceof FabricImage) {
+                fixImageInsideCanvas(target);
+              }
+            });
           }
           setReady(true);
         });
@@ -122,6 +164,13 @@ export const ModalInternalComponent = ({
             target={currentResource?.[1]}
             setCurrentResource={setCurrentResource}
           />
+          {isImageAdjust && (
+            <ImageAdjust
+              card={selectedCard}
+              canvasRef={editableCanvas}
+              className={`${classNameInt}`}
+            />
+          )}
         </div>
         <div className="verticalStack editSpace" ref={padderRef}>
           <canvas key="doNotChangePlease" ref={canvasElement} />
