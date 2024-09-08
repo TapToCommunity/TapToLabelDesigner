@@ -15,6 +15,7 @@ export const FabricCanvasWrapper = ({ setFabricCanvas }: WrapperProp) => {
       FabricObject.ownDefaults.originY = 'center';
       const fabricCanvas = new StaticCanvas(canvasRef.current!, {
         renderOnAddRemove: false,
+        backgroundColor: 'white',
       });
       startTransition(() => {
         setFabricCanvas(fabricCanvas);

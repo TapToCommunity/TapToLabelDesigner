@@ -25,7 +25,7 @@ import { Authors } from './templateAuthors';
 import { templateType } from './resourcesTypedef';
 import { logoResource } from './logos';
 
-import { NFCCCsizeCard, TapeBoxCover } from './constants';
+import { NFCCCsizeCard, TapeBoxCover, taptoPrePrintedHalf, taptoPrePrintedFullHeight } from './constants';
 
 export const templates: Record<string, templateType> = {
   blankH: {
@@ -39,6 +39,18 @@ export const templates: Record<string, templateType> = {
     label: 'Blank V cover',
     author: Authors.andrea,
     media: NFCCCsizeCard
+  },
+  taptoPPHalf: {
+    layout: 'horizontal',
+    label: 'Half height tapto sticker',
+    author: Authors.tim,
+    media: taptoPrePrintedHalf
+  },
+  taptoPPFull: {
+    layout: 'vertical',
+    label: 'Full height tapto sticker',
+    author: Authors.tim,
+    media: taptoPrePrintedFullHeight
   },
   blankHF: {
     layout: 'horizontal',

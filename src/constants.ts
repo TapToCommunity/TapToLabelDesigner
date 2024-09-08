@@ -27,5 +27,27 @@ export const TapeBoxCover: MediaDefinition = {
   fill: 'white',
 };
 
+// or a musicasset box inlay cover
+export const taptoPrePrintedHalf: MediaDefinition = {
+  width: 744, // 63mm * 300dpi
+  height: 425, // 36mm * 300dpi
+  rx: 0,
+  ry: 0,
+  strokeWidth: 2,
+  stroke: 'black',
+  fill: 'white',
+};
+
+// or a musicasset box inlay cover
+export const taptoPrePrintedFullHeight: MediaDefinition = {
+  width: 862, // 4.11inch * 300dpi
+  height: 744, // 63mm * 300dpi
+  rx: 0,
+  ry: 0,
+  strokeWidth: 2,
+  stroke: 'black',
+  fill: 'white',
+};
+
 export const boxShadow =
   '0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)';
