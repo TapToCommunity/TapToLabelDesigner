@@ -7,6 +7,7 @@ import { printTemplates } from '../printTemplates';
 import { type CardData } from '../contexts/fileDropper';
 
 const fromMMtoPoint = (x: number): number => (x / 25.4) * 72;
+const fromPixToPoint = (x: number): number => (x / 300) * 72;
 
 export const preparePdf = async (
   printOptions: PrintOptions,
@@ -14,10 +15,9 @@ export const preparePdf = async (
 ) => {
   const { printerTemplateKey, cutMarks } = printOptions;
   const printerTemplate = printTemplates[printerTemplateKey];
-  const { gridSize, leftMargin, topMargin, paperSize, columns, rows } =
+  const { gridSize: _tmpGridSize, leftMargin, topMargin, paperSize, columns: _tmpColumns, rows: _tmpRows, rightMargin, bottomMargin } =
     printerTemplate;
 
-  const labelsPerPage = rows * columns;
 
   let ptPaperSize = paperSize;
   if (Array.isArray(paperSize)) {
@@ -36,8 +36,82 @@ export const preparePdf = async (
   const topMarginInPt = fromMMtoPoint(topMargin);
   const paperWidthInPt = fromMMtoPoint(paperSize[0])
   const leftMarginInPt = fromMMtoPoint(leftMargin);
+  const rightMarginInPt = fromMMtoPoint(rightMargin || leftMargin);
+  const bottomMarginInPt = fromMMtoPoint(bottomMargin || topMargin);
+
   const cutHelperX = new Set();
   const cutHelperY = new Set();
+
+  // take first card and compare with paper size, then try to guess best way to fit
+  const firstCard = cards[0];
+  const widthInPt = fromPixToPoint(firstCard.template!.media.width);
+  const heightInPt = fromPixToPoint(firstCard.template!.media.height);
+  const availWidth = paperWidthInPt - leftMarginInPt - rightMarginInPt;
+  const availHeight = paperHeightInPt - topMarginInPt - bottomMarginInPt;
+
+  let rows = _tmpRows, columns = _tmpColumns;
+  let isRotated = false;
+  if (!_tmpColumns && !_tmpRows) {
+
+    // naively divide width by width and height by height, find margins and spacing.
+    const possibleRows = Math.floor(availHeight / heightInPt);
+    const possibleColums = Math.floor(availWidth / widthInPt);
+    const straightLabels = possibleRows * possibleColums;
+    const possibleRowsRotated = Math.floor(availHeight / widthInPt);
+    const possibleColumsRotated = Math.floor(availWidth / heightInPt);
+    console.log({ possibleRows, possibleColums, possibleRowsRotated, possibleColumsRotated, availHeight, heightInPt, availWidth, widthInPt })
+    const rotatedLabels = possibleRowsRotated * possibleColumsRotated;
+    if (straightLabels === rotatedLabels) {
+      const marginsW = availWidth - possibleColums * widthInPt;
+      const marginsH = availHeight - possibleRows * heightInPt;
+
+      const marginsWR = availWidth - possibleColumsRotated * heightInPt;
+      const marginsHR = availHeight - possibleRowsRotated * widthInPt;
+      // this is bullshit. I ll think on how to choose
+      if (Math.abs(marginsW - marginsH) > Math.abs(marginsWR - marginsHR)) {
+        rows = possibleRowsRotated;
+        columns = possibleColumsRotated;
+        isRotated = true;
+      } else {
+        rows = possibleRows;
+        columns = possibleColums;
+      }
+      // choose the labels with more margin
+    } else if (straightLabels > rotatedLabels) {
+      rows = possibleRows;
+      columns = possibleColums;
+    } else {
+      isRotated = true;
+      rows = possibleRowsRotated;
+      columns = possibleColumsRotated;
+    }
+  }
+
+  const gridSize = _tmpGridSize.map(x => fromMMtoPoint(x));
+  if (gridSize[0] === 0) {
+    // determine grid size here
+    let cWidth = widthInPt;
+    let cHeight = heightInPt;
+    if (isRotated) {
+      cWidth = heightInPt;
+      cHeight = widthInPt;
+    }
+    gridSize[0] = cWidth;
+    if (columns > 1) {
+      const freeSpace = (availWidth - columns * cWidth);
+      const extraMargin = freeSpace / (columns - 1);
+      gridSize[0] = cWidth + extraMargin;
+    }
+    gridSize[1] = heightInPt;
+    if (rows > 1) {
+      const freeSpace = (availHeight - rows * cHeight);
+      const extraMargin = freeSpace / (rows - 1);
+      gridSize[1] = cHeight + extraMargin;
+    }
+  }
+
+  const labelsPerPage = rows * columns;
+
 
   const makeTheCropMarks = () => {
     pdfDoc.lineWidth(0.2);
@@ -67,6 +141,7 @@ export const preparePdf = async (
     pdfDoc.switchToPage(pageNumber);
     for (let index = 0; index < cards.length; index++) {
       const canvas = cards[index].canvas!;
+      const templateMedia = cards[index].template!.media;
       const newPageNumber = Math.floor(index / labelsPerPage);
       if (newPageNumber > pageNumber) {
         // do the cropmarks
@@ -78,10 +153,10 @@ export const preparePdf = async (
       const column = index % columns;
       const row = Math.floor(index / columns) % rows;
 
-      const xStart = fromMMtoPoint(column * gridSize[0] + leftMargin);
-      const yStart = fromMMtoPoint(row * gridSize[1] + topMargin);
-      const width = fromMMtoPoint(85);
-      const height = fromMMtoPoint(54);
+      const xStart = column * gridSize[0] + leftMarginInPt;
+      const yStart = row * gridSize[1] + topMarginInPt;
+      const width = fromPixToPoint(templateMedia.width);
+      const height = fromPixToPoint(templateMedia.height);
 
       if (cutMarks === 'crop' ) {
         cutHelperX.add(xStart);
@@ -102,6 +177,7 @@ export const preparePdf = async (
           height,
         },
         imageNeedsRotation,
+        templateMedia,
       );
     }
   }

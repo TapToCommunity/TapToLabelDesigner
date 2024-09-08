@@ -18,8 +18,8 @@ export const NFCCCsizeCard: MediaDefinition = {
 
 // or a musicasset box inlay cover
 export const TapeBoxCover: MediaDefinition = {
-  width: 1233, // 4.11inch * 300dpi (85mm)
-  height: 1200, // 4inch * 300dpi, (54mm)
+  width: 1233, // 4.11inch * 300dpi
+  height: 1200, // 4inch * 300dpi
   rx: 0,
   ry: 0,
   strokeWidth: 2,

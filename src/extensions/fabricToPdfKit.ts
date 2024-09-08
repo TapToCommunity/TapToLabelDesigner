@@ -14,6 +14,7 @@ import {
   TMat2D,
   iMatrix
 } from 'fabric';
+import type { MediaDefinition } from '../resourcesTypedef';
 
 export const createDownloadStream = async (pdfDoc: any): Promise<Blob> => {
   // @ts-expect-error yeah no definitions
@@ -216,16 +217,17 @@ export const addCanvasToPdfPage = async (
   pdfDoc: any,
   box: box,
   needsRotation: boolean,
+  templateMedia: MediaDefinition,
 ) => {
   // translate to position.
   // skip background color, but draw the clip region
 
-  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, 8);
-  pdfDoc.lineWidth(0.2);
-  pdfDoc.stroke('black');
+  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, templateMedia.rx / 4);
+  pdfDoc.lineWidth(templateMedia.strokeWidth / 10);
+  pdfDoc.stroke(templateMedia.stroke);
 
   pdfDoc.save();
-  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, 8).clip();
+  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, templateMedia.rx / 4).clip();
   // 0.24 is a scale factor between px and points to keep the 300dpi
   pdfDoc.transform(0.24, 0, 0, 0.24, box.x, box.y);
   if (needsRotation) {

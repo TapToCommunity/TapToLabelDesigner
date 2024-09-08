@@ -5,11 +5,26 @@ export type PrintTemplate = {
   columns: number;
   leftMargin: number;
   topMargin: number;
+  // set those if you go for auto-arrange
+  rightMargin?: number;
+  bottomMargin?: number;
   layout: 'portrait' | 'landscape';
   paperSize: [number, number]; // in mm
 };
 
 export const printTemplates: Record<string, PrintTemplate> = {
+  a4Auto: {
+    gridSize: [0, 0],
+    label: 'A4, auto arrange',
+    rows: 0,
+    columns: 0,
+    leftMargin: 10,
+    topMargin: 3,
+    bottomMargin: 3,
+    rightMargin: 10,
+    layout: 'landscape',
+    paperSize: [297, 210],
+  },
   horizontal: {
     gridSize: [90, 59],
     label: 'A4, Horizontal 3x3',
@@ -59,16 +74,6 @@ export const printTemplates: Record<string, PrintTemplate> = {
     topMargin: 15,
     layout: 'portrait',
     paperSize: [203, 254],
-  },
-  printTest: {
-    gridSize: [90, 56],
-    label: '152cm adhesive vinyl',
-    rows: 26,
-    columns: 16,
-    leftMargin: 10,
-    topMargin: 10,
-    layout: 'landscape',
-    paperSize: [1520, 1520],
   },
   a3v: {
     gridSize: [90, 56],
