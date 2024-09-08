@@ -1757,10 +1757,10 @@ esutils@^2.0.2:
   resolved "https://registry.npmjs.org/esutils/-/esutils-2.0.3.tgz"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-fabric@6.2.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/fabric/-/fabric-6.2.0.tgz#0b8f40001e2ec44e1afcc1b611315b59ef21dfec"
-  integrity sha512-qB3PMTplOYFmNly1xzZwOPirJ57VP3OVCULZEv/uDAtLTCentfjcCKls/cq7lw7/XJwY7q+qrGYhuTv0PWidEw==
+fabric@6.4.1:
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/fabric/-/fabric-6.4.1.tgz#34735a005586c2343696ad962826e50d6823ab33"
+  integrity sha512-n+JPU+IyaWPL/K8ObdvxbVeaDtfd6jcnozl7Yd1odGQvoaG3/IFJT9yLaAI4wIDRAiEyEPSQcD3gB5McjAxlIg==
   optionalDependencies:
     canvas "^2.11.2"
     jsdom "^20.0.1"
