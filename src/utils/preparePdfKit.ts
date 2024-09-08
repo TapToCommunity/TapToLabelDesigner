@@ -174,6 +174,7 @@ export const preparePdf = async (
         },
         needsRotation,
         templateMedia,
+        printOptions.imageType !== 'vector' // print as raster?
       );
     }
   }

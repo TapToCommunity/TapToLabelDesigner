@@ -10,7 +10,6 @@ import IconButton from '@mui/material/IconButton';
 import { printTemplates } from '../printTemplates';
 import { prepareZip } from '../utils/prepareZip';
 import { preparePdf as preparePdfVector } from '../utils/preparePdfKit';
-import { preparePdf } from '../utils/preparePdf';
 import { generateCutShapes } from '../utils/generateCutShapes';
 
 type PrintModalProps = {
@@ -21,13 +20,8 @@ type PrintModalProps = {
 const createOutput = async (cards: CardData[], printOptions: PrintOptions) => {
   if (printOptions.fileType === 'zip') {
     await prepareZip(cards);
-  } else if (
-    printOptions.fileType === 'pdf' &&
-    printOptions.imageType === 'vector'
-  ) {
+  } else if (printOptions.fileType === 'pdf') {
     await preparePdfVector(printOptions, cards);
-  } else {
-    await preparePdf(printOptions, cards);
   }
   if (printOptions.cutMarks === 'cut') {
     await generateCutShapes(printOptions, cards);
