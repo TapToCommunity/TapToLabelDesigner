@@ -1,6 +1,5 @@
 import { useRef, useEffect, useTransition } from 'react';
-import { cardLikeOptions } from '../constants';
-import { StaticCanvas, Rect, FabricObject, type Canvas } from 'fabric';
+import { StaticCanvas, FabricObject } from 'fabric';
 
 type WrapperProp = {
   setFabricCanvas: (canvas: StaticCanvas | null) => void;
@@ -15,16 +14,8 @@ export const FabricCanvasWrapper = ({ setFabricCanvas }: WrapperProp) => {
       FabricObject.ownDefaults.originX = 'center';
       FabricObject.ownDefaults.originY = 'center';
       const fabricCanvas = new StaticCanvas(canvasRef.current!, {
-        width: cardLikeOptions.width,
-        height: cardLikeOptions.height,
         renderOnAddRemove: false,
       });
-      const cardBorder = new Rect(cardLikeOptions);
-      cardBorder.canvas = fabricCanvas as Canvas;
-      fabricCanvas.clipPath = cardBorder;
-      fabricCanvas.backgroundColor = 'white';
-      fabricCanvas.backgroundImage = cardBorder;
-      fabricCanvas.centerObject(cardBorder);
       startTransition(() => {
         setFabricCanvas(fabricCanvas);
       });

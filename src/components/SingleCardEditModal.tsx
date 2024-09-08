@@ -37,6 +37,7 @@ export const ModalInternalComponent = ({
   useRealTimeResize({
     fabricCanvas: editableCanvas.current,
     layout: selectedCard.template!.layout,
+    media: selectedCard.template!.media,
     ready,
     padderRef,
     throttleMs: 100,

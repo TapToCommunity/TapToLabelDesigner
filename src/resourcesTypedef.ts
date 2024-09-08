@@ -46,6 +46,16 @@ export type TemplateEdit = {
   resource: EditResource;
 }
 
+export type MediaDefinition = {
+  width: number;
+  height: number;
+  rx: number;
+  ry: number;
+  strokeWidth: number;
+  stroke: string;
+  fill: string;
+}
+
 export type templateType = {
   layout: layoutOrientation;
   overlay?: templateOverlay;
@@ -64,4 +74,5 @@ export type templateType = {
   canEdit?: boolean;
 
   edits?: TemplateEdit[];
+  media: MediaDefinition;
 };

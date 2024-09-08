@@ -12,7 +12,7 @@ import {
   type SerializedGroupProps,
   Rect,
 } from 'fabric';
-import { cardLikeOptions } from '../constants';
+import { NFCCCsizeCard } from '../constants';
 import { CardData } from '../contexts/fileDropper';
 import type { templateType, templateOverlay } from '../resourcesTypedef';
 import { processCustomizations } from './processCustomizations';
@@ -36,7 +36,7 @@ export const scaleImageToOverlayArea = (
 
   if (noMargin) {
     scaler = util.findScaleToCover;
-    scaledTemplateOverlaySize = template.layout === 'horizontal' ? new Point(cardLikeOptions.width, cardLikeOptions.height) : new Point(cardLikeOptions.height, cardLikeOptions.width);
+    scaledTemplateOverlaySize = template.layout === 'horizontal' ? new Point(NFCCCsizeCard.width, NFCCCsizeCard.height) : new Point(NFCCCsizeCard.height, NFCCCsizeCard.width);
   } else {
     scaledTemplateOverlaySize = overlayImg._getTransformedDimensions();
   }
@@ -132,11 +132,11 @@ const reposition = (
   layout: 'horizontal' | 'vertical',
 ): void => {
   if (layout === 'horizontal') {
-    fabricLayer.left = cardLikeOptions.width / 2;
-    fabricLayer.top = cardLikeOptions.height / 2;
+    fabricLayer.left = NFCCCsizeCard.width / 2;
+    fabricLayer.top = NFCCCsizeCard.height / 2;
   } else {
-    fabricLayer.left = cardLikeOptions.height / 2;
-    fabricLayer.top = cardLikeOptions.width / 2;
+    fabricLayer.left = NFCCCsizeCard.height / 2;
+    fabricLayer.top = NFCCCsizeCard.width / 2;
   }
   fabricLayer.setCoords();
 };
@@ -176,7 +176,7 @@ export const setTemplateOnCanvases = async (
       ? backgroundImageSource
       : await Group.fromObject(backgroundImageSource));
   const isHorizontal = layout === 'horizontal';
-  const { width, height } = cardLikeOptions;
+  const { width, height } = template.media;
   const finalWidth = isHorizontal ? width : height;
   const finalHeight = isHorizontal ? height : width;
 
@@ -195,7 +195,11 @@ export const setTemplateOnCanvases = async (
         },
         { backstoreOnly: true },
       );
-
+      const clipPath = new Rect(template.media);
+      clipPath.canvas = canvas as Canvas;
+      canvas.centerObject(clipPath);
+      canvas.clipPath = clipPath;
+      
       canvas.setDimensions(
         {
           width: isHorizontal ? 'var(--cell-width)' : 'auto',
@@ -275,10 +279,10 @@ export const setTemplateOnCanvases = async (
           // reset image size
           const destination =
             template?.layout === 'horizontal'
-              ? cardLikeOptions
+              ? NFCCCsizeCard
               : {
-                  width: cardLikeOptions.height,
-                  height: cardLikeOptions.width,
+                  width: NFCCCsizeCard.height,
+                  height: NFCCCsizeCard.width,
                 };
           const pictureScale = util.findScaleToCover(mainImage, destination);
           mainImage.set({
