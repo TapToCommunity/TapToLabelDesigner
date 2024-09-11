@@ -3,12 +3,8 @@ import type { Canvas, FabricImage } from 'fabric';
 import { util } from 'fabric';
 import { type RefObject, useCallback, useEffect, useState } from 'react';
 import { CardData } from '../contexts/fileDropper';
-import { cardLikeOptions } from '../constants';
 import { Typography } from '@mui/material';
 import { fixImageInsideCanvas } from '../utils/fixImageInsideCanvas';
-
-const ccInchesWidth = 3.375 as const;
-const baseDpi = cardLikeOptions.width / ccInchesWidth;
 
 type ImageAdjustProps = {
   canvasRef: RefObject<Canvas>;
@@ -76,11 +72,12 @@ export const ImageAdjust = ({
           onChange={scaleChange}
         />
         <Typography>
-          Maximum image DPI: {Math.floor(baseDpi / value).toString()}
+          Maximum image DPI: {Math.floor(300 / value).toString()}
         </Typography>
         <Typography>
           The maximum image DPI represents the resulting resolution of the image
-          after you scaled it to cover the card that is {ccInchesWidth} inches.
+          after you scaled it to cover the card that is{' '}
+          {card.template!.media.width} inches.
         </Typography>
       </div>
     </div>

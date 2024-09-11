@@ -12,7 +12,6 @@ import {
   type SerializedGroupProps,
   Rect,
 } from 'fabric';
-import { cardLikeOptions } from '../constants';
 import { CardData } from '../contexts/fileDropper';
 import type { templateType, templateOverlay } from '../resourcesTypedef';
 import { processCustomizations } from './processCustomizations';
@@ -26,7 +25,7 @@ export const scaleImageToOverlayArea = (
   overlayImg: FabricObject,
   mainImage: FabricImage,
 ) => {
-  const { overlay, noMargin } = template;
+  const { overlay, noMargin, media } = template;
   // scale the art to the designed area in the template. to fit
   // TODO: add option later for fit or cover
   const isRotated = mainImage.angle % 180 !== 0;
@@ -36,7 +35,7 @@ export const scaleImageToOverlayArea = (
 
   if (noMargin) {
     scaler = util.findScaleToCover;
-    scaledTemplateOverlaySize = template.layout === 'horizontal' ? new Point(cardLikeOptions.width, cardLikeOptions.height) : new Point(cardLikeOptions.height, cardLikeOptions.width);
+    scaledTemplateOverlaySize = template.layout === 'horizontal' ? new Point(media.width, media.height) : new Point(media.height, media.width);
   } else {
     scaledTemplateOverlaySize = overlayImg._getTransformedDimensions();
   }
@@ -129,14 +128,14 @@ const parseSvg = (url: string): Promise<SerializedGroupProps> =>
 
 const reposition = (
   fabricLayer: FabricObject,
-  layout: 'horizontal' | 'vertical',
+  template: templateType,
 ): void => {
-  if (layout === 'horizontal') {
-    fabricLayer.left = cardLikeOptions.width / 2;
-    fabricLayer.top = cardLikeOptions.height / 2;
+  if (template.layout === 'horizontal') {
+    fabricLayer.left = template.media.width / 2;
+    fabricLayer.top = template.media.height / 2;
   } else {
-    fabricLayer.left = cardLikeOptions.height / 2;
-    fabricLayer.top = cardLikeOptions.width / 2;
+    fabricLayer.left = template.media.height / 2;
+    fabricLayer.top = template.media.width / 2;
   }
   fabricLayer.setCoords();
 };
@@ -176,7 +175,7 @@ export const setTemplateOnCanvases = async (
       ? backgroundImageSource
       : await Group.fromObject(backgroundImageSource));
   const isHorizontal = layout === 'horizontal';
-  const { width, height } = cardLikeOptions;
+  const { width, height } = template.media;
   const finalWidth = isHorizontal ? width : height;
   const finalHeight = isHorizontal ? height : width;
 
@@ -195,6 +194,10 @@ export const setTemplateOnCanvases = async (
         },
         { backstoreOnly: true },
       );
+      const clipPath = new Rect(template.media);
+      clipPath.canvas = canvas as Canvas;
+      canvas.centerObject(clipPath);
+      canvas.clipPath = clipPath;
 
       canvas.setDimensions(
         {
@@ -260,7 +263,7 @@ export const setTemplateOnCanvases = async (
           });
         }
         // set the overlay of the template in the center of the card
-        reposition(fabricLayer, template.layout);
+        reposition(fabricLayer, template);
         if (templateLayer === overlay) {
           scaleImageToOverlayArea(template, fabricLayer, mainImage);
           canvas.overlayImage = fabricLayer;
@@ -275,10 +278,10 @@ export const setTemplateOnCanvases = async (
           // reset image size
           const destination =
             template?.layout === 'horizontal'
-              ? cardLikeOptions
+              ? template.media
               : {
-                  width: cardLikeOptions.height,
-                  height: cardLikeOptions.width,
+                  width: template.media.height,
+                  height: template.media.width,
                 };
           const pictureScale = util.findScaleToCover(mainImage, destination);
           mainImage.set({
@@ -292,7 +295,7 @@ export const setTemplateOnCanvases = async (
         if (templateLayer === background) {
           canvas.backgroundImage = canvas.clipPath;
           const backgroundImg = canvas.backgroundImage!;
-          reposition(backgroundImg, template.layout);
+          reposition(backgroundImg, template);
         }
       }
     }
@@ -304,7 +307,7 @@ export const setTemplateOnCanvases = async (
       } else {
         clipPath.angle = 90;
       }
-      reposition(clipPath, template.layout);
+      reposition(clipPath, template);
     }
     if (template.edits) {
       processCustomizations(canvas, template.edits);

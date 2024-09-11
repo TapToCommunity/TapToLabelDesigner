@@ -25,16 +25,32 @@ import { Authors } from './templateAuthors';
 import { templateType } from './resourcesTypedef';
 import { logoResource } from './logos';
 
+import { NFCCCsizeCard, TapeBoxCover, taptoPrePrintedHalf, taptoPrePrintedFullHeight } from './constants';
+
 export const templates: Record<string, templateType> = {
   blankH: {
     layout: 'horizontal',
     label: 'Blank H cover',
     author: Authors.andrea,
+    media: NFCCCsizeCard
   },
   blankV: {
     layout: 'vertical',
     label: 'Blank V cover',
     author: Authors.andrea,
+    media: NFCCCsizeCard
+  },
+  taptoPPHalf: {
+    layout: 'horizontal',
+    label: 'Half height tapto sticker',
+    author: Authors.tim,
+    media: taptoPrePrintedHalf
+  },
+  taptoPPFull: {
+    layout: 'vertical',
+    label: 'Full height tapto sticker',
+    author: Authors.tim,
+    media: taptoPrePrintedFullHeight
   },
   blankHF: {
     layout: 'horizontal',
@@ -51,6 +67,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     author: Authors.andrea,
+    media: NFCCCsizeCard
   },
   blankVF: {
     layout: 'vertical',
@@ -67,6 +84,7 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     author: Authors.andrea,
+    media: NFCCCsizeCard
   },
   tapto2: {
     layout: 'horizontal',
@@ -89,6 +107,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'Tap-to H',
     author: Authors.tim,
+    media: NFCCCsizeCard
   },
   tapto3: {
     layout: 'vertical',
@@ -110,7 +129,8 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     label: 'Tap-to V',
-    author: Authors.tim
+    author: Authors.tim,
+    media: NFCCCsizeCard,
   },
   hucard: {
     layout: 'vertical',
@@ -133,6 +153,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'HuCard',
     author: Authors.tim,
+    media: NFCCCsizeCard,
   },
   hucardsteam: {
     layout: 'vertical',
@@ -155,6 +176,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'HuCardSteam',
     author: Authors.ewrt,
+    media: NFCCCsizeCard,
   },
   hucardsteamVR: {
     layout: 'vertical',
@@ -177,6 +199,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'HuCardSteamVR',
     author: Authors.ewrt,
+    media: NFCCCsizeCard,
   },
   hucardc64: {
     layout: 'vertical',
@@ -199,6 +222,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'HuCard (C64)',
     author: Authors.ben,
+    media: NFCCCsizeCard,
   },
   taptoGB: {
     layout: 'horizontal',
@@ -221,6 +245,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'Tap-to Gameboy',
     author: Authors.ariel,
+    media: NFCCCsizeCard,
   },
   taptoFloppy: {
     layout: 'vertical',
@@ -242,6 +267,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'Floppy 3.5',
     author: Authors.andrea,
+    media: NFCCCsizeCard,
   },
   taptoFloppy525: {
     layout: 'vertical',
@@ -263,6 +289,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'Floppy 5.25',
     author: Authors.andrea,
+    media: NFCCCsizeCard,
   },
   tapToNes: {
     layout: 'vertical',
@@ -284,6 +311,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'Nes',
     author: Authors.ariel,
+    media: NFCCCsizeCard,
   },
   tapToGenesis: {
     layout: 'vertical',
@@ -305,6 +333,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'Genesis',
     author: Authors.ariel,
+    media: NFCCCsizeCard,
   },
   tapToPcEngine: {
     layout: 'vertical',
@@ -326,6 +355,7 @@ export const templates: Record<string, templateType> = {
     },
     label: 'PcEngineCD',
     author: Authors.ariel,
+    media: NFCCCsizeCard,
   },
   anime0taku: {
     canEdit: true,
@@ -347,6 +377,13 @@ export const templates: Record<string, templateType> = {
     label: 'full image + system',
     noMargin: true,
     author: Authors.animeotaku,
+    media: NFCCCsizeCard,
+  },
+  cassetteBox: {
+    layout: 'horizontal',
+    label: 'Casset box cover',
+    author: Authors.animeotaku, // to be changed with Phoneix data
+    media: TapeBoxCover
   }
 } as const;
 

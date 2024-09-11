@@ -14,6 +14,7 @@ import {
   TMat2D,
   iMatrix
 } from 'fabric';
+import type { MediaDefinition } from '../resourcesTypedef';
 
 export const createDownloadStream = async (pdfDoc: any): Promise<Blob> => {
   // @ts-expect-error yeah no definitions
@@ -216,16 +217,18 @@ export const addCanvasToPdfPage = async (
   pdfDoc: any,
   box: box,
   needsRotation: boolean,
+  templateMedia: MediaDefinition,
+  asRaster: boolean
 ) => {
   // translate to position.
   // skip background color, but draw the clip region
 
-  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, 8);
-  pdfDoc.lineWidth(0.2);
-  pdfDoc.stroke('black');
+  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, templateMedia.rx / 4);
+  pdfDoc.lineWidth(templateMedia.strokeWidth / 10);
+  pdfDoc.stroke(templateMedia.stroke);
 
   pdfDoc.save();
-  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, 8).clip();
+  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, templateMedia.rx / 4).clip();
   // 0.24 is a scale factor between px and points to keep the 300dpi
   pdfDoc.transform(0.24, 0, 0, 0.24, box.x, box.y);
   if (needsRotation) {
@@ -234,19 +237,28 @@ export const addCanvasToPdfPage = async (
     pdfDoc.transform(1, 0, 0, 1, -box.height / 2 / 0.24, -box.width / 2 / 0.24);
   }
 
-  if (canvas.backgroundImage instanceof Group) {
-    await addGroupToPdf(canvas.backgroundImage, pdfDoc);
-  } else {
-    // add it as an image.
-  }
+  if (asRaster) {
+    const imageFetch = await (await fetch(canvas.toDataURL())).arrayBuffer();
+    pdfDoc.image(imageFetch, 0, 0, {
+      width: (needsRotation ? box.height : box.width) / 0.24,
+      height: (needsRotation ? box.width : box.height) / 0.24,
+    });
 
-  const mainImage = canvas.getObjects('image')[0] as FabricImage;
-  await addImageToPdf(mainImage, pdfDoc);
-
-  if (canvas.overlayImage instanceof Group) {
-    await addGroupToPdf(canvas.overlayImage, pdfDoc);
   } else {
-    // add it as an image.
+    if (canvas.backgroundImage instanceof Group) {
+      await addGroupToPdf(canvas.backgroundImage, pdfDoc);
+    } else {
+      // add it as an image.
+    }
+  
+    const mainImage = canvas.getObjects('image')[0] as FabricImage;
+    await addImageToPdf(mainImage, pdfDoc);
+  
+    if (canvas.overlayImage instanceof Group) {
+      await addGroupToPdf(canvas.overlayImage, pdfDoc);
+    } else {
+      // add it as an image.
+    }
   }
 
   pdfDoc.restore();
