@@ -13,7 +13,13 @@
   padding: 18px;
 }
 
-.editSpace {
+.verticalStack > .editSpace {
+  position: relative;
+  flex-grow: 1;
+  height: 70%;
+}
+
+.horizontalStack > .editSpace {
   position: relative;
   flex-grow: 1;
   height: 100%;
@@ -21,6 +27,10 @@
 
 .topSpace {
   align-items: flex-start;
+}
+
+.topSpace.verticalStack {
+  height: calc(100vh - 110px);
 }
 
 .verticalStack.resourceSpace {
@@ -34,6 +44,7 @@
   overflow-x: scroll;
   align-items: flex-end;
   max-height: 30%;
+  height: 25%;
   max-width: 100%;
 }
 

@@ -31,12 +31,13 @@ export const scaleImageToOverlayArea = (
   const isRotated = mainImage.angle % 180 !== 0;
   let pictureScaleToTemplate = 1;
   let scaledTemplateOverlaySize = new Point();
-  let scaler = util.findScaleToFit;
+  let scaler;
 
   if (noMargin) {
     scaler = util.findScaleToCover;
     scaledTemplateOverlaySize = template.layout === 'horizontal' ? new Point(media.width, media.height) : new Point(media.height, media.width);
   } else {
+    scaler = overlay?.strategy === 'cover' ?  util.findScaleToCover : util.findScaleToFit;
     scaledTemplateOverlaySize = overlayImg._getTransformedDimensions();
   }
 
