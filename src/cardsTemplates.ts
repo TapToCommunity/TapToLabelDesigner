@@ -423,7 +423,7 @@ export const templates: Record<string, templateType> = {
       layerWidth: 354,
       layerHeight: 591,
       height: 445/591,
-      width: 300/354,
+      width: 305/354,
       y: 117/591,
       x: 25/354,
     },
