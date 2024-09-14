@@ -130,7 +130,7 @@ export const ModalInternalComponent = ({
             });
             canvas.on('object:moving', ({ target }) => {
               if (target instanceof FabricImage) {
-                fixImageInsideCanvas(target);
+                fixImageInsideCanvas(target, selectedCard.template!);
               }
             });
           }

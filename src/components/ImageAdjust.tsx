@@ -50,11 +50,11 @@ export const ImageAdjust = ({
       const canvas = canvasRef.current!;
       const image = canvas.getObjects('image')[0] as FabricImage;
       image.scale(value);
-      fixImageInsideCanvas(image);
+      fixImageInsideCanvas(image, card.template!);
       canvas.requestRenderAll();
       setValue(value);
     },
-    [canvasRef],
+    [canvasRef, card],
   );
 
   return (
