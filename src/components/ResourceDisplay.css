@@ -22,4 +22,5 @@
 
 .horizontalStack > .resourceItem img {
   max-height: 65%;
+  max-width: 250px;
 }

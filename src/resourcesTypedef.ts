@@ -20,6 +20,7 @@ export type templateOverlay = templateLayer & {
   width: number;
   /* percentage height that is transparent */
   height: number;
+  strategy?: 'fit' | 'cover'
 };
 
 export enum EditType {

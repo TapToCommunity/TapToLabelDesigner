@@ -46,6 +46,7 @@ export const processCustomizations = async (canvas: StaticCanvas | Canvas, edits
         image.resourceFor = id;
         image.canvas = canvas as Canvas;
         insertTarget.set('dirty', true);
+        (insertTarget as Group).triggerLayout();
         lastInsertedObject = image;
         canvas.requestRenderAll();
       }

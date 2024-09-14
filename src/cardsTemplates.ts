@@ -20,6 +20,7 @@ import genesisBg from './assets/genesis_bg.svg';
 import pcEngine from './assets/pcengine.svg';
 import pcEngineBG from './assets/pcengine_bg.svg';
 import animeOt4ku from './assets/tapto_0t4ku.svg';
+import cassetTape from './assets/cassette_tape.svg';
 
 import { Authors } from './templateAuthors';
 import { templateType } from './resourcesTypedef';
@@ -381,11 +382,39 @@ export const templates: Record<string, templateType> = {
   },
   cassetteBox: {
     layout: 'horizontal',
+    label: 'Casset box placeholder',
+    author: Authors.animeotaku, // to be changed with Phoneix data
+    media: TapeBoxCover
+  },
+  cassetteBoxV2: {
+    layout: 'horizontal',
     label: 'Casset box cover',
+    overlay: {
+      layerWidth: 1233,
+      layerHeight: 1200,
+      url: cassetTape,
+      height: 1 - 123/1200,
+      width: 1 - 454/1233,
+      y: 123/1200,
+      x: 454/1233,
+      isSvg: true,
+      strategy: 'cover',
+    },
+    edits: [{
+      id: 'placeholder_logo_1',
+      resource: logoResource,
+    }, {
+      id: 'placeholder_logo_2',
+      resource: logoResource,
+    }, {
+      id: 'placeholder_logo_3',
+      resource: logoResource,
+    }],
+    canEdit: true,
     author: Authors.animeotaku, // to be changed with Phoneix data
     media: TapeBoxCover
   }
 } as const;
-
-export const defaultTemplateKey = 'anime0taku';
+// hucard
+export const defaultTemplateKey = 'cassetteBoxV2';
 export const defaultTemplate = templates[defaultTemplateKey];
