@@ -49,5 +49,16 @@ export const taptoPrePrintedFullHeight: MediaDefinition = {
   fill: 'white',
 };
 
+// or a musicasset box inlay cover
+export const miniNfcCard: MediaDefinition = {
+  width: 591, //5cm * 300dpi
+  height: 354, // 63mm * 300dpi
+  rx: 8,
+  ry: 8,
+  strokeWidth: 2,
+  stroke: 'black',
+  fill: 'white',
+};
+
 export const boxShadow =
   '0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)';
