@@ -10,6 +10,7 @@ export const enum Authors {
   animeotaku,
   ben,
   ewrt,
+  alice,
 }
 
 export const templateAuthors: Record<Authors, TemplateAuthors> = {
@@ -37,6 +38,10 @@ export const templateAuthors: Record<Authors, TemplateAuthors> = {
   [Authors.ewrt]: {
     name: 'Ewrt',
     href: 'https://github.com/ewrt101',
+  },
+  [Authors.alice]: {
+    name: 'Alice',
+    href: 'https://github.com/alicecrawford',
   }
 } as const;
 

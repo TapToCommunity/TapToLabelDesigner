@@ -21,12 +21,12 @@ import pcEngine from './assets/pcengine.svg';
 import pcEngineBG from './assets/pcengine_bg.svg';
 import animeOt4ku from './assets/tapto_0t4ku.svg';
 import cassetTape from './assets/cassette_tape.svg';
-
+import mininfcAlice from './assets/3by5_steam.svg';
 import { Authors } from './templateAuthors';
 import { templateType } from './resourcesTypedef';
 import { logoResource } from './logos';
 
-import { NFCCCsizeCard, TapeBoxCover, taptoPrePrintedHalf, taptoPrePrintedFullHeight } from './constants';
+import { NFCCCsizeCard, TapeBoxCover, taptoPrePrintedHalf, taptoPrePrintedFullHeight, miniNfcCard } from './constants';
 
 export const templates: Record<string, templateType> = {
   blankH: {
@@ -413,8 +413,25 @@ export const templates: Record<string, templateType> = {
     canEdit: true,
     author: Authors.animeotaku, // to be changed with Phoneix data
     media: TapeBoxCover
+  },
+  miniNfcAlice: {
+    layout: 'vertical',
+    label: 'Steam 3by5cm',
+    overlay: {
+      url: mininfcAlice,
+      isSvg: true,
+      layerWidth: 354,
+      layerHeight: 591,
+      height: 445/591,
+      width: 305/354,
+      y: 117/591,
+      x: 25/354,
+    },
+    author: Authors.alice,
+    media: miniNfcCard,
   }
+
 } as const;
-// hucard
-export const defaultTemplateKey = 'cassetteBoxV2';
+
+export const defaultTemplateKey = 'hucard';
 export const defaultTemplate = templates[defaultTemplateKey];
