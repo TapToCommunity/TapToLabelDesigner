@@ -20,12 +20,16 @@ export const ImageAdjust = ({
   const [value, setValue] = useState<number>(1);
   const [minScale, setMinScale] = useState<number>(0.5);
   const [maxScale, setMaxScale] = useState<number>(5);
+  const [printSizeX, setPrintsizeX] = useState<number>(1);
+  const [printSizeY, setPrintsizeY] = useState<number>(1);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
     const image = canvas.getObjects('image')[0];
+    const overlayObj = canvas.getObjects('group')[0];
     const template = card.template;
     const overlay = template?.overlay;
+    const dims = overlayObj._getTransformedDimensions();
     if (overlay) {
       const destination = template?.noMargin
         ? {
@@ -33,10 +37,12 @@ export const ImageAdjust = ({
             height: overlay.layerHeight,
           }
         : {
-            width: overlay.width,
-            height: overlay.height,
+            width: overlay.width * dims.x,
+            height: overlay.height * dims.y,
           };
       const coverScale = util.findScaleToCover(image, destination);
+      setPrintsizeX(destination.width);
+      setPrintsizeY(destination.height);
       setMinScale(coverScale);
       setMaxScale(coverScale * 10);
       setValue(image.scaleX);
@@ -76,8 +82,9 @@ export const ImageAdjust = ({
         </Typography>
         <Typography>
           The maximum image DPI represents the resulting resolution of the image
-          after you scaled it to cover the card that is{' '}
-          {card.template!.media.width} inches.
+          after you scaled it to cover the part of template that is around{' '}
+          {(printSizeX / 300).toFixed(2)} by {(printSizeY / 300).toFixed(2)}{' '}
+          inches.
         </Typography>
       </div>
     </div>
