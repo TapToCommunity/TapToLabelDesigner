@@ -5,9 +5,13 @@ import { useAppDataContext } from '../contexts/appData';
 import { useFileAdder } from '../hooks/useFileAdder';
 import { templateAuthors } from '../templateAuthors';
 import type { templateType } from '../resourcesTypedef';
+import { useEffect, useState } from 'react';
 
 const TemplatesCarousel = () => {
-  const { setTemplate } = useAppDataContext();
+  const [templateItems, setTemplateItems] = useState<
+    (templateType & { key: string })[]
+  >([]);
+  const { setTemplate, setMediaType, availableTemplates } = useAppDataContext();
   const { inputElement, openInputFile } = useFileAdder();
   const items = Object.entries(templates)
     .map<templateType & { key: string }>(([key, value]) => ({
@@ -18,6 +22,8 @@ const TemplatesCarousel = () => {
       (tData) =>
         (!!tData.overlay || !!tData.background) && !tData.key.includes('blank'),
     );
+
+  useEffect(() => {});
 
   return (
     <>

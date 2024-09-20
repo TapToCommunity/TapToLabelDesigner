@@ -26,7 +26,7 @@ import { Authors } from './templateAuthors';
 import { templateType } from './resourcesTypedef';
 import { logoResource } from './logos';
 
-import { NFCCCsizeCard, TapeBoxCover, taptoPrePrintedHalf, taptoPrePrintedFullHeight, miniNfcCard } from './constants';
+import { NFCCCsizeCard, TapeBoxCover, taptoPrePrintedHalf, taptoPrePrintedFullHeight, miniNfcCard } from './printMediaTypes';
 
 export const templates: Record<string, templateType> = {
   blankH: {

@@ -55,6 +55,7 @@ export type MediaDefinition = {
   strokeWidth: number;
   stroke: string;
   fill: string;
+  label: string;
 }
 
 export type templateType = {
