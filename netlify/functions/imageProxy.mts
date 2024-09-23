@@ -20,6 +20,7 @@ export default async (req: Request /* , context: Context */): Promise<Response> 
       return new Response(body, { status, statusText, headers: respHeaders });
     }
   }
+  return new Response(null, { status: 403 });
 }
 
 export const config: Config = {
