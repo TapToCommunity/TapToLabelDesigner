@@ -1,33 +1,50 @@
 import Typography from '@mui/material/Typography';
-import { templates } from '../cardsTemplates';
+import { mediaTargetList } from '../printMediaTypes';
+
 import './Carousel.css';
 import { useAppDataContext } from '../contexts/appData';
 import { useFileAdder } from '../hooks/useFileAdder';
 import { templateAuthors } from '../templateAuthors';
 import type { templateType } from '../resourcesTypedef';
-import { useEffect, useState } from 'react';
+import { useState, useLayoutEffect } from 'react';
+import { ThreeDCarousel } from './ThreeDCarousel';
 
 const TemplatesCarousel = () => {
-  const [templateItems, setTemplateItems] = useState<
-    (templateType & { key: string })[]
-  >([]);
   const { setTemplate, setMediaType, availableTemplates } = useAppDataContext();
   const { inputElement, openInputFile } = useFileAdder();
-  const items = Object.entries(templates)
-    .map<templateType & { key: string }>(([key, value]) => ({
-      ...value,
-      key,
-    }))
-    .filter(
-      (tData) =>
-        (!!tData.overlay || !!tData.background) && !tData.key.includes('blank'),
-    );
+  const [items, setItems] = useState<(templateType & { key: string })[]>([]);
 
-  useEffect(() => {});
+  useLayoutEffect(() => {
+    setItems(
+      Object.entries(availableTemplates)
+        .map<templateType & { key: string }>(([key, value]) => ({
+          ...value,
+          key,
+        }))
+        .filter(
+          (tData) =>
+            (!!tData.overlay || !!tData.background) &&
+            !tData.key.includes('blank'),
+        ),
+    );
+  }, [availableTemplates]);
 
   return (
     <>
       {inputElement}
+      <Typography variant="h3" color="primary">
+        Choose the type of label you want to print:
+      </Typography>
+      <ThreeDCarousel onClick={console.log} />
+      <div className="carousel-container">
+        <div className="carousel-scroll">
+          {mediaTargetList.map((tData) => (
+            <div key={tData.label} onClick={() => setMediaType(tData)}>
+              {tData.label}
+            </div>
+          ))}
+        </div>
+      </div>
       <Typography variant="h3" color="primary">
         Click a template from the {items.length} availables to get started:
       </Typography>

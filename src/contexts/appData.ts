@@ -36,7 +36,6 @@ export type contextType = {
   setPrinterTemplateKey: (templateKey: string) => void;
   setIsIdle: (value: boolean) => void;
   setMediaType: (value: MediaDefinition) => void;
-  setAvailableTemplates: (value: templateType[]) => void;
 };
 
 export const defaultContextValue: contextType = {
@@ -44,7 +43,7 @@ export const defaultContextValue: contextType = {
   setIsIdle: noop,
   originalColors: [],
   customColors: [],
-  availableTemplates: Object.values(templates)sssssssss.filter((t) => t.media === defaultTemplate.media),
+  availableTemplates: Object.values(templates).filter((t) => t.media === defaultTemplate.media),
   mediaType: defaultTemplate.media,
   template: defaultTemplate,
   printerTemplate: defaultPrinterTemplate,
@@ -62,7 +61,6 @@ export const defaultContextValue: contextType = {
   setPrinterTemplate: noop,
   setPrinterTemplateKey: noop,
   setMediaType: noop,
-  setAvailableTemplates: noop,
 };
 
 export const AppDataContext = createContext<contextType>(defaultContextValue);
