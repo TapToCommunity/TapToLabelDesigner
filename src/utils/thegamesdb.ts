@@ -57,7 +57,7 @@ export async function fetchGameList(
   platform: Platform,
   page: string,
 ): Promise<GameListData> {
-  const url = getGoodUrl();
+  const url = getGoodUrl(GAMESDB_SEARCH_ENDPOINT);
   url.searchParams.append('name', query);
   url.searchParams.append('fields', 'platform,players');
   url.searchParams.append('include', 'boxart');
@@ -115,21 +115,21 @@ export async function fetchGameList(
   );
 }
 
-const getGoodUrl = (): URL => {
+const getGoodUrl = (relativeUrl: string): URL => {
   const host = window.location.hostname;
   let fqdn = 'https://tapto-designer.netlify.app';
   if (host.includes('netlify') || host.includes('tapto')) {
     fqdn = `${window.location.protocol}//${window.location.hostname}`;
   } 
   const url = new URL(
-    GAMESDB_IMAGE_ENDPOINT,
+    relativeUrl,
     fqdn,
   );
   return url;
 }
 
 export async function fetchGameImages(gameId: number): Promise<GameImagesData> {
-  const url = getGoodUrl();
+  const url = getGoodUrl(GAMESDB_IMAGE_ENDPOINT);
   url.searchParams.append('games_id', `${gameId}`);
   url.searchParams.append(
     'filter[type]',
