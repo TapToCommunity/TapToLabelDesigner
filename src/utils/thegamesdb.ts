@@ -57,12 +57,7 @@ export async function fetchGameList(
   platform: Platform,
   page: string,
 ): Promise<GameListData> {
-  const url = new URL(
-    GAMESDB_SEARCH_ENDPOINT,
-    // if working with the backend functions, put this on your deploy preview url
-    'https://tapto-designer.netlify.app',
-    // `${window.location.protocol}//${window.location.hostname}`,
-  );
+  const url = getGoodUrl();
   url.searchParams.append('name', query);
   url.searchParams.append('fields', 'platform,players');
   url.searchParams.append('include', 'boxart');
@@ -120,13 +115,21 @@ export async function fetchGameList(
   );
 }
 
-export async function fetchGameImages(gameId: number): Promise<GameImagesData> {
+const getGoodUrl = (): URL => {
+  const host = window.location.hostname;
+  let fqdn = 'https://tapto-designer.netlify.app';
+  if (host.includes('netlify') || host.includes('tapto')) {
+    fqdn = `${window.location.protocol}//${window.location.hostname}`;
+  } 
   const url = new URL(
     GAMESDB_IMAGE_ENDPOINT,
-    // if working with the backend functions, put this on your deploy preview url
-    'https://tapto-designer.netlify.app',
-    // `${window.location.protocol}//${window.location.hostname}`,
+    fqdn,
   );
+  return url;
+}
+
+export async function fetchGameImages(gameId: number): Promise<GameImagesData> {
+  const url = getGoodUrl();
   url.searchParams.append('games_id', `${gameId}`);
   url.searchParams.append(
     'filter[type]',
