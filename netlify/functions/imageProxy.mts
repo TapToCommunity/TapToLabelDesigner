@@ -7,7 +7,7 @@ export default async (req: Request /* , context: Context */): Promise<Response> 
   const parsedUrl = new URL(url);
   const destination = parsedUrl.searchParams.get('imageUrl');
   const host = parsedUrl.host;
-  if (destination && host.includes('')) {
+  if (destination && supportedDestinations.includes(host)) {
     const origin = req.headers.get('Origin') ?? '';
     const respHeaders = {};
     if (origin.includes('//localhost') || origin.includes('//deploy-preview')) {
