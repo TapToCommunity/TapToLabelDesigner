@@ -9,7 +9,7 @@ export default async (req: Request /* , context: Context */): Promise<Response> 
     const respHeaders = {};
     if (origin.includes('//localhost') || origin.includes('//deploy-preview')) {
       respHeaders['Access-Control-Allow-Origin'] = origin;
-      respHeaders['Cache-Control'] = 'Netlify-CDN-Cache-Control: public, max-age=3600';
+      respHeaders['Cache-Control'] = 'Netlify-CDN-Cache-Control: public, max-age=86400';
     }
     const { body, status, statusText } = await fetch(destination);
     return new Response(body, { status, statusText, headers: respHeaders });
