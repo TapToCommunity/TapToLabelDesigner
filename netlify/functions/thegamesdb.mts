@@ -12,6 +12,7 @@ export default async (req: Request /* , context: Context */): Promise<Response> 
   const respHeaders = {};
   if (origin.includes('//localhost') || origin.includes('//deploy-preview')) {
     respHeaders['Access-Control-Allow-Origin'] = origin;
+    respHeaders['Cache-Control'] = 'max-age=3600';
   }
   return new Response(body, { status, statusText, headers: respHeaders });
 }
