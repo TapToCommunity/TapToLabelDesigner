@@ -167,8 +167,9 @@ export async function fetchGameImages(gameId: number): Promise<GameImagesData> {
 }
 
 export async function getImage(cdnUrl: string, previousUrl: string): Promise<File> {
-  const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(cdnUrl);
-  return fetch(proxyUrl)
+  const url = getGoodUrl('/imageProxy/');
+  url.searchParams.append('imageUrl', `${cdnUrl}`);
+  return fetch(url)
     .then((r) => r.blob())
     .then((blob) => new File([blob], previousUrl, { type: blob.type }));
 }
