@@ -7,7 +7,7 @@ import { useFileAdder } from '../hooks/useFileAdder';
 import { templateAuthors } from '../templateAuthors';
 import type { templateType } from '../resourcesTypedef';
 import { useState, useLayoutEffect } from 'react';
-import { ThreeDCarousel } from './ThreeDCarousel';
+// import { ThreeDCarousel } from './ThreeDCarousel';
 
 const TemplatesCarousel = () => {
   const { setTemplate, setMediaType, availableTemplates } = useAppDataContext();
@@ -35,7 +35,7 @@ const TemplatesCarousel = () => {
       <Typography variant="h3" color="primary">
         Choose the type of label you want to print:
       </Typography>
-      <ThreeDCarousel onClick={console.log} />
+      {/* <ThreeDCarousel onClick={console.log} /> */}
       <div className="carousel-container">
         <div className="carousel-scroll">
           {mediaTargetList.map((tData) => (
