@@ -61,7 +61,9 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
   const setMediaType = useCallback((mediaType: contextType['mediaType']) => {
     _setMediaType(mediaType);
     setAvailableTemplates(
-      Object.values(templates).filter((t) => t.media === mediaType),
+      Object.entries(templates)
+        .map(([key, value]) => ({ ...value, key }))
+        .filter((t) => t.media === mediaType),
     );
   }, []);
 

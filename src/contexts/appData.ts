@@ -23,7 +23,7 @@ export type contextType = {
   originalColors: string[];
   customColors: string[];
   template: templateType;
-  availableTemplates: templateType[];
+  availableTemplates: (templateType & { key: string; })[];
   mediaType: MediaDefinition;
   printerTemplate: PrintTemplate;
   printerTemplateKey: string;
@@ -43,7 +43,7 @@ export const defaultContextValue: contextType = {
   setIsIdle: noop,
   originalColors: [],
   customColors: [],
-  availableTemplates: Object.values(templates).filter((t) => t.media === defaultTemplate.media),
+  availableTemplates: Object.entries(templates).map(([key, value]) => ({ ...value, key })).filter((t) => t.media === defaultTemplate.media),
   mediaType: defaultTemplate.media,
   template: defaultTemplate,
   printerTemplate: defaultPrinterTemplate,

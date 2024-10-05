@@ -18,7 +18,7 @@ export const NFCCCsizeCard: MediaDefinition = {
   strokeWidth: 2,
   stroke: 'black',
   fill: 'white',
-  label: 'Credit card sized NFC card'
+  label: 'Standard NFC card'
 };
 
 // or a musicasset box inlay cover
@@ -30,7 +30,7 @@ export const TapeBoxCover: MediaDefinition = {
   strokeWidth: 2,
   stroke: 'black',
   fill: 'white',
-  label: 'Cassette tape case inner label',
+  label: 'Cassette tape case',
 };
 
 // or a musicasset box inlay cover
@@ -42,7 +42,7 @@ export const taptoPrePrintedHalf: MediaDefinition = {
   strokeWidth: 2,
   stroke: 'black',
   fill: 'white',
-  label: 'Tapto collectible card sized pre printed card, half height',
+  label: 'Tapto pre-printed, half',
 };
 
 // or a musicasset box inlay cover
@@ -54,7 +54,7 @@ export const taptoPrePrintedFullHeight: MediaDefinition = {
   strokeWidth: 2,
   stroke: 'black',
   fill: 'white',
-  label: 'Tapto collectible card sized pre printed card, full height',
+  label: 'Tapto pre-printed, full',
 };
 
 // or a musicasset box inlay cover
@@ -66,7 +66,7 @@ export const miniNfcCard: MediaDefinition = {
   strokeWidth: 2,
   stroke: 'black',
   fill: 'white',
-  label: 'Small sized nfc card ( 3 by 5 cm )',
+  label: 'Small nfc card 3x5cm',
 };
 
 export const mediaTargetList = [

@@ -6,48 +6,61 @@ import { useAppDataContext } from '../contexts/appData';
 import { useFileAdder } from '../hooks/useFileAdder';
 import { templateAuthors } from '../templateAuthors';
 import type { templateType } from '../resourcesTypedef';
-import { useState, useLayoutEffect } from 'react';
+import { useState, useLayoutEffect, useEffect, memo } from 'react';
+import MediaTypeDropdown from './MediaTypeDropdown';
+import sob3 from '../assets/art/sampleart.webp';
+import { prepareTemplateCarousel } from '../utils/prepareTemplateCarousel';
 // import { ThreeDCarousel } from './ThreeDCarousel';
 
-const TemplatesCarousel = () => {
-  const { setTemplate, setMediaType, availableTemplates } = useAppDataContext();
+const getTemplateId = (id: string) => `template_replace_${id}`;
+
+const TemplatesCarousel = memo(() => {
+  const { setTemplate, availableTemplates } = useAppDataContext();
   const { inputElement, openInputFile } = useFileAdder();
   const [items, setItems] = useState<(templateType & { key: string })[]>([]);
 
   useLayoutEffect(() => {
     setItems(
-      Object.entries(availableTemplates)
-        .map<templateType & { key: string }>(([key, value]) => ({
-          ...value,
-          key,
-        }))
-        .filter(
-          (tData) =>
-            (!!tData.overlay || !!tData.background) &&
-            !tData.key.includes('blank'),
-        ),
+      availableTemplates.filter(
+        (tData) =>
+          (!!tData.overlay || !!tData.background) &&
+          !tData.key.includes('blank'),
+      ),
     );
   }, [availableTemplates]);
+
+  useEffect(() => {
+    prepareTemplateCarousel(items, sob3).then((canvases) => {
+      canvases.forEach((canvas, index) => {
+        const template = items[index];
+        const id = getTemplateId(template.key);
+        const div = document.getElementById(id);
+        if (div?.firstChild) {
+          div.removeChild(div.firstChild);
+        }
+        if (div) {
+          div.appendChild(canvas);
+        }
+      });
+    });
+  }, [items]);
 
   return (
     <>
       {inputElement}
-      <Typography variant="h3" color="primary">
-        Choose the type of label you want to print:
-      </Typography>
       {/* <ThreeDCarousel onClick={console.log} /> */}
-      <div className="carousel-container">
-        <div className="carousel-scroll">
-          {mediaTargetList.map((tData) => (
-            <div key={tData.label} onClick={() => setMediaType(tData)}>
-              {tData.label}
-            </div>
-          ))}
-        </div>
-      </div>
       <Typography variant="h3" color="primary">
         Click a template from the {items.length} availables to get started:
       </Typography>
+      <div
+        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+      >
+        <Typography variant="h5" color="secondary">
+          Or change the card type to one of the {mediaTargetList.length}{' '}
+          available:
+        </Typography>
+        <MediaTypeDropdown />
+      </div>
       <div className="carousel-container">
         <div className="carousel-scroll">
           {items.map((tData) => (
@@ -61,15 +74,13 @@ const TemplatesCarousel = () => {
             >
               <div
                 className={`carouselItem ${tData.layout}`}
+                id={getTemplateId(tData.key)}
                 key={tData.key}
                 onClick={() => {
                   setTemplate(tData);
                   openInputFile();
                 }}
-              >
-                {tData.background && <img src={tData.background.url} />}
-                {tData.overlay && <img src={tData.overlay.url} />}
-              </div>
+              ></div>
               <Typography className="carouselCaption">
                 {tData.label}
                 <br />
@@ -81,8 +92,11 @@ const TemplatesCarousel = () => {
           ))}
         </div>
       </div>
+      <Typography variant="p" color="secondary" lineHeight="3">
+        * Super outback bloke 3 is not a real game
+      </Typography>
     </>
   );
-};
+});
 
 export default TemplatesCarousel;

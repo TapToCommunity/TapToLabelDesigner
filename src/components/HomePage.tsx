@@ -28,6 +28,11 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
+      <div className="choose-template">
+        <div className="textLayout">
+          <Carousel />
+        </div>
+      </div>
       <div className="intro">
         <div className="textLayout">
           <Typography variant="h3" color="primary">
@@ -80,11 +85,6 @@ export const HomePage = () => {
               API
             </Link>
           </Typography>
-        </div>
-      </div>
-      <div className="choose-template">
-        <div className="textLayout">
-          <Carousel />
         </div>
       </div>
       <div className="content">
