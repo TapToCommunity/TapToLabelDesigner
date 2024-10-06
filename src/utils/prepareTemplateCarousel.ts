@@ -1,10 +1,9 @@
 import { templateType } from "../resourcesTypedef";
-import { util, StaticCanvas, FabricImage } from 'fabric';
+import { StaticCanvas, FabricImage } from 'fabric';
 import { setTemplateOnCanvases } from "./setTemplate";
 import { CardData } from "../contexts/fileDropper";
 
-export const prepareTemplateCarousel = async (templates: templateType[], url: string): Promise<HTMLCanvasElement[]> => {
-  const img = await util.loadImage(url);
+export const prepareTemplateCarousel = async (templates: templateType[], img: HTMLImageElement): Promise<HTMLCanvasElement[]> => {
   const canvases = [];
   for (const template of templates) {
     const canvas = new StaticCanvas(undefined, {
@@ -23,7 +22,6 @@ export const prepareTemplateCarousel = async (templates: templateType[], url: st
       key: 'x',
     }
     await setTemplateOnCanvases([card], template)
-    canvas.renderAll();
     canvases.push(canvas.lowerCanvasEl);
   }
   return canvases;

@@ -77,4 +77,5 @@ export type templateType = {
 
   edits?: TemplateEdit[];
   media: MediaDefinition;
+  key: string;
 };

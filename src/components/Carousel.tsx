@@ -3,21 +3,29 @@ import { mediaTargetList } from '../printMediaTypes';
 
 import './Carousel.css';
 import { useAppDataContext } from '../contexts/appData';
-import { useFileAdder } from '../hooks/useFileAdder';
 import { templateAuthors } from '../templateAuthors';
 import type { templateType } from '../resourcesTypedef';
-import { useState, useLayoutEffect, useEffect, memo } from 'react';
+import {
+  useState,
+  useLayoutEffect,
+  useEffect,
+  memo,
+  startTransition,
+} from 'react';
 import MediaTypeDropdown from './MediaTypeDropdown';
 import sob3 from '../assets/art/sampleart.webp';
 import { prepareTemplateCarousel } from '../utils/prepareTemplateCarousel';
+import { useFileDropperContext } from '../contexts/fileDropper';
 // import { ThreeDCarousel } from './ThreeDCarousel';
+import { util } from 'fabric';
 
 const getTemplateId = (id: string) => `template_replace_${id}`;
 
 const TemplatesCarousel = memo(() => {
   const { setTemplate, availableTemplates } = useAppDataContext();
-  const { inputElement, openInputFile } = useFileAdder();
+  const { setFiles } = useFileDropperContext();
   const [items, setItems] = useState<(templateType & { key: string })[]>([]);
+  const [img, setImg] = useState<HTMLImageElement>();
 
   useLayoutEffect(() => {
     setItems(
@@ -30,24 +38,29 @@ const TemplatesCarousel = memo(() => {
   }, [availableTemplates]);
 
   useEffect(() => {
-    prepareTemplateCarousel(items, sob3).then((canvases) => {
-      canvases.forEach((canvas, index) => {
-        const template = items[index];
-        const id = getTemplateId(template.key);
-        const div = document.getElementById(id);
-        if (div?.firstChild) {
-          div.removeChild(div.firstChild);
-        }
-        if (div) {
-          div.appendChild(canvas);
-        }
+    util.loadImage(sob3).then((img) => setImg(img));
+  }, []);
+
+  useEffect(() => {
+    if (img) {
+      prepareTemplateCarousel(items, img).then((canvases) => {
+        canvases.forEach((canvas, index) => {
+          const template = items[index];
+          const id = getTemplateId(template.key);
+          const div = document.getElementById(id);
+          if (div?.firstChild) {
+            div.removeChild(div.firstChild);
+          }
+          if (div) {
+            div.appendChild(canvas);
+          }
+        });
       });
-    });
-  }, [items]);
+    }
+  }, [items, img]);
 
   return (
     <>
-      {inputElement}
       {/* <ThreeDCarousel onClick={console.log} /> */}
       <Typography variant="h3" color="primary">
         Click a template from the {items.length} availables to get started:
@@ -78,7 +91,11 @@ const TemplatesCarousel = memo(() => {
                 key={tData.key}
                 onClick={() => {
                   setTemplate(tData);
-                  openInputFile();
+                  if (img) {
+                    startTransition(() => {
+                      setFiles([img]);
+                    });
+                  }
                 }}
               ></div>
               <Typography className="carouselCaption">
@@ -92,9 +109,6 @@ const TemplatesCarousel = memo(() => {
           ))}
         </div>
       </div>
-      <Typography variant="p" color="secondary" lineHeight="3">
-        * Super outback bloke 3 is not a real game
-      </Typography>
     </>
   );
 });

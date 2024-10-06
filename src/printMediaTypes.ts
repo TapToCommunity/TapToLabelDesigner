@@ -72,7 +72,7 @@ export const miniNfcCard: MediaDefinition = {
 export const mediaTargetList = [
   NFCCCsizeCard,
   TapeBoxCover,
-  taptoPrePrintedHalf,
-  taptoPrePrintedFullHeight,
+  // taptoPrePrintedHalf,
+  // taptoPrePrintedFullHeight,
   miniNfcCard,
 ];
