@@ -26,6 +26,7 @@ const TemplatesCarousel = memo(() => {
   const { setFiles } = useFileDropperContext();
   const [items, setItems] = useState<(templateType & { key: string })[]>([]);
   const [img, setImg] = useState<HTMLImageElement>();
+  const [toLoad, setToLoad] = useState(0);
 
   useLayoutEffect(() => {
     setItems(
@@ -35,6 +36,7 @@ const TemplatesCarousel = memo(() => {
           !tData.key.includes('blank'),
       ),
     );
+    setToLoad(0);
   }, [availableTemplates]);
 
   useEffect(() => {
@@ -42,22 +44,21 @@ const TemplatesCarousel = memo(() => {
   }, []);
 
   useEffect(() => {
-    if (img) {
-      prepareTemplateCarousel(items, img).then((canvases) => {
-        canvases.forEach((canvas, index) => {
-          const template = items[index];
-          const id = getTemplateId(template.key);
-          const div = document.getElementById(id);
-          if (div?.firstChild) {
-            div.removeChild(div.firstChild);
-          }
-          if (div) {
-            div.appendChild(canvas);
-          }
-        });
+    if (img && toLoad < items.length) {
+      prepareTemplateCarousel([items[toLoad]], img).then(([canvas]) => {
+        const template = items[toLoad];
+        const id = getTemplateId(template.key);
+        const div = document.getElementById(id);
+        if (div?.firstChild) {
+          div.removeChild(div.firstChild);
+        }
+        if (div) {
+          div.appendChild(canvas);
+        }
+        setToLoad(toLoad + 1);
       });
     }
-  }, [items, img]);
+  }, [items, img, toLoad]);
 
   return (
     <>
