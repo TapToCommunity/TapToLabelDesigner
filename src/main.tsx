@@ -31,6 +31,10 @@ const theme = createTheme({
       letterSpacing: '3px',
       fontWeight: 500,
     },
+    h5: {
+      fontSize: '1.25rem',
+      fontWeight: 500,
+    },
     allVariants: {
       letterSpacing: '0.46px',
       lineHeight: 1.375,

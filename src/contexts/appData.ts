@@ -1,8 +1,9 @@
 import { createContext, useContext } from 'react';
 import {
   defaultTemplate,
+  templates,
 } from '../cardsTemplates';
-import type { templateType } from '../resourcesTypedef';
+import type { MediaDefinition, templateType } from '../resourcesTypedef';
 import {
   type PrintTemplate,
   defaultPrinterTemplate,
@@ -22,6 +23,8 @@ export type contextType = {
   originalColors: string[];
   customColors: string[];
   template: templateType;
+  availableTemplates: (templateType & { key: string; })[];
+  mediaType: MediaDefinition;
   printerTemplate: PrintTemplate;
   printerTemplateKey: string;
   printOptions: PrintOptions;
@@ -32,6 +35,7 @@ export type contextType = {
   setPrinterTemplate: (template: PrintTemplate) => void;
   setPrinterTemplateKey: (templateKey: string) => void;
   setIsIdle: (value: boolean) => void;
+  setMediaType: (value: MediaDefinition) => void;
 };
 
 export const defaultContextValue: contextType = {
@@ -39,6 +43,8 @@ export const defaultContextValue: contextType = {
   setIsIdle: noop,
   originalColors: [],
   customColors: [],
+  availableTemplates: Object.entries(templates).map(([key, value]) => ({ ...value, key })).filter((t) => t.media === defaultTemplate.media),
+  mediaType: defaultTemplate.media,
   template: defaultTemplate,
   printerTemplate: defaultPrinterTemplate,
   printerTemplateKey: defaultPrinterTemplateKey,
@@ -54,6 +60,7 @@ export const defaultContextValue: contextType = {
   setTemplate: noop,
   setPrinterTemplate: noop,
   setPrinterTemplateKey: noop,
+  setMediaType: noop,
 };
 
 export const AppDataContext = createContext<contextType>(defaultContextValue);

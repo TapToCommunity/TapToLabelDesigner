@@ -1,30 +1,80 @@
 import Typography from '@mui/material/Typography';
-import { templates } from '../cardsTemplates';
+import { mediaTargetList } from '../printMediaTypes';
+
 import './Carousel.css';
 import { useAppDataContext } from '../contexts/appData';
-import { useFileAdder } from '../hooks/useFileAdder';
 import { templateAuthors } from '../templateAuthors';
 import type { templateType } from '../resourcesTypedef';
+import {
+  useState,
+  useLayoutEffect,
+  useEffect,
+  memo,
+  startTransition,
+} from 'react';
+import MediaTypeDropdown from './MediaTypeDropdown';
+import sob3 from '../assets/art/sampleart.webp';
+import { prepareTemplateCarousel } from '../utils/prepareTemplateCarousel';
+import { useFileDropperContext } from '../contexts/fileDropper';
+// import { ThreeDCarousel } from './ThreeDCarousel';
+import { util } from 'fabric';
 
-const TemplatesCarousel = () => {
-  const { setTemplate } = useAppDataContext();
-  const { inputElement, openInputFile } = useFileAdder();
-  const items = Object.entries(templates)
-    .map<templateType & { key: string }>(([key, value]) => ({
-      ...value,
-      key,
-    }))
-    .filter(
-      (tData) =>
-        (!!tData.overlay || !!tData.background) && !tData.key.includes('blank'),
+const getTemplateId = (id: string) => `template_replace_${id}`;
+
+const TemplatesCarousel = memo(() => {
+  const { setTemplate, availableTemplates } = useAppDataContext();
+  const { setFiles } = useFileDropperContext();
+  const [items, setItems] = useState<(templateType & { key: string })[]>([]);
+  const [img, setImg] = useState<HTMLImageElement>();
+  const [toLoad, setToLoad] = useState(0);
+
+  useLayoutEffect(() => {
+    setItems(
+      availableTemplates.filter(
+        (tData) =>
+          (!!tData.overlay || !!tData.background) &&
+          !tData.key.includes('blank'),
+      ),
     );
+    setToLoad(0);
+  }, [availableTemplates]);
+
+  useEffect(() => {
+    util.loadImage(sob3).then((img) => setImg(img));
+  }, []);
+
+  useEffect(() => {
+    if (img && toLoad < items.length) {
+      prepareTemplateCarousel([items[toLoad]], img).then(([canvas]) => {
+        const template = items[toLoad];
+        const id = getTemplateId(template.key);
+        const div = document.getElementById(id);
+        if (div?.firstChild) {
+          div.removeChild(div.firstChild);
+        }
+        if (div) {
+          div.appendChild(canvas);
+        }
+        setToLoad(toLoad + 1);
+      });
+    }
+  }, [items, img, toLoad]);
 
   return (
     <>
-      {inputElement}
+      {/* <ThreeDCarousel onClick={console.log} /> */}
       <Typography variant="h3" color="primary">
         Click a template from the {items.length} availables to get started:
       </Typography>
+      <div
+        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+      >
+        <Typography variant="h5" color="secondary">
+          Or change the card type to one of the {mediaTargetList.length}{' '}
+          available:
+        </Typography>
+        <MediaTypeDropdown />
+      </div>
       <div className="carousel-container">
         <div className="carousel-scroll">
           {items.map((tData) => (
@@ -38,15 +88,17 @@ const TemplatesCarousel = () => {
             >
               <div
                 className={`carouselItem ${tData.layout}`}
+                id={getTemplateId(tData.key)}
                 key={tData.key}
                 onClick={() => {
                   setTemplate(tData);
-                  openInputFile();
+                  if (img) {
+                    startTransition(() => {
+                      setFiles([img]);
+                    });
+                  }
                 }}
-              >
-                {tData.background && <img src={tData.background.url} />}
-                {tData.overlay && <img src={tData.overlay.url} />}
-              </div>
+              ></div>
               <Typography className="carouselCaption">
                 {tData.label}
                 <br />
@@ -60,6 +112,6 @@ const TemplatesCarousel = () => {
       </div>
     </>
   );
-};
+});
 
 export default TemplatesCarousel;

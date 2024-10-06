@@ -3,7 +3,6 @@ import Link from '@mui/material/Link';
 import bgUrl from '../assets/homebg.jpg';
 import logoUrl from '../assets/log.svg';
 import examplesUrl from '../assets/tapto_cards.jpg';
-import { SmallDropZone } from './SmallDropZone';
 import { templateAuthors } from '../templateAuthors';
 
 import './HomePage.css';
@@ -24,8 +23,12 @@ export const HomePage = () => {
               />
               <Typography variant="h4">LABEL GENERATOR</Typography>
             </div>
-            <SmallDropZone />
           </div>
+        </div>
+      </div>
+      <div className="choose-template">
+        <div className="textLayout">
+          <Carousel />
         </div>
       </div>
       <div className="intro">
@@ -80,11 +83,6 @@ export const HomePage = () => {
               API
             </Link>
           </Typography>
-        </div>
-      </div>
-      <div className="choose-template">
-        <div className="textLayout">
-          <Carousel />
         </div>
       </div>
       <div className="content">

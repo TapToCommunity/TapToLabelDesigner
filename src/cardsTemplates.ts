@@ -26,32 +26,36 @@ import { Authors } from './templateAuthors';
 import { templateType } from './resourcesTypedef';
 import { logoResource } from './logos';
 
-import { NFCCCsizeCard, TapeBoxCover, taptoPrePrintedHalf, taptoPrePrintedFullHeight, miniNfcCard } from './constants';
+import { NFCCCsizeCard, TapeBoxCover, taptoPrePrintedHalf, taptoPrePrintedFullHeight, miniNfcCard } from './printMediaTypes';
 
 export const templates: Record<string, templateType> = {
   blankH: {
     layout: 'horizontal',
     label: 'Blank H cover',
     author: Authors.andrea,
-    media: NFCCCsizeCard
+    media: NFCCCsizeCard,
+    key: 'blankH',
   },
   blankV: {
     layout: 'vertical',
     label: 'Blank V cover',
     author: Authors.andrea,
-    media: NFCCCsizeCard
+    media: NFCCCsizeCard,
+    key: 'blankV',
   },
   taptoPPHalf: {
     layout: 'horizontal',
     label: 'Half height tapto sticker',
     author: Authors.tim,
-    media: taptoPrePrintedHalf
+    media: taptoPrePrintedHalf,
+    key: 'taptoPPHalf',
   },
   taptoPPFull: {
     layout: 'vertical',
     label: 'Full height tapto sticker',
     author: Authors.tim,
-    media: taptoPrePrintedFullHeight
+    media: taptoPrePrintedFullHeight,
+    key: 'taptoPPFull',
   },
   blankHF: {
     layout: 'horizontal',
@@ -68,7 +72,8 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     author: Authors.andrea,
-    media: NFCCCsizeCard
+    media: NFCCCsizeCard,
+    key: 'blankHF',
   },
   blankVF: {
     layout: 'vertical',
@@ -85,7 +90,8 @@ export const templates: Record<string, templateType> = {
       isSvg: true,
     },
     author: Authors.andrea,
-    media: NFCCCsizeCard
+    media: NFCCCsizeCard,
+    key: 'blankVF',
   },
   tapto2: {
     layout: 'horizontal',
@@ -108,7 +114,8 @@ export const templates: Record<string, templateType> = {
     },
     label: 'Tap-to H',
     author: Authors.tim,
-    media: NFCCCsizeCard
+    media: NFCCCsizeCard,
+    key: 'tapto2',
   },
   tapto3: {
     layout: 'vertical',
@@ -132,6 +139,7 @@ export const templates: Record<string, templateType> = {
     label: 'Tap-to V',
     author: Authors.tim,
     media: NFCCCsizeCard,
+    key: 'tapto3',
   },
   hucard: {
     layout: 'vertical',
@@ -155,6 +163,7 @@ export const templates: Record<string, templateType> = {
     label: 'HuCard',
     author: Authors.tim,
     media: NFCCCsizeCard,
+    key: 'hucard',
   },
   hucardsteam: {
     layout: 'vertical',
@@ -178,6 +187,7 @@ export const templates: Record<string, templateType> = {
     label: 'HuCardSteam',
     author: Authors.ewrt,
     media: NFCCCsizeCard,
+    key: 'hucardsteam',
   },
   hucardsteamVR: {
     layout: 'vertical',
@@ -201,6 +211,7 @@ export const templates: Record<string, templateType> = {
     label: 'HuCardSteamVR',
     author: Authors.ewrt,
     media: NFCCCsizeCard,
+    key: 'hucardsteamVR',
   },
   hucardc64: {
     layout: 'vertical',
@@ -224,6 +235,7 @@ export const templates: Record<string, templateType> = {
     label: 'HuCard (C64)',
     author: Authors.ben,
     media: NFCCCsizeCard,
+    key: 'hucardc64',
   },
   taptoGB: {
     layout: 'horizontal',
@@ -247,6 +259,7 @@ export const templates: Record<string, templateType> = {
     label: 'Tap-to Gameboy',
     author: Authors.ariel,
     media: NFCCCsizeCard,
+    key: 'taptoGB',
   },
   taptoFloppy: {
     layout: 'vertical',
@@ -269,6 +282,7 @@ export const templates: Record<string, templateType> = {
     label: 'Floppy 3.5',
     author: Authors.andrea,
     media: NFCCCsizeCard,
+    key: 'taptoFloppy',
   },
   taptoFloppy525: {
     layout: 'vertical',
@@ -291,6 +305,7 @@ export const templates: Record<string, templateType> = {
     label: 'Floppy 5.25',
     author: Authors.andrea,
     media: NFCCCsizeCard,
+    key: 'taptoFloppy525',
   },
   tapToNes: {
     layout: 'vertical',
@@ -313,6 +328,7 @@ export const templates: Record<string, templateType> = {
     label: 'Nes',
     author: Authors.ariel,
     media: NFCCCsizeCard,
+    key: 'tapToNes',
   },
   tapToGenesis: {
     layout: 'vertical',
@@ -335,6 +351,7 @@ export const templates: Record<string, templateType> = {
     label: 'Genesis',
     author: Authors.ariel,
     media: NFCCCsizeCard,
+    key: 'tapToGenesis',
   },
   tapToPcEngine: {
     layout: 'vertical',
@@ -357,6 +374,7 @@ export const templates: Record<string, templateType> = {
     label: 'PcEngineCD',
     author: Authors.ariel,
     media: NFCCCsizeCard,
+    key: 'tapToPcEngine',
   },
   anime0taku: {
     canEdit: true,
@@ -379,12 +397,14 @@ export const templates: Record<string, templateType> = {
     noMargin: true,
     author: Authors.animeotaku,
     media: NFCCCsizeCard,
+    key: 'anime0taku',
   },
   cassetteBox: {
     layout: 'horizontal',
     label: 'Casset box placeholder',
     author: Authors.animeotaku, // to be changed with Phoneix data
-    media: TapeBoxCover
+    media: TapeBoxCover,
+    key: 'cassetteBoxBlank',
   },
   cassetteBoxV2: {
     layout: 'horizontal',
@@ -412,7 +432,8 @@ export const templates: Record<string, templateType> = {
     }],
     canEdit: true,
     author: Authors.animeotaku, // to be changed with Phoneix data
-    media: TapeBoxCover
+    media: TapeBoxCover,
+    key: 'cassetteBoxV2',
   },
   miniNfcAlice: {
     layout: 'vertical',
@@ -429,6 +450,7 @@ export const templates: Record<string, templateType> = {
     },
     author: Authors.alice,
     media: miniNfcCard,
+    key: 'miniNfcAlice',
   }
 
 } as const;

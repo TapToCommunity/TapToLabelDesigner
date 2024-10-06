@@ -16,6 +16,8 @@ import { CardData } from '../contexts/fileDropper';
 import type { templateType, templateOverlay } from '../resourcesTypedef';
 import { processCustomizations } from './processCustomizations';
 
+FabricObject.ownDefaults.originX = 'center';
+FabricObject.ownDefaults.originY = 'center';
 FabricObject.ownDefaults.objectCaching = false;
 /* add the ability to parse 'id' to rects */
 Rect.ATTRIBUTE_NAMES = [...Rect.ATTRIBUTE_NAMES, 'id'];

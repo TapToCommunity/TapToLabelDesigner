@@ -59,7 +59,7 @@ p.carouselCaption {
   box-shadow: 0px 0px 10px white ;
 }
 
-.carouselItem > img {
+.carouselItem > img, .carouselItem > canvas {
   border-radius: 8px;
   left: 50%;
   top: 50%;
@@ -74,12 +74,12 @@ p.carouselCaption {
   background-color: white;
 }
 
-.carouselItem.horizontal > img {
+.carouselItem.horizontal > img, .carouselItem.horizontal > canvas {
   width: 300px;
   height: auto;
 }
 
-.carouselItem.vertical > img {
+.carouselItem.vertical > img, .carouselItem.vertical > canvas {
   height: 300px;
   width: auto;
 }

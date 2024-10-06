@@ -5,52 +5,52 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import { useAppDataContext } from '../contexts/appData';
-import type { templateType } from '../resourcesTypedef';
+import { mediaTargetList } from '../printMediaTypes';
 
 type TemplateDropdownProps = {
-  id: string;
-  template: templateType & { key: string };
+  id?: string;
 };
 
-const TemplateDropdown = ({
-  id = 'header-dropdown',
-  template,
+const MediaTypeDropdown = ({
+  id = 'carousel-dropdown',
 }: TemplateDropdownProps): JSX.Element => {
-  const { setTemplate, availableTemplates } = useAppDataContext();
-  const toggleTemplate = useCallback(
+  const { setMediaType, mediaType } = useAppDataContext();
+  const toggleMediaType = useCallback(
     async (evt: SelectChangeEvent<string>) => {
       const value = evt.target.value;
-      const chosenTemplate = availableTemplates.find(
-        (template) => template.key === value,
+      const chosenMediaType = mediaTargetList.find(
+        (target) => target.label === value,
       );
-      setTemplate(chosenTemplate!);
+      if (chosenMediaType) {
+        setMediaType(chosenMediaType);
+      }
     },
-    [setTemplate, availableTemplates],
+    [setMediaType],
   );
 
-  const currentKey = template.key;
+  const currentKey = mediaType.label;
 
   return (
     <FormControl size="small" sx={{ m: 1, minWidth: 120 }}>
       <InputLabel id={id} htmlFor={`${id}-select`} sx={{ fontWeight: 400 }}>
-        Card template
+        Media type
       </InputLabel>
       <Select
         id={`${id}-select`}
         labelId={id}
-        label="Card template"
+        label="Media type"
         value={currentKey}
-        onChange={toggleTemplate}
+        onChange={toggleMediaType}
         sx={{ fontWeight: 400 }}
       >
-        {availableTemplates.map((template) => (
+        {mediaTargetList.map((item, key) => (
           <MenuItem
-            key={template.key}
-            value={template.key}
-            selected={template.key === currentKey}
+            key={key}
+            value={item.label}
+            selected={item.label === currentKey}
             sx={{ fontWeight: 400 }}
           >
-            {template.label}
+            {item.label}
           </MenuItem>
         ))}
       </Select>
@@ -58,4 +58,4 @@ const TemplateDropdown = ({
   );
 };
 
-export default TemplateDropdown;
+export default MediaTypeDropdown;

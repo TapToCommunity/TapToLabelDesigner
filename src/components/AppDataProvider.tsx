@@ -5,6 +5,7 @@ import {
   defaultContextValue,
   AppDataContext,
 } from '../contexts/appData.ts';
+import { templates } from '../cardsTemplates.ts';
 
 type AppDataContextProps = {
   children: JSX.Element | JSX.Element[] | ReactNode;
@@ -34,6 +35,12 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
   const [printOptions, setPrintOptions] = useState<contextType['printOptions']>(
     defaultContextValue.printOptions,
   );
+  const [mediaType, _setMediaType] = useState<contextType['mediaType']>(
+    defaultContextValue.mediaType,
+  );
+  const [availableTemplates, setAvailableTemplates] = useState<
+    contextType['availableTemplates']
+  >(defaultContextValue.availableTemplates);
 
   useEffect(() => {
     const serializedOptions = localStorage.getItem('printOptions');
@@ -51,6 +58,15 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
     [printOptions, setPrintOptions],
   );
 
+  const setMediaType = useCallback((mediaType: contextType['mediaType']) => {
+    _setMediaType(mediaType);
+    setAvailableTemplates(
+      Object.entries(templates)
+        .map(([key, value]) => ({ ...value, key }))
+        .filter((t) => t.media === mediaType),
+    );
+  }, []);
+
   const contextValue = useMemo(
     () => ({
       originalColors,
@@ -60,6 +76,8 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       printerTemplateKey,
       printOptions,
       isIdle,
+      mediaType,
+      availableTemplates,
       setOriginalColors,
       setCustomColors,
       setTemplate,
@@ -67,6 +85,7 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       setPrinterTemplateKey,
       setPrintOptions: mergePrintOptions,
       setIsIdle,
+      setMediaType,
     }),
     [
       originalColors,
@@ -74,14 +93,12 @@ export const AppDataContextProvider: FC<AppDataContextProps> = ({
       template,
       printerTemplate,
       printerTemplateKey,
-      isIdle,
       printOptions,
-      setOriginalColors,
-      setCustomColors,
-      setTemplate,
-      setPrinterTemplate,
-      setPrinterTemplateKey,
+      isIdle,
+      mediaType,
+      availableTemplates,
       mergePrintOptions,
+      setMediaType,
     ],
   );
 
