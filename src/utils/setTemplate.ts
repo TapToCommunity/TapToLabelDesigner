@@ -41,6 +41,13 @@ export const scaleImageToOverlayArea = (
   } else {
     scaler = overlay?.strategy === 'cover' ?  util.findScaleToCover : util.findScaleToFit;
     scaledTemplateOverlaySize = overlayImg._getTransformedDimensions();
+    if (overlay?.strategy === 'cover') {
+      const  clipPath =  new Rect({ width: scaledTemplateOverlaySize.x, height: scaledTemplateOverlaySize.y });
+      clipPath.absolutePositioned = true;
+      mainImage.clipPath = clipPath;
+    } else {
+      mainImage.clipPath = undefined
+    }
   }
 
   pictureScaleToTemplate = scaler(
@@ -80,6 +87,18 @@ export const scaleImageToOverlayArea = (
       'center',
       'center',
     );
+    if (mainImage.clipPath) {
+      mainImage.clipPath.setPositionByOrigin(
+        new Point(
+          scaledTemplateOverlaySize.x * (overlay!.x + overlay!.width / 2) +
+            templatePostion.x,
+          scaledTemplateOverlaySize.y * (overlay!.y + overlay!.height / 2) +
+            templatePostion.y,
+        ),
+        'center',
+        'center',
+      );
+    }
   }
   mainImage.setCoords();
 };
