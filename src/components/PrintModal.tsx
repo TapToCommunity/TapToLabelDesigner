@@ -121,13 +121,13 @@ export const PrintModal = ({ open, onClose }: PrintModalProps) => {
             >
               <Typography>Crop marks</Typography>
             </Button>
-            <Button
+            {/* <Button
               onClick={() => setPrintOptions({ cutMarks: 'cut' })}
               {...basicButtonProps}
               color={cutMarks === 'cut' ? 'primary' : 'secondary'}
             >
               <Typography>Cutting shape</Typography>
-            </Button>
+            </Button> */}
             <Button
               onClick={() => setPrintOptions({ cutMarks: 'none' })}
               {...basicButtonProps}

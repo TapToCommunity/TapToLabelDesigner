@@ -54,6 +54,14 @@ export const scaleImageToOverlayArea = (
     },
   );
 
+  if (overlay?.strategy === 'cover') {
+    const  clipPath =  new Rect({ width: scaledTemplateOverlaySize.x * overlay!.width, height: scaledTemplateOverlaySize.y * overlay!.height });
+    clipPath.absolutePositioned = true;
+    mainImage.clipPath = clipPath;
+  } else {
+    mainImage.clipPath = undefined
+  }
+
   mainImage.set({
     scaleX: pictureScaleToTemplate,
     scaleY: pictureScaleToTemplate,
@@ -80,6 +88,18 @@ export const scaleImageToOverlayArea = (
       'center',
       'center',
     );
+    if (mainImage.clipPath) {
+      mainImage.clipPath.setPositionByOrigin(
+        new Point(
+          scaledTemplateOverlaySize.x * (overlay!.x + overlay!.width / 2) +
+            templatePostion.x,
+          scaledTemplateOverlaySize.y * (overlay!.y + overlay!.height / 2) +
+            templatePostion.y,
+        ),
+        'center',
+        'center',
+      );
+    }
   }
   mainImage.setCoords();
 };

@@ -3,18 +3,18 @@ import {
   FabricImage,
   type FabricObject,
   Group,
-  ImageProps,
+  type ImageProps,
   Path,
-  StaticCanvas,
+  type StaticCanvas,
   util,
   Color,
   Rect,
-  TFiller,
-  Gradient,
-  TMat2D,
+  type TFiller,
+  type Gradient,
+  type TMat2D,
   iMatrix
 } from 'fabric';
-import type { MediaDefinition } from '../resourcesTypedef';
+import type { MediaDefinition, templateType } from '../resourcesTypedef';
 
 export const createDownloadStream = async (pdfDoc: any): Promise<Blob> => {
   // @ts-expect-error yeah no definitions
@@ -76,7 +76,9 @@ const addRectToPdf = (
   pdfDoc.save();
 
   transformPdf(rect, pdfDoc);
-
+  if (rect.rx || rect.ry) {
+    console.warn('Missing code for Rect rounded corners')
+  }
   const paintStroke = () => {
     if (rect.stroke && rect.stroke !== 'transparent') {
       const stroke = toPdfColor(rect.stroke, pdfDoc, rect);
@@ -157,12 +159,31 @@ const transformPdf = (fabricObject: FabricObject, pdfDoc: any) => {
   pdfDoc.transform(...matrix);
 };
 
+const handleAbsoluteClipPath = (clipPath: FabricObject, pdfDoc: any) => {
+  transformPdf(clipPath as FabricObject, pdfDoc);
+  if (clipPath instanceof Rect) {
+    if (clipPath.rx || clipPath.ry) {
+      console.warn('Missing code for rounded corners rect clipPath')
+    }
+    pdfDoc.roundedRect(-clipPath.width / 2, -clipPath.height / 2, clipPath.width, clipPath.height, 0).clip();
+  }
+  const matrix = clipPath.calcOwnMatrix();
+  pdfDoc.transform(...util.invertTransform(matrix));
+}
+
 const addImageToPdf = async (
   fabricImage: FabricImage<ImageProps>,
   pdfDoc: any,
 ) => {
   pdfDoc.save();
+  const clipPath = fabricImage.clipPath;
+  if (clipPath && clipPath.absolutePositioned) {
+    handleAbsoluteClipPath(clipPath as FabricObject, pdfDoc);
+  }
   transformPdf(fabricImage, pdfDoc);
+  if (clipPath && !clipPath.absolutePositioned) {
+    console.warn('Missing code for standard clipPath')
+  }
   const originalSize = fabricImage.getOriginalSize();
   // @ts-expect-error this isn't typed
   const originalFile = fabricImage.originalFile;
@@ -212,23 +233,29 @@ const addGroupToPdf = async (
   pdfDoc.restore();
 };
 
+const makeCardRegion = (box: box, templateMedia: MediaDefinition, pdfDoc: any): any => pdfDoc.roundedRect(box.x, box.y, box.width, box.height, templateMedia.rx / 4)
+
 export const addCanvasToPdfPage = async (
   canvas: StaticCanvas,
   pdfDoc: any,
   box: box,
   needsRotation: boolean,
-  templateMedia: MediaDefinition,
+  template: templateType,
   asRaster: boolean
 ) => {
   // translate to position.
   // skip background color, but draw the clip region
+  const { media: templateMedia } = template;
+  if (!template.printableAreas) {
+    // if there are no printable areas, draw the outline of the card
+    makeCardRegion(box, templateMedia, pdfDoc);
+    pdfDoc.lineWidth(templateMedia.strokeWidth / 10);
+    pdfDoc.stroke(templateMedia.stroke);
+  }
 
-  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, templateMedia.rx / 4);
-  pdfDoc.lineWidth(templateMedia.strokeWidth / 10);
-  pdfDoc.stroke(templateMedia.stroke);
 
   pdfDoc.save();
-  pdfDoc.roundedRect(box.x, box.y, box.width, box.height, templateMedia.rx / 4).clip();
+  makeCardRegion(box, templateMedia, pdfDoc).clip();
   // 0.24 is a scale factor between px and points to keep the 300dpi
   pdfDoc.transform(0.24, 0, 0, 0.24, box.x, box.y);
   if (needsRotation) {
@@ -245,12 +272,15 @@ export const addCanvasToPdfPage = async (
     });
 
   } else {
-    if (canvas.backgroundImage instanceof Group) {
-      await addGroupToPdf(canvas.backgroundImage, pdfDoc);
-    } else {
-      // add it as an image.
+    if (!template.background?.hidePrint) {
+      if (canvas.backgroundImage instanceof Group) {
+        await addGroupToPdf(canvas.backgroundImage, pdfDoc);
+      } else {
+        // add it as an image.
+        // no usecase for this yet
+        console.warn('Missing code to add images to pdf from background')
+      }
     }
-  
     const mainImage = canvas.getObjects('image')[0] as FabricImage;
     await addImageToPdf(mainImage, pdfDoc);
   

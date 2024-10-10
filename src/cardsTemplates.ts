@@ -22,11 +22,12 @@ import pcEngineBG from './assets/pcengine_bg.svg';
 import animeOt4ku from './assets/tapto_0t4ku.svg';
 import cassetTape from './assets/cassette_tape.svg';
 import mininfcAlice from './assets/3by5_steam.svg';
+import cardFront from './assets/cardfront.png';
 import { Authors } from './templateAuthors';
 import { templateType } from './resourcesTypedef';
 import { logoResource } from './logos';
 
-import { NFCCCsizeCard, TapeBoxCover, taptoPrePrintedHalf, taptoPrePrintedFullHeight, miniNfcCard } from './printMediaTypes';
+import { NFCCCsizeCard, TapeBoxCover, tapToPrePrinted, miniNfcCard } from './printMediaTypes';
 
 export const templates: Record<string, templateType> = {
   blankH: {
@@ -44,18 +45,70 @@ export const templates: Record<string, templateType> = {
     key: 'blankV',
   },
   taptoPPHalf: {
-    layout: 'horizontal',
+    canEdit: true,
+    layout: 'vertical',
     label: 'Half height tapto sticker',
     author: Authors.tim,
-    media: taptoPrePrintedHalf,
+    media: tapToPrePrinted,
     key: 'taptoPPHalf',
+    background: {
+      hidePrint: true,
+      url: cardFront,
+      isSvg: false,
+      layerHeight: 1050,
+      layerWidth: 750,
+    },
+    overlay: {
+      // full card size
+      url: '',
+      layerHeight: 1050,
+      layerWidth: 750,
+      x: 0.00,
+      width: 1,
+      y: 0.075,
+      height: 0.415,
+      isSvg: false,
+      strategy: 'cover',
+    },
+    printableAreas: [{
+      x: 0.00,
+      width: 1,
+      y: 0.075,
+      height: 0.415,
+    }],
   },
   taptoPPFull: {
+    canEdit: true,
     layout: 'vertical',
     label: 'Full height tapto sticker',
     author: Authors.tim,
-    media: taptoPrePrintedFullHeight,
+    media: tapToPrePrinted,
     key: 'taptoPPFull',
+    background: {
+      hidePrint: true,
+      url: cardFront,
+      isSvg: false,
+      layerHeight: 1050,
+      layerWidth: 750,
+    },
+    overlay: {
+      // full card size
+      url: '',
+      layerHeight: 1050,
+      layerWidth: 750,
+      x: 0.00,
+      width: 1,
+      y: 0.075,
+      height: 0.855,
+      isSvg: false,
+      strategy: 'cover',
+    },
+    printableAreas: [{
+      x: 0.00,
+      width: 1,
+      y: 0.075,
+      height: 0.855,
+    }],
   },
   blankHF: {
     layout: 'horizontal',
@@ -451,8 +504,7 @@ export const templates: Record<string, templateType> = {
     author: Authors.alice,
     media: miniNfcCard,
     key: 'miniNfcAlice',
-  }
-
+  },
 } as const;
 
 export const defaultTemplateKey = 'hucard';

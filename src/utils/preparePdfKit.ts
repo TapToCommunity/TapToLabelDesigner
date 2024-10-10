@@ -69,7 +69,6 @@ export const preparePdf = async (
     const straightLabels = possibleRows * possibleColums;
     const possibleRowsRotated = Math.floor(availPaperHeight / widthInPt);
     const possibleColumsRotated = Math.floor(availPaperWidth / heightInPt);
-    console.log({ possibleRows, possibleColums, possibleRowsRotated, possibleColumsRotated, availHeight: availPaperHeight, heightInPt, availWidth: availPaperWidth, widthInPt })
     const rotatedLabels = possibleRowsRotated * possibleColumsRotated;
     if (straightLabels === rotatedLabels) {
       const marginsW = availPaperWidth - possibleColums * widthInPt;
@@ -138,8 +137,8 @@ export const preparePdf = async (
     pdfDoc.addPage({ margins: 0, size: ptPaperSize });
     pdfDoc.switchToPage(pageNumber);
     for (let index = 0; index < cards.length; index++) {
-      const canvas = cards[index].canvas!;
-      const templateMedia = cards[index].template!.media;
+      const { canvas, template } = cards[index];
+      const { printableAreas } = template!;
       const newPageNumber = Math.floor(index / labelsPerPage);
       if (newPageNumber > pageNumber) {
         // do the cropmarks
@@ -155,16 +154,25 @@ export const preparePdf = async (
       const yStart = row * gridSize[1] + topMarginInPt + (gridSize[1] - heightInPt) / 2;
 
       if (cutMarks === 'crop' ) {
-        cutHelperX.add(xStart);
-        cutHelperX.add(xStart + widthInPt);
-        cutHelperY.add(yStart);
-        cutHelperY.add(yStart + heightInPt);
+        if (printableAreas) {
+          printableAreas.forEach(({ x, y, width, height }) => {
+            cutHelperX.add(xStart + x * widthInPt);
+            cutHelperX.add(xStart + x * widthInPt + width * widthInPt);
+            cutHelperY.add(yStart + y * heightInPt);
+            cutHelperY.add(yStart + y * heightInPt + height * heightInPt);
+          });
+        } else {
+          cutHelperX.add(xStart);
+          cutHelperX.add(xStart + widthInPt);
+          cutHelperY.add(yStart);
+          cutHelperY.add(yStart + heightInPt);
+        }
       }
 
       const needsRotation = isRotated || cards[index].template!.layout !== firstCardTemplate.layout;
 
       await addCanvasToPdfPage(
-        canvas,
+        canvas!,
         pdfDoc,
         {
           x: xStart,
@@ -173,7 +181,7 @@ export const preparePdf = async (
           height: heightInPt,
         },
         needsRotation,
-        templateMedia,
+        template!,
         printOptions.imageType !== 'vector' // print as raster?
       );
     }

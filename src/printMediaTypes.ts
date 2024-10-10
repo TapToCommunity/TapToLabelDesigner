@@ -33,28 +33,15 @@ export const TapeBoxCover: MediaDefinition = {
   label: 'Cassette tape case',
 };
 
-// or a musicasset box inlay cover
-export const taptoPrePrintedHalf: MediaDefinition = {
-  width: 744, // 63mm * 300dpi
-  height: 425, // 36mm * 300dpi
-  rx: 0,
-  ry: 0,
+export const tapToPrePrinted: MediaDefinition = {
+  width: 1050, // 63mm * 300dpi
+  height: 750, // 36mm * 300dpi
+  rx: 35,
+  ry: 35,
   strokeWidth: 2,
   stroke: 'black',
   fill: 'white',
-  label: 'Tapto pre-printed, half',
-};
-
-// or a musicasset box inlay cover
-export const taptoPrePrintedFullHeight: MediaDefinition = {
-  width: 862, // 4.11inch * 300dpi
-  height: 744, // 63mm * 300dpi
-  rx: 0,
-  ry: 0,
-  strokeWidth: 2,
-  stroke: 'black',
-  fill: 'white',
-  label: 'Tapto pre-printed, full',
+  label: 'Tapto pre-printed',
 };
 
 // or a musicasset box inlay cover
@@ -72,7 +59,7 @@ export const miniNfcCard: MediaDefinition = {
 export const mediaTargetList = [
   NFCCCsizeCard,
   TapeBoxCover,
-  // taptoPrePrintedHalf,
+  tapToPrePrinted,
   // taptoPrePrintedFullHeight,
   miniNfcCard,
 ];
