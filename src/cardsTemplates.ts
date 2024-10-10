@@ -45,6 +45,7 @@ export const templates: Record<string, templateType> = {
     key: 'blankV',
   },
   taptoPPHalf: {
+    canEdit: true,
     layout: 'vertical',
     label: 'Half height tapto sticker',
     author: Authors.tim,
@@ -77,6 +78,7 @@ export const templates: Record<string, templateType> = {
     }],
   },
   taptoPPFull: {
+    canEdit: true,
     layout: 'vertical',
     label: 'Full height tapto sticker',
     author: Authors.tim,
