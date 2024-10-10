@@ -51,6 +51,7 @@ export const templates: Record<string, templateType> = {
     media: tapToPrePrinted,
     key: 'taptoPPHalf',
     background: {
+      hidePrint: true,
       url: cardFront,
       isSvg: false,
       layerHeight: 1050,
@@ -68,6 +69,12 @@ export const templates: Record<string, templateType> = {
       isSvg: false,
       strategy: 'cover',
     },
+    printableAreas: [{
+      x: 0.00,
+      width: 1,
+      y: 0.075,
+      height: 0.415,
+    }],
   },
   taptoPPFull: {
     layout: 'vertical',
@@ -76,6 +83,7 @@ export const templates: Record<string, templateType> = {
     media: tapToPrePrinted,
     key: 'taptoPPFull',
     background: {
+      hidePrint: true,
       url: cardFront,
       isSvg: false,
       layerHeight: 1050,
@@ -93,6 +101,12 @@ export const templates: Record<string, templateType> = {
       isSvg: false,
       strategy: 'cover',
     },
+    printableAreas: [{
+      x: 0.00,
+      width: 1,
+      y: 0.075,
+      height: 0.855,
+    }],
   },
   blankHF: {
     layout: 'horizontal',

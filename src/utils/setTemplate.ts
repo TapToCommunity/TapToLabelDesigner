@@ -41,13 +41,6 @@ export const scaleImageToOverlayArea = (
   } else {
     scaler = overlay?.strategy === 'cover' ?  util.findScaleToCover : util.findScaleToFit;
     scaledTemplateOverlaySize = overlayImg._getTransformedDimensions();
-    if (overlay?.strategy === 'cover') {
-      const  clipPath =  new Rect({ width: scaledTemplateOverlaySize.x, height: scaledTemplateOverlaySize.y });
-      clipPath.absolutePositioned = true;
-      mainImage.clipPath = clipPath;
-    } else {
-      mainImage.clipPath = undefined
-    }
   }
 
   pictureScaleToTemplate = scaler(
@@ -60,6 +53,14 @@ export const scaleImageToOverlayArea = (
       height: scaledTemplateOverlaySize.y * overlay!.height,
     },
   );
+
+  if (overlay?.strategy === 'cover') {
+    const  clipPath =  new Rect({ width: scaledTemplateOverlaySize.x * overlay!.width, height: scaledTemplateOverlaySize.y * overlay!.height });
+    clipPath.absolutePositioned = true;
+    mainImage.clipPath = clipPath;
+  } else {
+    mainImage.clipPath = undefined
+  }
 
   mainImage.set({
     scaleX: pictureScaleToTemplate,
