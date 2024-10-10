@@ -58,6 +58,6 @@ export const printTemplates: Record<string, PrintTemplate> = {
   }
 };
 
-export const defaultPrinterTemplateKey = 'horizontal';
+export const defaultPrinterTemplateKey = 'a4Auto';
 
 export const defaultPrinterTemplate = printTemplates[defaultPrinterTemplateKey];
