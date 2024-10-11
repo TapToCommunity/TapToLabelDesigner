@@ -9,6 +9,7 @@ export type templateLayer = {
   /* parse the layer as a group rather than raster */
   isSvg: boolean;
   parsed?: Promise<SerializedGroupProps | HTMLImageElement>;
+  hidePrint?: boolean;
 };
 
 export type templateOverlay = templateLayer & {
@@ -58,6 +59,13 @@ export type MediaDefinition = {
   label: string;
 }
 
+export type PrintableArea = {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+}
+
 export type templateType = {
   layout: layoutOrientation;
   overlay?: templateOverlay;
@@ -77,5 +85,6 @@ export type templateType = {
 
   edits?: TemplateEdit[];
   media: MediaDefinition;
+  printableAreas?: PrintableArea[],
   key: string;
 };

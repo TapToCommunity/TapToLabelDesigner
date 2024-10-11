@@ -138,7 +138,7 @@ export const ModalInternalComponent = ({
         });
       }
       return () => {
-        console.log('disposing');
+        // console.log('disposing');
         canvas && canvas.dispose();
       };
     }

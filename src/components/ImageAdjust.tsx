@@ -29,8 +29,10 @@ export const ImageAdjust = ({
     const overlayObj = canvas.getObjects('group')[0];
     const template = card.template;
     const overlay = template?.overlay;
-    const dims = overlayObj._getTransformedDimensions();
     if (overlay) {
+      const dims = overlayObj
+        ? overlayObj._getTransformedDimensions()
+        : { x: overlay.layerWidth, y: overlay.layerHeight };
       const destination = template?.noMargin
         ? {
             width: overlay.layerWidth,
