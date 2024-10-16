@@ -125,6 +125,20 @@ export const cassetteColorVariations = [
     nfcLogoSpine: '#FFFFFF',
     nfcLogoFront: '#FFFFFF',
   },
+  {
+    label: 'famicomdisk',
+    backColor: '#FEFCF1',
+    colorSpineTop: '#FFFFFF',
+    colorSpineBottom: '#FFFFFF',
+    frontcolorTop: '#FFFFFF',
+    frontcolorBottom: '#FFFFFF',
+    loadingLogoBack: '#000000',
+    loadingLogoSpine: '#000000',
+    loadingLogoFront: '#000000',
+    nfcLogoBack: '#000000',
+    nfcLogoSpine: '#EBBF45',
+    nfcLogoFront: '#EBBF45',
+  },
 ]
 
 export const referencColorTable = {
