@@ -13,7 +13,7 @@ import {
   startTransition,
 } from 'react';
 import MediaTypeDropdown from './MediaTypeDropdown';
-import sob3 from '../assets/art/sampleart.webp';
+import sob3 from '../assets/art/sampleart.png';
 import { prepareTemplateCarousel } from '../utils/prepareTemplateCarousel';
 import { useFileDropperContext } from '../contexts/fileDropper';
 // import { ThreeDCarousel } from './ThreeDCarousel';
