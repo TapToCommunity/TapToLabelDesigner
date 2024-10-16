@@ -154,3 +154,34 @@ export const referencColorTable = {
   nfcLogoSpine: '#FF0020',
   nfcLogoFront: '#FF0030',
 }
+
+export const cassetteBaseTemplate = `  {
+    layout: 'horizontal',
+    label: 'Casset box cover',
+    overlay: {
+      layerWidth: 1233,
+      layerHeight: 1200,
+      url: cassetTape,
+      height: 1 - 123/1200,
+      width: 1 - 454/1233,
+      y: 123/1200,
+      x: 454/1233,
+      isSvg: true,
+      strategy: 'cover',
+    },
+    edits: [{
+      id: 'placeholder_logo_1',
+      resource: logoResource,
+    }, {
+      id: 'placeholder_logo_2',
+      resource: logoResource,
+    }, {
+      id: 'placeholder_logo_3',
+      resource: logoResource,
+    }],
+    canEdit: true,
+    author: Authors.animeotaku, // to be changed with Phoneix data
+    media: TapeBoxCover,
+    key: 'cassetteBoxV2',
+  },
+`
